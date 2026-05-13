@@ -1,0 +1,12 @@
+{
+  "Messages.Success": "İşlem başarıyla tamamlandı.",
+  "Errors.Unexpected": "Beklenmeyen bir hata gerçekleşti. Lütfen daha sonra tekrar deneyiniz.",
+  "Messages.UserMailUserPasswordNotFound": "Mail adresiniz veya şifreniz hatalıdır. Lütfen tekar deneyiniz.",
+  "Messages.MailAlreadyExists": "Bu email adresi zaten kullanımda!",
+  "Messages.IdIsNull": "Parametre Bulunamadı",
+  "Messages.CarNotFound": "Araç bulunamadı.",
+  "Messages.BrandNotFound": "Marka bulunamadı.",
+  "Validations.BrandNameRequired": "Marka adı boş geçilemez.",
+  "Validations.BrandNameMinLength": "Marka adı en az 3 karakter olmalıdır.",
+  "Validations.ValidationErrors": "Doğrulama hataları mevcut."
+}

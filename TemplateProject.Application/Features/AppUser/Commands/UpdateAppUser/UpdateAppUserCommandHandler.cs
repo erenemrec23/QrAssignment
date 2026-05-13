@@ -1,0 +1,38 @@
+﻿using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using TemplateProject.Application.Repositories;
+using TemplateProject.Domain.Shared;
+
+namespace TemplateProject.Application.Features.AppUser.Commands.UpdateAppUser
+{
+    internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Result<Unit>>
+    {
+        private readonly IAppUserRepository _appUserRepository;
+        private readonly IUserRepository _userRepository; // Generic Repository'yi de ekleyelim, belki ihtiyacımız olur diye.
+
+        // SADECE REPOSITORY VAR, UnitOfWork GİTTİ!
+        public UpdateUserCommandHandler(IAppUserRepository appUserRepository, IUserRepository userRepository)
+        {
+            _appUserRepository = appUserRepository;
+            _userRepository = userRepository;
+        }
+
+        public async Task<Result<Unit>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        {
+            var user = await _appUserRepository.GetByIdWithRefreshTokenAsync(request.Id, cancellationToken);
+
+            if (user is null)
+                throw new Exception("Kullanıcı bulunamadı!");
+
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+
+            // Sadece update metodunu çağırıyoruz, gerisini Pipeline Behavior halledecek.
+            _userRepository.Update(user);
+
+            return Result<Unit>.Success(Unit.Value);
+        }
+    }
+}
