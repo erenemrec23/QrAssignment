@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using TemplateProject.Application.Services;
-using TemplateProject.Domain.Shared;
+using QrAssignment.Application.Services;
+using QrAssignment.Domain.Shared;
 
-namespace TemplateProject.Application.Features.AuthFeatures.Commands.Login
+namespace QrAssignment.Application.Features.AuthFeatures.Commands.Login
 {
     public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginCommandResponse>>
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TemplateProject.Application.Abstractions
+﻿namespace QrAssignment.Application.Abstractions
 {
     public interface IUnitOfWork
     {

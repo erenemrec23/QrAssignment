@@ -11,9 +11,8 @@
   <ItemGroup> 
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\TemplateProject.Application\TemplateProject.Application.csproj" />
+    <ProjectReference Include="..\TemplateProject.Application\QrAssignment.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-using TemplateProject.Application.Interfaces;
+using QrAssignment.Application.Interfaces;
 
-namespace TemplateProject.Infrastructure.Services; // veya Presentation
+namespace QrAssignment.Infrastructure.Services; // veya Presentation
 
 public sealed class UserContext : IUserContext
 {

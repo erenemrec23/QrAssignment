@@ -3,6 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
+using QrAssignment.Application;
+using QrAssignment.Application.Behaviors;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Infrastructure;
+using QrAssignment.Infrastructure.Localization;
+using QrAssignment.Persistance;
+using QrAssignment.Presentation;
 using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
@@ -10,13 +17,6 @@ using Serilog.Ui.Core.Extensions;
 using Serilog.Ui.MsSqlServerProvider.Extensions;
 using Serilog.Ui.Web.Extensions;
 using System.Text;
-using TemplateProject.Application;
-using TemplateProject.Application.Behaviors;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Infrastructure;
-using TemplateProject.Infrastructure.Localization;
-using TemplateProject.Persistance;
-using TemplateProject.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +68,7 @@ builder.Services.AddOpenApi(options =>
 });
 builder.Services.AddPresentation();
 builder.Services.AddControllers()
-    .AddApplicationPart(TemplateProject.Presentation.AssemblyReference.Assembly);
+    .AddApplicationPart(QrAssignment.Presentation.AssemblyReference.Assembly);
 builder.Services.AddAuthentication(options =>
 {
     // Varsayılan doğrulama şemasını JWT olarak belirliyoruz
@@ -99,7 +99,7 @@ builder.Services.AddAuthentication(options =>
      
 });
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(TemplateProject.Application.AssemblyReference).Assembly)); // Application olmalı
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(QrAssignment.Application.AssemblyReference).Assembly)); // Application olmalı
                                                                                                                                       // "Birisi ILocalizationService isterse, ona Singleton olarak JsonLocalizationManager ver"
 builder.Services.AddLocalization();
 
@@ -129,7 +129,7 @@ builder.Host.UseSerilog((context, loggerConfig) =>
             }));
 builder.Services.AddSingleton<IAppLocalizer, AppLocalizer>();
 
-builder.Services.AddValidatorsFromAssembly(typeof(TemplateProject.Application.SharedResource).Assembly);  
+builder.Services.AddValidatorsFromAssembly(typeof(SharedResource).Assembly);  
  
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 var app = builder.Build();

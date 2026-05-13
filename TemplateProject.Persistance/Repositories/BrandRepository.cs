@@ -1,11 +1,10 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Entity;
-using TemplateProject.Persistance.Repositories;
-using TemplateProject.Persistence.Context;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Entity;
+using QrAssignment.Persistance.Context;
 
-namespace TemplateProject.Persistence.Repositories;
+namespace QrAssignment.Persistance.Repositories;
 
 internal sealed class BrandRepository : GenericRepository<Brand>, IBrandRepository
 {

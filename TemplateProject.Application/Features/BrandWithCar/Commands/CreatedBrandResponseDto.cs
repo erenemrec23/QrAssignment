@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TemplateProject.Application.Features.BrandWithCar.Commands
+namespace QrAssignment.Application.Features.BrandWithCar.Commands
 {
     public class CreatedBrandResponseDto
     {

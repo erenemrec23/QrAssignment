@@ -3,11 +3,11 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TemplateProject.Domain.Entity;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Shared;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Entity;
+using QrAssignment.Domain.Shared;
 
-namespace TemplateProject.Application.Features.BrandWithCar.Commands
+namespace QrAssignment.Application.Features.BrandWithCar.Commands
 {
     public class CreateBrandWithCarCommandHandler : IRequestHandler<CreateBrandWithCarCommand, Result<Guid>>
     { 

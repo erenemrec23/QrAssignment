@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
 
-namespace TemplateProject.Domain.Entity.App
+namespace QrAssignment.Domain.Entity.App
 {
     public class AppRole : IdentityRole<Guid>
     {

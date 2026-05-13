@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
-using TemplateProject.Application.Abstractions;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Entity;
-using TemplateProject.Domain.Shared;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Entity;
+using QrAssignment.Domain.Shared;
 
-namespace TemplateProject.Application.Features.Cars.Commands.CreateCar;
+namespace QrAssignment.Application.Features.Cars.Commands.CreateCar;
 
 public class CreateCarCommandHandler : IRequestHandler<CreateCarCommand, Result<Guid>>
 { 

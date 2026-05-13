@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TemplateProject.Application.Interfaces; // Sadece Application'ı biliyor!
+using QrAssignment.Application.Interfaces;
 
-namespace TemplateProject.Presentation.Controllers;
+namespace QrAssignment.Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

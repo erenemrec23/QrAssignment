@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
+using QrAssignment.Application.Features.Cars.Commands.CreateCar;
+using QrAssignment.Application.Features.Cars.Commands.UpdateCar;
+using QrAssignment.Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TemplateProject.Application.Features.Cars.Commands.CreateCar;
-using TemplateProject.Application.Features.Cars.Commands.UpdateCar;
-using TemplateProject.Domain.Entity;
 
-namespace TemplateProject.Application.Mapping
+namespace QrAssignment.Application.Mapping
 { 
     public class CarProfile : Profile
     {

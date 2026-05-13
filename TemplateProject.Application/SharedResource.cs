@@ -1,4 +1,4 @@
-﻿namespace TemplateProject.Application;
+﻿namespace QrAssignment.Application;
  
 public sealed class SharedResource
 {

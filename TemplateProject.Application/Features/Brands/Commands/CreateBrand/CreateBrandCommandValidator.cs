@@ -1,11 +1,7 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TemplateProject.Application.Features.Brands.Commands.UpdateBrand;
-using TemplateProject.Application.Interfaces;
+using QrAssignment.Application.Interfaces;
 
-namespace TemplateProject.Application.Features.Brands.Commands.CreateBrand
+namespace QrAssignment.Application.Features.Brands.Commands.CreateBrand
 {
     public class CreateBrandCommandValidator : AbstractValidator<CreateBrandCommand>
     {

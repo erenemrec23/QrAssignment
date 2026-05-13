@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace TemplateProject.Application
+namespace QrAssignment.Application
 {
     public static class AssemblyReference
     {

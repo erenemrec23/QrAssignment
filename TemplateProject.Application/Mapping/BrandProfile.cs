@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using TemplateProject.Application.Features.Brands.Commands.CreateBrand;
-using TemplateProject.Application.Features.Brands.Commands.UpdateBrand;
-using TemplateProject.Domain.Entity;
+using QrAssignment.Application.Features.Brands.Commands.CreateBrand;
+using QrAssignment.Application.Features.Brands.Commands.UpdateBrand;
+using QrAssignment.Domain.Entity;
 
-namespace TemplateProject.Application.Mapping
+namespace QrAssignment.Application.Mapping
 {
     public class BrandProfile : Profile
     {

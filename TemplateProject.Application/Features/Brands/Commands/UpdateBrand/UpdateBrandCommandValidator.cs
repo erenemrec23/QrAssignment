@@ -1,7 +1,7 @@
-﻿namespace TemplateProject.Application.Features.Brands.Commands.UpdateBrand
+﻿namespace QrAssignment.Application.Features.Brands.Commands.UpdateBrand
 {
     using FluentValidation;
-    using TemplateProject.Application.Interfaces;
+    using QrAssignment.Application.Interfaces;
 
     public class UpdateBrandCommandValidator : AbstractValidator<UpdateBrandCommand>
     {

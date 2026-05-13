@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TemplateProject.Application.Features.Cars.Queries.GetList
+namespace QrAssignment.Application.Features.Cars.Queries.GetList
 {
     public class GetListCarResponse
     {

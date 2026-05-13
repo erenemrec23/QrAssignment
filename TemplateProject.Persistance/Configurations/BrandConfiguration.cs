@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
-using TemplateProject.Domain.Entity;
+using QrAssignment.Domain.Entity;
 
-namespace TemplateProject.Persistance.Configurations
+namespace QrAssignment.Persistance.Configurations
 {
     public sealed class BrandConfiguration : IEntityTypeConfiguration<Brand>
     {

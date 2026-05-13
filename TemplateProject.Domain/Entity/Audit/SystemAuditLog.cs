@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-
-namespace TemplateProject.Domain.Entities;
+﻿namespace QrAssignment.Domain.Entity.Audit;
 
 public class SystemAuditLog
 {

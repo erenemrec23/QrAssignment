@@ -1,15 +1,11 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TemplateProject.Application.Features.BrandWithCar.Commands;
-using TemplateProject.Application.Features.Cars.Commands.CreateCar;
-using TemplateProject.Application.Features.Cars.Commands.UpdateCar;
-using TemplateProject.Application.Features.Cars.Queries.GetList;
+using QrAssignment.Application.Features.BrandWithCar.Commands;
+using QrAssignment.Application.Features.Cars.Commands.CreateCar;
+using QrAssignment.Application.Features.Cars.Commands.UpdateCar;
+using QrAssignment.Application.Features.Cars.Queries.GetList;
 
-namespace TemplateProject.Presentation.Controllers
+namespace QrAssignment.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

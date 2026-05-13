@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using QrAssignment.Application.Interfaces;
 using System.Collections.Concurrent;
 using System.Text.Json;
-using TemplateProject.Application.Interfaces;
 
-namespace TemplateProject.Infrastructure.Localization;
+namespace QrAssignment.Infrastructure.Localization;
 
 public class JsonLocalizationManager :   ILocalizationService
 {

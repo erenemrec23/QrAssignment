@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Domain.Abstractions;
+using QrAssignment.Persistance.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Domain.Abstractions;
-using TemplateProject.Persistence.Context;
 
-namespace TemplateProject.Persistance.Repositories
+namespace QrAssignment.Persistance.Repositories
 {
     internal class GenericRepository<T> : IGenericRepository<T> where T : class, IBaseEntity
     {

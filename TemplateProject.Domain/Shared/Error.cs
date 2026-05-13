@@ -1,4 +1,4 @@
-﻿namespace TemplateProject.Domain.Shared
+﻿namespace QrAssignment.Domain.Shared
 {
     public sealed record Error(string Code, string Message)
     {

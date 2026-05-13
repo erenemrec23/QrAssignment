@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TemplateProject.Domain.Exceptions
+﻿namespace QrAssignment.Domain.Exceptions
 {
     public class BusinessException : Exception
     {

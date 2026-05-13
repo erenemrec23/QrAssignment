@@ -1,8 +1,8 @@
-﻿using TemplateProject.Application.Features.Cars.Queries.GetList;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Domain.Entity;
+﻿using QrAssignment.Application.Features.Cars.Queries.GetList;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Domain.Entity;
 
-namespace TemplateProject.Application.Repositories
+namespace QrAssignment.Application.Repositories
 {
     public interface ICarRepository : IGenericRepository<Car>
     { 

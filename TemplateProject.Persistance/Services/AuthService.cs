@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using TemplateProject.Application.Features.AuthFeatures.Commands.Login;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Application.Services;
-using TemplateProject.Domain.Entity.App;
+using QrAssignment.Application.Features.AuthFeatures.Commands.Login;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Application.Services;
+using QrAssignment.Domain.Entity.App;
 
-namespace TemplateProject.Persistance.Services
+namespace QrAssignment.Persistance.Services
 {
     internal sealed class AuthService : IAuthService
     {

@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Localization;
+using QrAssignment.Application;
+using QrAssignment.Application.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TemplateProject.Application;
-using TemplateProject.Application.Interfaces;
 
-namespace TemplateProject.Infrastructure.Localization
+namespace QrAssignment.Infrastructure.Localization
 {
     public class AppLocalizer : IAppLocalizer
     {

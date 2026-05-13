@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Domain.Entity;
-using TemplateProject.Domain.Entity.App;
+﻿using QrAssignment.Domain.Entity.App;
 
-namespace TemplateProject.Application.Repositories
+namespace QrAssignment.Application.Repositories
 {
 
     public interface IAppUserRepository  

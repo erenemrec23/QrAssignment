@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
+﻿using System.Reflection;
 
-namespace TemplateProject.Presentation
+namespace QrAssignment.Presentation
 {
     public static class AssemblyReference
     { 

@@ -1,4 +1,4 @@
-﻿namespace TemplateProject.Domain.Shared
+﻿namespace QrAssignment.Domain.Shared
 {
     public class Result
     {

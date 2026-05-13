@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Domain.Abstractions;
-using TemplateProject.Domain.Shared;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Domain.Abstractions;
 
-namespace TemplateProject.Persistance.Interceptors;
+namespace QrAssignment.Persistance.Interceptors;
 
 public sealed class AuditInterceptor : SaveChangesInterceptor
 {

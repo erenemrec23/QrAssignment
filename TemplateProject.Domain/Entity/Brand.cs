@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TemplateProject.Domain.Abstractions;
+﻿using QrAssignment.Domain.Abstractions;
 
-namespace TemplateProject.Domain.Entity
+namespace QrAssignment.Domain.Entity
 {
     public class Brand : BaseEntity
     { 

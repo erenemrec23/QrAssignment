@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using TemplateProject.Application.Abstractions;
-using TemplateProject.Domain.Shared;
+using QrAssignment.Application.Abstractions;
+using QrAssignment.Domain.Shared;
 
-namespace TemplateProject.Application.Features.BrandWithCar.Commands
+namespace QrAssignment.Application.Features.BrandWithCar.Commands
 {
     public class CreateBrandWithCarCommand : ICommand<Result<Guid>>
     {

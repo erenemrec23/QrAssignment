@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using QrAssignment.Application.Behaviors;
 using System.Reflection;
-using TemplateProject.Application.Behaviors;  
-namespace TemplateProject.Application
+namespace QrAssignment.Application
 {
     public static class DependencyInjection
     {

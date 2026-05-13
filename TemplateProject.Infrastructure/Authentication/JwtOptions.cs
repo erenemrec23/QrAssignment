@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TemplateProject.Infrastructure.Authentication
+﻿namespace QrAssignment.Infrastructure.Authentication
 {
     public sealed class JwtOptions
     {

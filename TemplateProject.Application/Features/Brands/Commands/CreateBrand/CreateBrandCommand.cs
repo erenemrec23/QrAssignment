@@ -1,7 +1,7 @@
-﻿using TemplateProject.Application.Abstractions;
-using TemplateProject.Domain.Shared;
+﻿using QrAssignment.Application.Abstractions;
+using QrAssignment.Domain.Shared;
 
-namespace TemplateProject.Application.Features.Brands.Commands.CreateBrand;
+namespace QrAssignment.Application.Features.Brands.Commands.CreateBrand;
 
 public class CreateBrandCommand   : ICommand<Result<Guid>>
 {

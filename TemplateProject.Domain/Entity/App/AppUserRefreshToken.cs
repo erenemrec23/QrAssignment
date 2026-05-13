@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TemplateProject.Domain.Abstractions;
+﻿using QrAssignment.Domain.Abstractions;
 
-namespace TemplateProject.Domain.Entity.App
+namespace QrAssignment.Domain.Entity.App
 {
     public sealed class AppUserRefreshToken : BaseEntity
     { 

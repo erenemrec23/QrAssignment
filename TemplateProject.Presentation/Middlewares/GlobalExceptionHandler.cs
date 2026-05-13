@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using TemplateProject.Application;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Domain.Exceptions;
-using TemplateProject.Domain.Shared; // Kendi Result ve Error sınıflarımızın olduğu yol
-namespace TemplateProject.Presentation.Middlewares
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Domain.Exceptions;
+using QrAssignment.Domain.Shared;
+namespace QrAssignment.Presentation.Middlewares
 {
     internal sealed class GlobalExceptionHandler : IExceptionHandler
     {

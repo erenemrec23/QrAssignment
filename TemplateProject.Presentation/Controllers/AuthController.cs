@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TemplateProject.Application.Features.AppUser.Commands.CreateAppUser;
-using TemplateProject.Application.Features.AuthFeatures.Commands.Login;
+using QrAssignment.Application.Features.AppUser.Commands.CreateAppUser;
+using QrAssignment.Application.Features.AuthFeatures.Commands.Login;
 
-namespace TemplateProject.Presentation.Controllers
+namespace QrAssignment.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

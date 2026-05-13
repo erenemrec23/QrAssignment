@@ -1,11 +1,11 @@
 ﻿using MediatR;
+using QrAssignment.Application.Abstractions;
+using QrAssignment.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TemplateProject.Application.Abstractions;
-using TemplateProject.Domain.Shared;
 
-namespace TemplateProject.Application.Features.AppUser.Commands.UpdateAppUser
+namespace QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser
 {
     public sealed record UpdateUserCommand(
     Guid Id,

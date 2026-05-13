@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Shared;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Shared;
 
-namespace TemplateProject.Application.Features.Cars.Queries.GetList
+namespace QrAssignment.Application.Features.Cars.Queries.GetList
 {
     public class GetListCarQueryHandler : IRequestHandler<GetListCarQuery, Result<List<GetListCarResponse>>>
     { 

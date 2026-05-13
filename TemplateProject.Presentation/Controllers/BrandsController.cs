@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TemplateProject.Application.Features.Brands.Commands.CreateBrand;
-using TemplateProject.Application.Features.Brands.Commands.UpdateBrand;
+using QrAssignment.Application.Features.Brands.Commands.CreateBrand;
+using QrAssignment.Application.Features.Brands.Commands.UpdateBrand;
 
-namespace TemplateProject.Presentation.Controllers
+namespace QrAssignment.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

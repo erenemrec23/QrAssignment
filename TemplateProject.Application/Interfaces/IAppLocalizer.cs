@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TemplateProject.Application.Interfaces
+namespace QrAssignment.Application.Interfaces
 {
     public interface IAppLocalizer
     {

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using QrAssignment.Application.Features.AuthFeatures.Commands.Login;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using TemplateProject.Application.Features.AuthFeatures.Commands.Login;
 
-namespace TemplateProject.Application.Services
+namespace QrAssignment.Application.Services
 {
     public interface IAuthService
     {

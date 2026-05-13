@@ -1,9 +1,8 @@
-﻿using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Entity.App;
-using TemplateProject.Persistance.Repositories;
-using TemplateProject.Persistence.Context;
+﻿using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Entity.App;
+using QrAssignment.Persistance.Context;
 
-namespace TemplateProject.Persistence.Repositories;
+namespace QrAssignment.Persistance.Repositories;
 
 internal sealed class AppUserRefreshTokenRepository : GenericRepository<AppUserRefreshToken>, IAppUserRefreshTokenRepository
 {

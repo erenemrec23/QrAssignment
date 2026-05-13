@@ -25,10 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TemplateProject.Application\TemplateProject.Application.csproj" />
-    <ProjectReference Include="..\TemplateProject.Infrastructure\TemplateProject.Infrastructure.csproj" />
-    <ProjectReference Include="..\TemplateProject.Persistance\TemplateProject.Persistance.csproj" />
-    <ProjectReference Include="..\TemplateProject.Presentation\TemplateProject.Presentation.csproj" />
+    <ProjectReference Include="..\TemplateProject.Application\QrAssignment.Application.csproj" />
+    <ProjectReference Include="..\TemplateProject.Infrastructure\QrAssignment.Infrastructure.csproj" />
+    <ProjectReference Include="..\TemplateProject.Persistance\QrAssignment.Persistance.csproj" />
+    <ProjectReference Include="..\TemplateProject.Presentation\QrAssignment.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

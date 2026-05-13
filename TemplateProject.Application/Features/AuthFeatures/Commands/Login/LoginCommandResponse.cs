@@ -1,4 +1,4 @@
-﻿namespace TemplateProject.Application.Features.AuthFeatures.Commands.Login
+﻿namespace QrAssignment.Application.Features.AuthFeatures.Commands.Login
 {
 
     public sealed record LoginCommandResponse(

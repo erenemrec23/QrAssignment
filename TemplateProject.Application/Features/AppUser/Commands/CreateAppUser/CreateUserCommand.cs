@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using TemplateProject.Application.Abstractions;
-using TemplateProject.Domain.Shared;
+using QrAssignment.Application.Abstractions;
+using QrAssignment.Domain.Shared;
 
-namespace TemplateProject.Application.Features.AppUser.Commands.CreateAppUser
+namespace QrAssignment.Application.Features.AppUser.Commands.CreateAppUser
 {
     public sealed record CreateUserCommand(
     string FirstName,

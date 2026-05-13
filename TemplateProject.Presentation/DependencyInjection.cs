@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TemplateProject.Presentation.Middlewares; // Handler'ın olduğu klasör
+using QrAssignment.Presentation.Middlewares;
 
-namespace TemplateProject.Presentation;
+namespace QrAssignment.Presentation;
 
 public static class DependencyInjection
 {

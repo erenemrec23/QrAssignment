@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders; 
-using TemplateProject.Domain.Entity.App;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using QrAssignment.Domain.Entity.App;
 
-namespace TemplateProject.Persistance.Configurations.App
+namespace QrAssignment.Persistance.Configurations.App
 {
     public sealed class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
     {

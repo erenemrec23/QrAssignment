@@ -1,7 +1,7 @@
-﻿using System.Linq.Expressions;
-using TemplateProject.Domain.Abstractions;
+﻿using QrAssignment.Domain.Abstractions;
+using System.Linq.Expressions;
 
-namespace TemplateProject.Application.Interfaces;
+namespace QrAssignment.Application.Interfaces;
 
 public interface IGenericRepository<T> where T : class, IBaseEntity
 {

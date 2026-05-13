@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TemplateProject.Application.Features.Cars.Commands.UpdateCar
+namespace QrAssignment.Application.Features.Cars.Commands.UpdateCar
 {
     public class UpdatedCarResponse
     {

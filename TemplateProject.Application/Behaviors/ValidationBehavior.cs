@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MediatR;
-using TemplateProject.Domain.Exceptions;
+using QrAssignment.Domain.Exceptions;
 
-namespace TemplateProject.Application.Behaviors;
+namespace QrAssignment.Application.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

@@ -1,7 +1,7 @@
-﻿using TemplateProject.Application.Interfaces;
-using TemplateProject.Domain.Entity.App;
+﻿using QrAssignment.Application.Interfaces;
+using QrAssignment.Domain.Entity.App;
 
-namespace TemplateProject.Application.Repositories
+namespace QrAssignment.Application.Repositories
 {
     public interface IUserRepository : IGenericRepository<AppUser>
     {

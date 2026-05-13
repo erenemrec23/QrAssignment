@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TemplateProject.Domain.Abstractions;
+using QrAssignment.Domain.Abstractions;
 
-namespace TemplateProject.Persistance.Configurations.Base
+namespace QrAssignment.Persistance.Configurations.Base
 {
     public abstract class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
     {

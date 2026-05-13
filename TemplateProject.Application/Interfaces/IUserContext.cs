@@ -1,4 +1,4 @@
-﻿namespace TemplateProject.Application.Interfaces
+﻿namespace QrAssignment.Application.Interfaces
 {
     public interface IUserContext
     {

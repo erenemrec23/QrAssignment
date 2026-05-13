@@ -1,4 +1,4 @@
-﻿namespace TemplateProject.Domain.Exceptions;
+﻿namespace QrAssignment.Domain.Exceptions;
 
 public sealed class ValidationAppException : Exception
 {

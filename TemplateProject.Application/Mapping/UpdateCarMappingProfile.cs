@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using TemplateProject.Application.Features.Cars.Commands.UpdateCar;
-using TemplateProject.Domain.Entity;
+using QrAssignment.Application.Features.Cars.Commands.UpdateCar;
+using QrAssignment.Domain.Entity;
 
-namespace TemplateProject.Application.Mapping
+namespace QrAssignment.Application.Mapping
 {
     public class UpdateCarMappingProfile : Profile
     {

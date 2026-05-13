@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using TemplateProject.Application.Features.BrandWithCar.Commands;
-using TemplateProject.Domain.Entity;
+using QrAssignment.Application.Features.BrandWithCar.Commands;
+using QrAssignment.Domain.Entity;
 
-namespace TemplateProject.Application.Mapping
+namespace QrAssignment.Application.Mapping
 {
     public class BrandMappingProfile : Profile
     {

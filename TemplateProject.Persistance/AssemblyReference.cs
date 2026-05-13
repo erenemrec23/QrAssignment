@@ -1,4 +1,4 @@
-﻿namespace TemplateProject.Persistance
+﻿namespace QrAssignment.Persistance
 {
     public static class AssemblyReference
     {

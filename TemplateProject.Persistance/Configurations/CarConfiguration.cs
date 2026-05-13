@@ -1,12 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TemplateProject.Domain.Entity;
+using QrAssignment.Domain.Entity;
 
-namespace TemplateProject.Persistance.Configurations
+namespace QrAssignment.Persistance.Configurations
 {
     public sealed class CarConfiguration : IEntityTypeConfiguration<Car>
     {

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Exceptions;
-using TemplateProject.Domain.Shared;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Shared;
+using QrAssignment.Domain.Exceptions;
 
-namespace TemplateProject.Application.Features.Brands.Commands.UpdateBrand
+namespace QrAssignment.Application.Features.Brands.Commands.UpdateBrand
 {
     public class UpdateBrandCommandHandler : IRequestHandler<UpdateBrandCommand, Result>
     {

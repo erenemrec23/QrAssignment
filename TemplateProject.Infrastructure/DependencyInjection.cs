@@ -1,13 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
-using System.Configuration;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Infrastructure.Authentication;
-using TemplateProject.Infrastructure.Localization;
-using TemplateProject.Infrastructure.Services;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Infrastructure.Authentication;
+using QrAssignment.Infrastructure.Services;
 
-namespace TemplateProject.Infrastructure
+namespace QrAssignment.Infrastructure
 {
 
     public static class DependencyInjection

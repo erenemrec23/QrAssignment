@@ -1,13 +1,13 @@
 ﻿using Audit.EntityFramework;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QrAssignment.Domain.Abstractions;
+using QrAssignment.Domain.Entity;
+using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Entity.Audit;
 using System.Linq.Expressions;
-using TemplateProject.Domain.Abstractions; 
-using TemplateProject.Domain.Entities;
-using TemplateProject.Domain.Entity;
-using TemplateProject.Domain.Entity.App;
 
-namespace TemplateProject.Persistence.Context;
+namespace QrAssignment.Persistance.Context;
 
 public class AppDbContext : AuditDbContext
 {

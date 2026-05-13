@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
 
 
-namespace TemplateProject.Domain.Entity.App
+namespace QrAssignment.Domain.Entity.App
 {
     public class AppUserRole : IdentityRole<Guid>
     {

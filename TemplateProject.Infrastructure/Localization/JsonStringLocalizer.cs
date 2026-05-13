@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Localization;
 using System.Globalization;
 
-namespace TemplateProject.Infrastructure.Localization;
+namespace QrAssignment.Infrastructure.Localization;
 
 public class JsonStringLocalizer : IStringLocalizer
 {

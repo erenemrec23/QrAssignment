@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore; 
-using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Entity.App;
-using TemplateProject.Persistance; // AppDbContext'in olduğu yer
+using Microsoft.EntityFrameworkCore;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Entity.App;
 
-namespace TemplateProject.Persistance.Repositories;
+namespace QrAssignment.Persistance.Repositories;
 
 public sealed class AppUserRepository : IAppUserRepository
 {

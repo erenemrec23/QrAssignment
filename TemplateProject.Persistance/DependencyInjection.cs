@@ -2,20 +2,19 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using QrAssignment.Application.Abstractions;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Application.Services;
+using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Entity.Audit;
+using QrAssignment.Persistance.Context;
+using QrAssignment.Persistance.Interceptors;
+using QrAssignment.Persistance.Repositories;
+using QrAssignment.Persistance.Services;
 using System.Text.Json;
-using TemplateProject.Application.Abstractions;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Application.Services;
-using TemplateProject.Domain.Entities;
-using TemplateProject.Domain.Entity.App;
-using TemplateProject.Persistance.Interceptors;
-using TemplateProject.Persistance.Repositories;
-using TemplateProject.Persistance.Services;
-using TemplateProject.Persistence.Context;
-using TemplateProject.Persistence.Repositories;
 
 
-namespace TemplateProject.Persistance
+namespace QrAssignment.Persistance
 {
     public static class DependencyInjection
     {

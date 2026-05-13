@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Shared;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Shared;
 
-namespace TemplateProject.Application.Features.Cars.Commands.UpdateCar
+namespace QrAssignment.Application.Features.Cars.Commands.UpdateCar
 {
     public class UpdateCarCommandHandler : IRequestHandler<UpdateCarCommand, Result>
     {

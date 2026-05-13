@@ -1,10 +1,10 @@
-﻿using System;
+﻿using QrAssignment.Application.Abstractions;
+using QrAssignment.Persistance.Context;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using TemplateProject.Application.Abstractions;
-using TemplateProject.Persistence.Context;
 
-namespace TemplateProject.Persistance.Repositories
+namespace QrAssignment.Persistance.Repositories
 {
     internal sealed class UnitOfWork : IUnitOfWork
     {

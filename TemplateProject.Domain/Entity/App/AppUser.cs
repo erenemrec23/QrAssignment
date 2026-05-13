@@ -1,13 +1,10 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
+using QrAssignment.Domain.Abstractions;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
-using TemplateProject.Domain.Abstractions;
 
 
-namespace TemplateProject.Domain.Entity.App
+namespace QrAssignment.Domain.Entity.App
 {
     public class AppUser :  IdentityUser<Guid>, IBaseEntity
     {

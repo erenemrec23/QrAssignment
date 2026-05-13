@@ -1,11 +1,11 @@
 ﻿using MediatR;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Shared;
 
-namespace TemplateProject.Application.Features.AppUser.Commands.UpdateAppUser
+namespace QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser
 {
     internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Result<Unit>>
     {

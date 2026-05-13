@@ -2,15 +2,14 @@
 using Azure.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TemplateProject.Application.Features.Cars.Queries.GetList;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Entity;
-using TemplateProject.Domain.Entity.App;
-using TemplateProject.Persistance.Repositories;
-using TemplateProject.Persistence.Context;
+using QrAssignment.Application.Features.Cars.Queries.GetList;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Entity;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Domain.Entity.App;
+using QrAssignment.Persistance.Context;
 
-namespace TemplateProject.Persistence.Repositories;
+namespace QrAssignment.Persistance.Repositories;
 
 internal sealed class CarRepository : GenericRepository<Car>, ICarRepository
 {

@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TemplateProject.Application.Abstractions;
-using TemplateProject.Domain.Shared;
+﻿using QrAssignment.Application.Abstractions;
+using QrAssignment.Domain.Shared;
+using System.ComponentModel.DataAnnotations;
 
-namespace TemplateProject.Application.Features.Brands.Commands.UpdateBrand
+namespace QrAssignment.Application.Features.Brands.Commands.UpdateBrand
 {
 
     public class UpdateBrandCommand : ICommand<Result>

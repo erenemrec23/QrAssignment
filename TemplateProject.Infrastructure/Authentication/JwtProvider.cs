@@ -1,26 +1,24 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using QrAssignment.Application.Features.AuthFeatures.Commands.Login;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Entity.App;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using TemplateProject.Application.Features.AuthFeatures.Commands.Login;
-using TemplateProject.Application.Interfaces;
-using TemplateProject.Application.Repositories;
-using TemplateProject.Domain.Entity.App;
 
-namespace TemplateProject.Infrastructure.Authentication
+namespace QrAssignment.Infrastructure.Authentication
 {
     internal sealed class JwtProvider : IJwtProvider
     {
-        private readonly JwtOptions _jwtOptions;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly JwtOptions _jwtOptions; 
         private readonly IAppUserRefreshTokenRepository _appUserRefreshTokenRepository;
         public JwtProvider(IOptions<JwtOptions> jwtOptions, UserManager<AppUser> userManager, IAppUserRefreshTokenRepository appUserRefreshTokenRepository)
         {
-            _jwtOptions = jwtOptions.Value;
-            _userManager = userManager;
+            _jwtOptions = jwtOptions.Value; 
             _appUserRefreshTokenRepository = appUserRefreshTokenRepository;
         }
 

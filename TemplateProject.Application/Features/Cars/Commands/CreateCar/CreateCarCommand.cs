@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using TemplateProject.Application.Abstractions;
-using TemplateProject.Domain.Shared;
+using QrAssignment.Application.Abstractions;
+using QrAssignment.Domain.Shared;
 
-namespace TemplateProject.Application.Features.Cars.Commands.CreateCar;
+namespace QrAssignment.Application.Features.Cars.Commands.CreateCar;
 
 // IRequest<Guid> -> Bu komut çalıştıktan sonra geriye bir Guid (Id) dönecek demektir.
 public class CreateCarCommand : ICommand<Result<Guid>>

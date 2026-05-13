@@ -1,8 +1,7 @@
-﻿
-using TemplateProject.Application.Features.AuthFeatures.Commands.Login;
-using TemplateProject.Domain.Entity.App;
+﻿using QrAssignment.Application.Features.AuthFeatures.Commands.Login;
+using QrAssignment.Domain.Entity.App;
 
-namespace TemplateProject.Application.Interfaces
+namespace QrAssignment.Application.Interfaces
 {
     public interface IJwtProvider
     {
