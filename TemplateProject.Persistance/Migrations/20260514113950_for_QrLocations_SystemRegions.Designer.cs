@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QrAssignment.Persistance.Context;
 
@@ -11,9 +12,11 @@ using QrAssignment.Persistance.Context;
 namespace TemplateProject.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260514113950_for_QrLocations_SystemRegions")]
+    partial class for_QrLocations_SystemRegions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +57,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppRoles", (string)null);
+                    b.ToTable("AppRoles");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUser", b =>
@@ -130,7 +133,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppUsers", (string)null);
+                    b.ToTable("AppUsers");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUserRefreshToken", b =>
@@ -175,7 +178,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("AppUserRefreshTokens", (string)null);
+                    b.ToTable("AppUserRefreshTokens");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUserRole", b =>
@@ -214,7 +217,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("AppUserRole", (string)null);
+                    b.ToTable("AppUserRole");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.Audit.SystemAuditLog", b =>
@@ -252,7 +255,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SystemAuditLogs", (string)null);
+                    b.ToTable("SystemAuditLogs");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.Brand", b =>
@@ -288,7 +291,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands", (string)null);
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.Car", b =>
@@ -331,7 +334,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.ToTable("Cars", (string)null);
+                    b.ToTable("Cars");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.QrLocation", b =>
@@ -381,7 +384,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasIndex("ParentLocationId");
 
-                    b.ToTable("QrLocations", (string)null);
+                    b.ToTable("QrLocations");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.System.SystemRegion", b =>
@@ -428,7 +431,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasIndex("ParentRegionId");
 
-                    b.ToTable("SystemRegions", (string)null);
+                    b.ToTable("SystemRegions");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUserRefreshToken", b =>

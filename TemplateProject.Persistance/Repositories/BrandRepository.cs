@@ -12,3 +12,4 @@ internal sealed class BrandRepository : GenericRepository<Brand>, IBrandReposito
     {
     }
 }
+

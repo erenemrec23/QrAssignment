@@ -5,6 +5,7 @@ using QrAssignment.Domain.Abstractions;
 using QrAssignment.Domain.Entity;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Entity.Audit;
+using QrAssignment.Domain.Entity.System;
 using System.Linq.Expressions;
 
 namespace QrAssignment.Persistance.Context;
@@ -24,7 +25,15 @@ public class AppDbContext : AuditDbContext
 
      
     public DbSet<Car> Cars { get; set; }
-    public DbSet<Brand> Brands { get; set; }
+    public DbSet<Brand> Brands { get; set; } 
+    //public DbSet<QrApplicant> QrApplicants { get; set; }
+
+    public DbSet<QrLocation> QrLocations { get; set; }
+
+    public DbSet<SystemRegion> SystemRegions { get; set; }
+     
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

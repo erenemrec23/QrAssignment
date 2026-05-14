@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using QrAssignment.Application.Features.BrandWithCar.Commands;
+using QrAssignment.Application.Features.Cars.Commands.CreateCar;
 using QrAssignment.Domain.Entity;
 
 namespace QrAssignment.Application.Mapping

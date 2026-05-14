@@ -22,28 +22,29 @@ namespace QrAssignment.Persistance
         {
 
             services.AddScoped<AuditInterceptor>();
-             
+
             services.AddDbContext<AppDbContext>((sp, options) =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-                 
+
                 options.AddInterceptors(sp.GetRequiredService<AuditInterceptor>());
             });
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddIdentity<AppUser, AppUserRole>(options =>
-            { 
+            {
                 options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireDigit = true;
-                 
+
                 options.User.RequireUniqueEmail = true;
             })
     .AddEntityFrameworkStores<AppDbContext>();
-             
+
             services.AddScoped<ICarRepository, CarRepository>();
-            services.AddScoped<IBrandRepository, BrandRepository>(); 
+            services.AddScoped<IBrandRepository, BrandRepository>();
+            services.AddScoped<IQrLocationRepository, QrLocationRepository>();
             services.Scan(scan => scan
                 .FromCallingAssembly()
                 .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Repository")))
@@ -52,7 +53,7 @@ namespace QrAssignment.Persistance
 
             Audit.Core.Configuration.Setup()
     .UseEntityFramework(ef => ef
-        .AuditTypeMapper(t => typeof(SystemAuditLog)) 
+        .AuditTypeMapper(t => typeof(SystemAuditLog))
         .AuditEntityAction<SystemAuditLog>((ev, entry, auditEntity) =>
         {
 
@@ -63,24 +64,24 @@ namespace QrAssignment.Persistance
             auditEntity.ColumnValues = JsonSerializer.Serialize(entry.ColumnValues);
             if (entry.Action == "Insert")
             {
-                auditEntity.OldValues = null; 
+                auditEntity.OldValues = null;
                 auditEntity.NewValues = JsonSerializer.Serialize(entry.ColumnValues);
-            } 
+            }
             else if (entry.Action == "Update")
-            { 
+            {
                 auditEntity.OldValues = entry.Changes == null ? null :
                     JsonSerializer.Serialize(entry.Changes.ToDictionary(c => c.ColumnName, c => c.OriginalValue));
 
                 auditEntity.NewValues = entry.Changes == null ? null :
                     JsonSerializer.Serialize(entry.Changes.ToDictionary(c => c.ColumnName, c => c.NewValue));
-            } 
+            }
             else if (entry.Action == "Delete")
-            { 
+            {
                 auditEntity.OldValues = JsonSerializer.Serialize(entry.ColumnValues);
                 auditEntity.NewValues = null;
             }
         })
-        .IgnoreMatchedProperties(true) 
+        .IgnoreMatchedProperties(true)
     );
 
             return services;

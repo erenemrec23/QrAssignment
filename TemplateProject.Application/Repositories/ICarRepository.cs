@@ -5,7 +5,8 @@ using QrAssignment.Domain.Entity;
 namespace QrAssignment.Application.Repositories
 {
     public interface ICarRepository : IGenericRepository<Car>
-    { 
+    {
         Task<List<GetListCarResponse>> GetCarsWithBrandAsync(CancellationToken cancellationToken);
     }
+
 }

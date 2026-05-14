@@ -16,4 +16,8 @@
     <ProjectReference Include="..\TemplateProject.Domain\QrAssignment.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\QrApplicants\Queries\" />
+  </ItemGroup>
+
 </Project>

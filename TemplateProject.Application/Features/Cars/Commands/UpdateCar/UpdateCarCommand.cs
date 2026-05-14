@@ -14,9 +14,6 @@ namespace QrAssignment.Application.Features.Cars.Commands.UpdateCar
         public int Year { get; set; }
         public Guid BrandId { get; set; }
 
-
-
-
         public byte[] RowVersion { get; set; }
     }
 }
