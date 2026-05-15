@@ -41,9 +41,7 @@ namespace QrAssignment.Persistance
                 options.User.RequireUniqueEmail = true;
             })
     .AddEntityFrameworkStores<AppDbContext>();
-
-            services.AddScoped<ICarRepository, CarRepository>();
-            services.AddScoped<IBrandRepository, BrandRepository>();
+             
             services.AddScoped<IQrLocationRepository, QrLocationRepository>();
             services.Scan(scan => scan
                 .FromCallingAssembly()

@@ -6,7 +6,7 @@ using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity; // QrLocation'ın bulunduğu namespace
 using Xunit;
 
-namespace QrAssignment.Application.UnitTests.Features.QrLocations.Commands
+namespace TemplateProject.UnitTests.QrAssignment
 {
     public class UpdateQrLocationCommandHandlerTests
     {

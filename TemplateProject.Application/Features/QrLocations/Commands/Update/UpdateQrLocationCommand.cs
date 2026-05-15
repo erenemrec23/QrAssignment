@@ -1,5 +1,4 @@
 ﻿using QrAssignment.Application.Abstractions;
-using QrAssignment.Application.Features.Cars.Commands.UpdateCar;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.QrLocations.Commands.Update

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using QrAssignment.Application.Features.Cars.Queries.GetList;
 using QrAssignment.Application.Features.QrLocations.Queries.GetList;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity;

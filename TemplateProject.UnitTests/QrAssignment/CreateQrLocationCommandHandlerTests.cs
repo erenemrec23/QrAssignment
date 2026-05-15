@@ -7,7 +7,7 @@ using System.Timers;
 using Xunit;
 // using FluentAssertions; // Tercihe bağlı eklenebilir
 
-namespace QrAssignment.Application.UnitTests.Features.QrLocations.Commands
+namespace TemplateProject.UnitTests.QrAssignment
 {
     public class CreateQrLocationCommandHandlerTests
     {

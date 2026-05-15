@@ -23,9 +23,7 @@ public class AppDbContext : AuditDbContext
     public DbSet<AppRole> AppRoles { get; set; }
     public DbSet<AppUserRefreshToken> AppUserRefreshTokens { get; set; }
 
-     
-    public DbSet<Car> Cars { get; set; }
-    public DbSet<Brand> Brands { get; set; } 
+      
     //public DbSet<QrApplicant> QrApplicants { get; set; }
 
     public DbSet<QrLocation> QrLocations { get; set; }
