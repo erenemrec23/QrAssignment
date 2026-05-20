@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QrAssignment.Application.Features.QrLocations.Queries.GetById;
 using QrAssignment.Application.Features.QrLocations.Queries.GetList;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity;
@@ -18,13 +19,30 @@ internal sealed class QrLocationRepository : GenericRepository<QrLocation>, IQrL
 
 
 
-    public async Task<List<GetListQrLocationResponse>> GetCarsWithBrandAsync(CancellationToken cancellationToken)
+    public async Task<List<QrLocationListItemDto>> GetList(CancellationToken cancellationToken)
     {
-        // Sorgu mantığı artık tamamen repository içinde kapsüllendi (encapsulated)
         return await _context.QrLocations
             .AsNoTracking()
-            .Select(c => new GetListQrLocationResponse
+            .Select(c => new QrLocationListItemDto
             { 
+                Id = c.Id,
+                EndDate = c.EndDate,
+                LocationName = c.LocationName,
+                Name = c.Name,
+                ParentLocationId = c.ParentLocationId,
+                ParentLocationName = c.ParentLocation != null ? c.ParentLocation.LocationName : null,
+                StartDate = c.StartDate,
+                RowVersion = c.RowVersion
+            })
+            .ToListAsync(cancellationToken);
+    }
+    public async Task<List<QrLocationItemGetByIdDto>> GetById(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.QrLocations
+            .AsNoTracking()
+            .Where(c => c.Id == id)
+            .Select(c => new QrLocationItemGetByIdDto
+            {
                 Id = c.Id,
                 EndDate = c.EndDate,
                 LocationName = c.LocationName,

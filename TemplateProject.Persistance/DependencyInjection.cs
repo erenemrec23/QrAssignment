@@ -42,7 +42,7 @@ namespace QrAssignment.Persistance
             })
     .AddEntityFrameworkStores<AppDbContext>();
              
-            services.AddScoped<IQrLocationRepository, QrLocationRepository>();
+            //services.AddScoped<IQrLocationRepository, QrLocationRepository>();
             services.Scan(scan => scan
                 .FromCallingAssembly()
                 .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Repository")))

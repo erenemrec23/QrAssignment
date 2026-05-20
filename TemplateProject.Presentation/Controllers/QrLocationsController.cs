@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Features.QrLocations.Commands.Create;
 using QrAssignment.Application.Features.QrLocations.Commands.Update;
+using QrAssignment.Application.Features.QrLocations.Queries.GetById;
 using QrAssignment.Application.Features.QrLocations.Queries.GetList;
 
 namespace QrAssignment.Presentation.Controllers
@@ -34,6 +35,18 @@ namespace QrAssignment.Presentation.Controllers
         {
             var response = await _mediator.Send(query);
             return Ok(response);
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+        {
+            var query = new QrLocationGetByIdQuery(id);
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result);  
+
+            return Ok(result);
         }
     }
 }
