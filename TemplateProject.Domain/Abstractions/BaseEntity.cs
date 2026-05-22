@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 
 namespace QrAssignment.Domain.Abstractions
 {
@@ -27,5 +28,7 @@ namespace QrAssignment.Domain.Abstractions
 
         [Timestamp] 
         public byte[] RowVersion { get; set; } = null!;
+
+        public long RevNum { get; set; }
     }
 }

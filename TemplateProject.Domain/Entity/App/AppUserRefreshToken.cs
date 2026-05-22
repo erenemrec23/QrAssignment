@@ -2,7 +2,7 @@
 
 namespace QrAssignment.Domain.Entity.App
 {
-    public sealed class AppUserRefreshToken : BaseEntity
+    public sealed class AppUserRefreshToken  : BaseEntity
     { 
         public Guid AppUserId { get; set; }
         public string RefreshToken { get; set; } = null!;

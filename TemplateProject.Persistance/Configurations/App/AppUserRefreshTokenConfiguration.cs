@@ -10,15 +10,17 @@ namespace QrAssignment.Persistance.Configurations.App
         {
             builder.ToTable("AppUserRefreshTokens");
 
+            builder.Property(x => x.Id)
+                   .ValueGeneratedOnAdd(); 
+
             builder.HasOne(x => x.AppUser)
                .WithOne(u => u.RefreshToken)
                .HasForeignKey<AppUserRefreshToken>(x => x.AppUserId)
-               .OnDelete(DeleteBehavior.Cascade); // Ana kullanıcı silinirse, ona ait token tablosu da otomatik silinir.
-
-            // 4. Property Kısıtlamaları (İyi bir veritabanı tasarımı için tavsiye edilir)
+               .OnDelete(DeleteBehavior.Cascade); 
+             
             builder.Property(x => x.RefreshToken)
                    .IsRequired()
-                   .HasMaxLength(250); // Token uzunluğuna göre bir sınır koymak performansı artırır.
+                   .HasMaxLength(250); 
 
             builder.Property(x => x.RefreshTokenExpires)
                    .IsRequired();

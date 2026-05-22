@@ -14,11 +14,11 @@ namespace QrAssignment.Infrastructure.Authentication
 {
     internal sealed class JwtProvider : IJwtProvider
     {
-        private readonly JwtOptions _jwtOptions; 
+        private readonly JwtOptions _jwtOptions;
         private readonly IAppUserRefreshTokenRepository _appUserRefreshTokenRepository;
         public JwtProvider(IOptions<JwtOptions> jwtOptions, UserManager<AppUser> userManager, IAppUserRefreshTokenRepository appUserRefreshTokenRepository)
         {
-            _jwtOptions = jwtOptions.Value; 
+            _jwtOptions = jwtOptions.Value;
             _appUserRefreshTokenRepository = appUserRefreshTokenRepository;
         }
 
@@ -54,18 +54,20 @@ namespace QrAssignment.Infrastructure.Authentication
                     RefreshToken = refreshToken,
                     RefreshTokenExpires = refreshTokenExpires
                 };
+                await _appUserRefreshTokenRepository.AddAsync(user.RefreshToken);
             }
             else
             {
                 // Kullanıcının zaten tablosu varsa, sadece değerleri güncellenir (Update).
                 user.RefreshToken.RefreshToken = refreshToken;
                 user.RefreshToken.RefreshTokenExpires = refreshTokenExpires;
+                var refreshTokenUpdated = user.RefreshToken;
+                _appUserRefreshTokenRepository.Update(refreshTokenUpdated);
             }
-            await _appUserRefreshTokenRepository.AddAsync(user.RefreshToken);
 
             LoginCommandResponse response = new(
                 token,
-                refreshToken, 
+                refreshToken,
                 refreshTokenExpires,
                 user.Id.ToString()
 
