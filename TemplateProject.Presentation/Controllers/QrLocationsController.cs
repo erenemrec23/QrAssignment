@@ -21,11 +21,10 @@ namespace QrAssignment.Presentation.Controllers
 
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Update(UpdateQrLocationCommand command)
-        { 
+        [HttpPut("[action]")]
+        public async Task<IActionResult> Update([FromBody] UpdateQrLocationCommand command)
+        {
             var result = await _mediator.Send(command);
-
             return Ok(result);
         }
 
