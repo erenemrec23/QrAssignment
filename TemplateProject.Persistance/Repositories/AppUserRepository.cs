@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QrAssignment.Application.Features.AppUser.Queries.GetList; 
 using QrAssignment.Application.Repositories;
-using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Entity.App; 
 
 namespace QrAssignment.Persistance.Repositories;
 
@@ -25,5 +26,19 @@ public sealed class AppUserRepository : IAppUserRepository
         return await _userManager.Users
             .Include(u => u.RefreshToken)
             .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+    }
+
+
+    public async Task<List<AppUserListItemDto>> GetList(CancellationToken cancellationToken)
+    {
+        return await _userManager.Users
+            .AsNoTracking()
+            .Select(u => new AppUserListItemDto
+            {
+                Id = u.Id,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+            })
+            .ToListAsync(cancellationToken);
     }
 }

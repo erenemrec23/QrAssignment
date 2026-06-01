@@ -8,8 +8,7 @@ namespace QrAssignment.Presentation.Controllers;
 public sealed class LocalizationController : ControllerBase
 {
     private readonly ILocalizationService _localizationService;
-
-    // JsonLocalizationManager yerine ILocalizationService enjekte ediyoruz
+     
     public LocalizationController(ILocalizationService localizationService)
     {
         _localizationService = localizationService;

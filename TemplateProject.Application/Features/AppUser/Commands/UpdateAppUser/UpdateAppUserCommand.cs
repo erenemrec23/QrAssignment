@@ -7,7 +7,7 @@ using System.Text;
 
 namespace QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser
 {
-    public sealed record UpdateUserCommand(
+    public sealed record UpdateAppUserCommand(
     Guid Id,
     string FirstName,
     string LastName) : ICommand<Result<Unit>>;

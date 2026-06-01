@@ -7,7 +7,7 @@ using System.Text;
 
 namespace QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser
 {
-    internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Result<Unit>>
+    internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateAppUserCommand, Result<Unit>>
     {
         private readonly IAppUserRepository _appUserRepository;
         private readonly IUserRepository _userRepository; // Generic Repository'yi de ekleyelim, belki ihtiyacımız olur diye.
@@ -19,7 +19,7 @@ namespace QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser
             _userRepository = userRepository;
         }
 
-        public async Task<Result<Unit>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(UpdateAppUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _appUserRepository.GetByIdWithRefreshTokenAsync(request.Id, cancellationToken);
 

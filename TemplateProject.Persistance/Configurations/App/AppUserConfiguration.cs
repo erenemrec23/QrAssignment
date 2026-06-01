@@ -10,7 +10,14 @@ namespace QrAssignment.Persistance.Configurations.App
         {
             builder.ToTable("AppUser");
 
-             
+            builder.OwnsMany(x => x.AppUserRoles, roleBuilder =>
+            {
+                roleBuilder.ToTable("AppUserRoles");  
+                roleBuilder.WithOwner().HasForeignKey("UserId");  
+                roleBuilder.Property(r => r.Name).HasColumnName("Role"); 
+                roleBuilder.HasKey("UserId", "Id"); 
+            });
+
         }
     }
 }

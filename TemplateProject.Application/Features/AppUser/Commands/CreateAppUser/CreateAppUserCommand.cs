@@ -4,9 +4,9 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.AppUser.Commands.CreateAppUser
 {
-    public sealed record CreateUserCommand(
+    public sealed record CreateAppUserCommand(
     string FirstName,
     string LastName,
     string Email,
-    string Password) : ICommand<Result<Unit>>; // Değer dönmeyeceksek ICommand yeterli
+    string Password) : ICommand<Result<Unit>>;  
 }

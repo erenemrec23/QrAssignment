@@ -7,16 +7,16 @@ using System.Text;
 
 namespace QrAssignment.Application.Features.AppUser.Commands.CreateAppUser
 {
-    internal sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<Unit>>
+    internal sealed class CreateAppUserCommandHandler : IRequestHandler<CreateAppUserCommand, Result<Unit>>
     {
         private readonly IAuthService _authService;
 
-        public CreateUserCommandHandler(IAuthService authService)
+        public CreateAppUserCommandHandler(IAuthService authService)
         {
             _authService = authService;
         }
 
-        public async Task<Result<Unit>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(CreateAppUserCommand request, CancellationToken cancellationToken)
         {
             await _authService.CreateAsync(
                 request.FirstName,

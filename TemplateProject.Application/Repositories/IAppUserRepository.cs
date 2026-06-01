@@ -1,4 +1,5 @@
-﻿using QrAssignment.Domain.Entity.App;
+﻿using QrAssignment.Application.Features.AppUser.Queries.GetList;
+using QrAssignment.Domain.Entity.App;
 
 namespace QrAssignment.Application.Repositories
 {
@@ -7,5 +8,7 @@ namespace QrAssignment.Application.Repositories
     {
         Task<AppUser?> GetByIdWithRefreshTokenAsync(Guid id, CancellationToken cancellationToken = default);
         Task<AppUser?> GetByEmailWithRefreshTokenAsync (string email, CancellationToken cancellationToken = default);
+
+        Task<List<AppUserListItemDto>> GetList(CancellationToken cancellationToken);
     }
 }

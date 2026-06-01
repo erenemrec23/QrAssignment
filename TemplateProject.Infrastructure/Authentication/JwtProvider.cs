@@ -24,14 +24,20 @@ namespace QrAssignment.Infrastructure.Authentication
 
         public async Task<LoginCommandResponse> CreateTokenAsync(AppUser user)
         {
-            var claims = new Claim[]
+            var claims = new List<Claim>
             {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Name, user.UserName),
             new Claim("FullName",user.FullName)
             };
-
+            if (user.AppUserRoles != null && user.AppUserRoles.Any())
+            {
+                foreach (var role in user.AppUserRoles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role.Name));
+                }
+            }
             DateTime expires = DateTime.Now.AddHours(1);
 
             JwtSecurityToken jwtSecurityToken = new(
