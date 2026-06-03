@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QrAssignment.Application.Features.AppUser.Queries.GetById;
 using QrAssignment.Application.Features.AppUser.Queries.GetList; 
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App; 
@@ -40,5 +41,19 @@ public sealed class AppUserRepository : IAppUserRepository
                 LastName = u.LastName,
             })
             .ToListAsync(cancellationToken);
+    }
+
+
+    public async Task<AppUserItemDto> GetById(Guid? id, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users
+            .Where(w=> w.Id == id)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+
+        if (user == null)
+            return null;
+
+        return new AppUserItemDto { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName };
     }
 }

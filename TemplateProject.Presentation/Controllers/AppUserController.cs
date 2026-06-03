@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Features.AppUser.Commands.CreateAppUser;
 using QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser;
+using QrAssignment.Application.Features.AppUser.Queries.GetById;
 using QrAssignment.Application.Features.AppUser.Queries.GetList;
+
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -40,6 +42,19 @@ namespace QrAssignment.Presentation.Controllers
         {
             var response = await _mediator.Send(query);
             return Ok(response);
+        }
+
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById(Guid? id, CancellationToken cancellationToken)
+        {
+            var query = new GetByIdAppUserQuery(id);
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
         }
     }
 }
