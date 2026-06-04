@@ -22,7 +22,7 @@ namespace QrAssignment.Presentation.Controllers
 
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create([FromBody] CreateAppUserCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(CreateAppUserCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
             return Ok(result);

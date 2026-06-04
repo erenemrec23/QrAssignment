@@ -39,6 +39,7 @@ public sealed class AppUserRepository : IAppUserRepository
                 Id = u.Id,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
+                Email = u.Email
             })
             .ToListAsync(cancellationToken);
     }
@@ -54,6 +55,6 @@ public sealed class AppUserRepository : IAppUserRepository
         if (user == null)
             return null;
 
-        return new AppUserItemDto { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName };
+        return new AppUserItemDto { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email };
     }
 }
