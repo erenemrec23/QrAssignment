@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Exceptions;
 using QrAssignment.Domain.Shared;
+using System.Data.Entity;
 namespace QrAssignment.Presentation.Middlewares
 {
     internal sealed class GlobalExceptionHandler : IExceptionHandler
@@ -47,16 +48,30 @@ namespace QrAssignment.Presentation.Middlewares
                 await httpContext.Response.WriteAsJsonAsync(resultValidation, cancellationToken);
                 return true;
             }
-            if (exception is BusinessException appException)
+            if (exception is BusinessException businessException)
             {
                 // Kullanıcı hatası olduğu için 400 döneriz (Loglamaya gerek yok, sistem çökmedi)
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                httpContext.Response.ContentType = "application/json";
 
-                // Senin Handler'dan fırlattığın mesajı doğrudan alırız (veya Localizer'dan çeviririz)
-                // Eğer Handler'dan "Errors.BrandNotFound" gibi bir key yollarsan: _localizer[appException.Message] yapabilirsin.
-                var businessError = new Error("BusinessRule.Violation", appException.Message);
+                //// Senin Handler'dan fırlattığın mesajı doğrudan alırız (veya Localizer'dan çeviririz)
+                //// Eğer Handler'dan "Errors.BrandNotFound" gibi bir key yollarsan: _localizer[appException.Message] yapabilirsin.
+                //var businessError = new Error("BusinessRule.Violation", appException.Message);
 
-                await httpContext.Response.WriteAsJsonAsync(Result.Failure(businessError), cancellationToken);
+                //await httpContext.Response.WriteAsJsonAsync(Result.Failure(businessError), cancellationToken);
+
+                var errorResult = new
+                {
+                    isSuccess = false,
+                    isFailure = true,
+                    error = new
+                    {
+                        code = "BusinessRule.Violation",
+                        message = businessException.Message // "Bu mail adresi zaten kayıtlı" mesajı buraya gelir
+                    }
+                };
+
+                await httpContext.Response.WriteAsJsonAsync(errorResult, cancellationToken);
                 return true;
             }
 

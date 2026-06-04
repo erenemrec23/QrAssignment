@@ -4,6 +4,7 @@ using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Exceptions;
 
 namespace QrAssignment.Persistance.Services
 {
@@ -31,13 +32,13 @@ namespace QrAssignment.Persistance.Services
           
             if (user is null)
             {
-                throw new Exception(_localizer["Messages.UserMailUserPasswordNotFound"]); 
+                throw new BusinessException(_localizer["Messages.UserMailUserPasswordNotFound"]); 
             } 
             bool checkPassword = await _userManager.CheckPasswordAsync(user, password);
 
             if (!checkPassword)
             {
-                throw new Exception(_localizer["Messages.UserMailUserPasswordNotFound"]);
+                throw new BusinessException(_localizer["Messages.UserMailUserPasswordNotFound"]);
             } 
             var token = await _jwtProvider.CreateTokenAsync(user);
 
@@ -50,7 +51,7 @@ namespace QrAssignment.Persistance.Services
             var existingUser = await _userManager.FindByEmailAsync(email);
             if (existingUser is not null)
             {
-                throw new Exception(_localizer["Messages.MailAlreadyExists"]);
+                throw new BusinessException(_localizer["Messages.MailAlreadyExists"]);
             }
              
             AppUser user = new()
@@ -67,7 +68,7 @@ namespace QrAssignment.Persistance.Services
             if (!result.Succeeded)
             { 
                 var error = string.Join(", ", result.Errors.Select(e => e.Description));
-                throw new Exception(error);
+                throw new BusinessException(error);
             }
         }
     }

@@ -10,9 +10,7 @@ namespace QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser
     internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateAppUserCommand, Result<Unit>>
     {
         private readonly IAppUserRepository _appUserRepository;
-        private readonly IUserRepository _userRepository; // Generic Repository'yi de ekleyelim, belki ihtiyacımız olur diye.
-
-        // SADECE REPOSITORY VAR, UnitOfWork GİTTİ!
+        private readonly IUserRepository _userRepository;  
         public UpdateUserCommandHandler(IAppUserRepository appUserRepository, IUserRepository userRepository)
         {
             _appUserRepository = appUserRepository;
