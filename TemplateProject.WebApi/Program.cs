@@ -98,9 +98,7 @@ builder.Services.AddAuthentication(options =>
     };
      
 });
-
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(QrAssignment.Application.AssemblyReference).Assembly)); // Application olmalı
-                                                                                                                                      // "Birisi ILocalizationService isterse, ona Singleton olarak JsonLocalizationManager ver"
+                                                                                                                           // "Birisi ILocalizationService isterse, ona Singleton olarak JsonLocalizationManager ver"
 builder.Services.AddLocalization();
 
 // 2. Kendi yazdığımız JSON Merkez Motorunu Singleton olarak kaydet (Tüm uygulama tek bir RAM üzerinden okusun)
@@ -128,15 +126,14 @@ builder.Host.UseSerilog((context, loggerConfig) =>
                 AutoCreateSqlTable = true 
             }));
 builder.Services.AddSingleton<IAppLocalizer, AppLocalizer>();
-
-builder.Services.AddValidatorsFromAssembly(typeof(SharedResource).Assembly);  
  
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+ 
+
 var app = builder.Build();
 app.UseExceptionHandler();
 app.UseRouting();
 //app.UseCors("AllowAngularApp");
-app.UseCors("AllowAll");
+app.UseCors("AllowAngularApp");
 app.UseRequestLocalization();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
