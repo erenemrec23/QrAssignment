@@ -26,6 +26,8 @@ public sealed class AppUserRepository : IAppUserRepository
     {
         return await _userManager.Users
             .Include(u => u.RefreshToken)
+            .AsNoTracking()
+            .IgnoreQueryFilters()
             .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
     }
 

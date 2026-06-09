@@ -31,4 +31,7 @@ namespace QrAssignment.Domain.Abstractions
 
         public long RevNum { get; set; }
     }
+
+
+  
 }

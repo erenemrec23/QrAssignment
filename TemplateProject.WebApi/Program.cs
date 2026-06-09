@@ -133,7 +133,7 @@ var app = builder.Build();
 app.UseExceptionHandler();
 app.UseRouting();
 //app.UseCors("AllowAngularApp");
-app.UseCors("AllowAngularApp");
+app.UseCors("AllowAll");
 app.UseRequestLocalization();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

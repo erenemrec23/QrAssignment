@@ -14,11 +14,7 @@ internal sealed class QrLocationRepository : GenericRepository<QrLocation>, IQrL
         _context = context;
     }
     private readonly AppDbContext _context;
-
      
-
-
-
     public async Task<List<QrLocationListItemDto>> GetList(CancellationToken cancellationToken)
     {
         return await _context.QrLocations

@@ -29,7 +29,8 @@ namespace QrAssignment.Infrastructure.Authentication
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Name, user.UserName),
-            new Claim("FullName",user.FullName)
+            new Claim("FullName",user.FullName),
+            new Claim("TenantId",user.TenantId.ToString())
             };
             if (user.AppUserRoles != null && user.AppUserRoles.Any())
             {

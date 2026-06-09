@@ -1,5 +1,5 @@
-﻿using AutoMapper; 
-using QrAssignment.Application.Features.QrLocations.Commands.Create; 
+﻿using AutoMapper;
+using QrAssignment.Application.Features.QrLocations.Commands.Create;
 using QrAssignment.Domain.Entity;
 
 namespace QrAssignment.Application.Mapping
@@ -18,5 +18,5 @@ namespace QrAssignment.Application.Mapping
                 .ForMember(dest => dest.SubLocations, opt => opt.Ignore()); 
         }
     }
-    
-}
+
+}  

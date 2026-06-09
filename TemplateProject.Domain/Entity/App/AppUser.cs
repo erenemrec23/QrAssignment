@@ -6,8 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace QrAssignment.Domain.Entity.App
 {
-    public class AppUser :  IdentityUser<Guid>, IBaseEntity
+    public class AppUser :  IdentityUser<Guid>, IBaseEntity, IMustHaveTenant
     {
+        public Guid? TenantId { get; set; }
         public virtual string FirstName { get; set; } = default!;
         public virtual string LastName { get; set; } = default!;
         public virtual string FullName => $"{FirstName} {LastName}";

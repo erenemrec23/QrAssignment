@@ -3,7 +3,7 @@ using QrAssignment.Domain.Entity.System;
 
 namespace QrAssignment.Domain.Entity
 {
-    public class QrApplicant : BaseEntity
+    public class QrApplicant : TenantBaseEntity
     {
         public required string FirstName { get; set; }
         public required string  LastName { get; set; } 

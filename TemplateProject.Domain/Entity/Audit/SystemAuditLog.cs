@@ -2,7 +2,8 @@
 
 public class SystemAuditLog
 {
-    public Guid Id { get; set; } = Guid.CreateVersion7();
+    public Guid Id { get; set; } = Guid.CreateVersion7(); 
+    public Guid? TenantId { get; set; }
     public string TableName { get; set; } = null!;
     public string Action { get; set; } = null!;
     public string? PrimaryKey { get; set; }

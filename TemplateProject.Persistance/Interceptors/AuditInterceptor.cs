@@ -1,17 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Services;
 using QrAssignment.Domain.Abstractions;
 
 namespace QrAssignment.Persistance.Interceptors;
 
 public sealed class AuditInterceptor : SaveChangesInterceptor
 {
+    private readonly ITenantService _tenantService;
     private readonly IUserContext _userContext;
 
-    public AuditInterceptor(IUserContext userContext)
+    public AuditInterceptor(IUserContext userContext, ITenantService tenantService)
     {
         _userContext = userContext;
+        _tenantService = tenantService;
     }
 
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -34,6 +37,7 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
                 entry.Entity.IsDeleted = false;
                 entry.Entity.CreatedByUserId = currentUserId;
                 entry.Entity.CreatedDate = currentTime;
+                 
             }
             else if (entry.State == EntityState.Modified)
             {
@@ -48,6 +52,17 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
             } 
         }
 
+
+        var entriesHasTenantId = dbContext.ChangeTracker.Entries<TenantBaseEntity>();
+
+        foreach (var entry in entriesHasTenantId)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.TenantId = _tenantService.GetTenantId(); 
+            }
+            
+        }
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 }

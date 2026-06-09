@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using QrAssignment.Domain.Abstractions;
 
 
 namespace QrAssignment.Domain.Entity.App
 {
-    public class AppRole : IdentityRole<Guid>
+
+    public class AppRole : IdentityRole<Guid>, IMustHaveTenant
     {
+        public Guid? TenantId { get; set; }
         public virtual string Name { get; set; } = default!;
 
         public virtual DateTime CreatedDate { get; set; }

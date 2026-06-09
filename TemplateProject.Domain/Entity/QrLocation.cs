@@ -2,7 +2,7 @@
 
 namespace QrAssignment.Domain.Entity
 {
-    public class QrLocation : BaseEntity
+    public class QrLocation : TenantBaseEntity
     {
         public required string Name { get; set; }
 
@@ -18,4 +18,5 @@ namespace QrAssignment.Domain.Entity
 
         public virtual ICollection<QrLocation> SubLocations { get; set; } = new List<QrLocation>();
     }
+
 }

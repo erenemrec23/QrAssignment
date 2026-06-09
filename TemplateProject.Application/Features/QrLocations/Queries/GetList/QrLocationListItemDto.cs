@@ -1,6 +1,7 @@
 ﻿namespace QrAssignment.Application.Features.QrLocations.Queries.GetList
 {
-    public class QrLocationListItemDto
+
+        public class QrLocationListItemDto
     {
         public Guid? Id { get; set; }
         public string Name { get; set; }

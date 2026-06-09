@@ -12,5 +12,7 @@ namespace QrAssignment.Application.Mapping
 
         }
     }
+
+
     
 }

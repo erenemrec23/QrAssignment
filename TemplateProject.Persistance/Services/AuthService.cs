@@ -13,17 +13,18 @@ namespace QrAssignment.Persistance.Services
         private readonly IAppUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtProvider _jwtProvider;
-        private readonly IAppLocalizer _localizer;
+        private readonly IAppLocalizer _localizer; 
 
         public AuthService(IAppUserRepository userRepository,
             UserManager<AppUser> userManager,
             IJwtProvider jwtProvider,
-            IAppLocalizer localizer)
+            IAppLocalizer localizer, 
+            ITenantService tenantService)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _jwtProvider = jwtProvider; 
-            _localizer = localizer;
+            _localizer = localizer; 
         }
 
         public async Task<LoginCommandResponse> LoginAsync(string email, string password, CancellationToken cancellationToken)
@@ -48,7 +49,7 @@ namespace QrAssignment.Persistance.Services
 
         public async Task CreateAsync(string firstName, string lastName, string email, string password, CancellationToken cancellationToken)
         { 
-            var existingUser = await _userManager.FindByEmailAsync(email);
+            var existingUser = await _userRepository.GetByEmailWithRefreshTokenAsync(email);
             if (existingUser is not null)
             {
                 throw new BusinessException(_localizer["Messages.MailAlreadyExists"]);
@@ -60,7 +61,7 @@ namespace QrAssignment.Persistance.Services
                 FirstName = firstName,
                 LastName = lastName,
                 Email = email,
-                UserName = email  
+                UserName = email, 
             };
              
             var result = await _userManager.CreateAsync(user, password);
