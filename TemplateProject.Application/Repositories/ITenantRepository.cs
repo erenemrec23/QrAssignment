@@ -7,7 +7,7 @@ namespace QrAssignment.Application.Repositories
     public interface ITenantRepository : IGenericRepository<Tenant>
     {
         Task<List<TenantListItemDto>> GetList(CancellationToken cancellationToken);
-        Task<List<TenantItemDto>> GetById(Guid id, CancellationToken cancellationToken);
+        Task<TenantItemDto> GetById(Guid id, CancellationToken cancellationToken);
 
     }
 }

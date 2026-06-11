@@ -8,5 +8,6 @@
 
     public class TenantItemDto : TenantListItemDto
     {
+        public byte[] RowVersion { get; set; }
     }
 }

@@ -29,7 +29,7 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
             })
             .ToListAsync(cancellationToken);
     }
-    public async Task<List<TenantItemDto>> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<TenantItemDto> GetById(Guid id, CancellationToken cancellationToken)
     {
         return await _context.Tenants
             .AsNoTracking()
@@ -37,9 +37,10 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
             .Select(c => new TenantItemDto
             {
                 Id = c.Id, 
-                Name = c.Name, 
+                Name = c.Name,
+                RowVersion = c.RowVersion,
             })
-            .ToListAsync(cancellationToken);
+            .SingleOrDefaultAsync(cancellationToken);
     }
 
 }

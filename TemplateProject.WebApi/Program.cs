@@ -69,12 +69,12 @@ builder.Services.AddOpenApi(options =>
 builder.Services.AddPresentation();
 builder.Services.AddControllers()
     .AddApplicationPart(QrAssignment.Presentation.AssemblyReference.Assembly);
+// 1. Varsayılan doğrulama şemasını JWT olarak belirliyoruz
 builder.Services.AddAuthentication(options =>
 {
-    // Varsayılan doğrulama şemasını JWT olarak belirliyoruz
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+}) 
 .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -91,14 +91,10 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)
         ),
-
-        // ÖNEMLİ: .NET varsayılan olarak token süresine 5 dakika tolerans tanır. 
-        // Token süresi biter bitmez geçersiz olmasını istiyorsak bunu sıfırlıyoruz:
+         
         ClockSkew = TimeSpan.Zero
     };
-     
-});
-                                                                                                                           // "Birisi ILocalizationService isterse, ona Singleton olarak JsonLocalizationManager ver"
+}); 
 builder.Services.AddLocalization();
 
 // 2. Kendi yazdığımız JSON Merkez Motorunu Singleton olarak kaydet (Tüm uygulama tek bir RAM üzerinden okusun)
