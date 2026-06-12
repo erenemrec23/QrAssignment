@@ -19,5 +19,46 @@
   "Label.Id": "ID",
   "Label.FirstName": "Adı",
   "Label.LastName": "Soyadı",
-  "Label.Email": "Email"
+  "Label.Email": "Email",
+  "Messages.UserNotFound": "Kullanıcı bulunamadı.",
+  "User.Form.Title.Create": "Yeni Kullanıcı Tanımla",
+  "User.Form.Title.Edit": "Kullanıcı Bilgilerini Düzenle",
+  "Button.Save": "Kaydet",
+  "Button.Update": "Güncelle",
+
+  "Placeholder.Email": "Örn: ahmet@example.com",
+  "Error.EmailRequired": "Email zorunludur ve geçerli bir email formatında olmalıdır.",
+
+  "Placeholder.FirstName": "Örn: Ahmet",
+  "Error.FirstNameRequired": "Kullanıcı adı zorunludur ve en az 2 karakter olmalıdır.",
+
+  "Placeholder.LastName": "Örn: Yılmaz",
+  "Error.LastNameRequired": "Kullanıcı soyadı zorunludur ve en az 2 karakter olmalıdır.",
+
+  "Label.Password": "Parola",
+  "Placeholder.Password": "Örn: 123456",
+  "Error.PasswordRequired": "Parola zorunludur ve en az 6 karakter olmalıdır.",
+
+  "PageTitle.Tenants": "Kiracı Listesi",
+  "Label.AddTenant": "Yeni Kiracı Ekle",
+  "Label.TenantName": "Kiracı Adı",
+  "Label.NoTenants": "Henüz kiracı bulunmamaktadır.",
+
+  "Tenant.Form.Title.Create": "Yeni Kiracı Tanımla",
+  "Tenant.Form.Title.Edit": "Kiracı Bilgilerini Düzenle",
+  "Label.TenantCompany": "Kiracı (Şirket) Adı",
+  "Placeholder.TenantCompany": "Örn: Akme Holding, Çağlar Teknoloji",
+  "Error.TenantCompanyRequired": "Kiracı adı zorunludur ve en az 3 karakter olmalıdır.",
+  "Label.Saving": "Kaydediliyor...",
+
+  "PageTitle.QrLocations": "Qr Lokasyon Listesi",
+  "Label.AddQrLocation": "Yeni Qr Lokasyon Ekle",
+  "Message.DataLoading": "Veriler yükleniyor...",
+  "Label.LocationName": "Lokasyon Adı",
+  "Label.PositionName": "Konum Adı",
+  "Label.ShowQr": "QR Göster",
+  "Label.NoRecords": "Kayıt bulunamadı.",
+  "Label.VehicleQrCode": "Araç QR Kodu",
+  "Button.Print": "Yazdır",
+  "Button.Close": "Kapat"
 }

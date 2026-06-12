@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 using System;
@@ -10,11 +11,13 @@ namespace QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser
     internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateAppUserCommand, Result<Unit>>
     {
         private readonly IAppUserRepository _appUserRepository;
-        private readonly IUserRepository _userRepository;  
-        public UpdateUserCommandHandler(IAppUserRepository appUserRepository, IUserRepository userRepository)
+        private readonly IUserRepository _userRepository;
+        private readonly IAppLocalizer _localizer;
+        public UpdateUserCommandHandler(IAppUserRepository appUserRepository, IUserRepository userRepository, IAppLocalizer localizer)
         {
             _appUserRepository = appUserRepository;
             _userRepository = userRepository;
+            _localizer = localizer;
         }
 
         public async Task<Result<Unit>> Handle(UpdateAppUserCommand request, CancellationToken cancellationToken)
@@ -22,7 +25,7 @@ namespace QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser
             var user = await _appUserRepository.GetByIdWithRefreshTokenAsync(request.Id, cancellationToken);
 
             if (user is null)
-                throw new Exception("Kullanıcı bulunamadı!");
+                throw new Exception(_localizer["Messages.UserNotFound"]);
 
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
