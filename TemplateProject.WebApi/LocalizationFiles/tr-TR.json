@@ -8,5 +8,16 @@
   "Messages.BrandNotFound": "Marka bulunamadı.",
   "Validations.BrandNameRequired": "Marka adı boş geçilemez.",
   "Validations.BrandNameMinLength": "Marka adı en az 3 karakter olmalıdır.",
-  "Validations.ValidationErrors": "Doğrulama hataları mevcut."
+  "Validations.ValidationErrors": "Doğrulama hataları mevcut.",
+
+  "PageTitle.Users": "Sistem Kullanıcı Listesi",
+  "Label.AddButton": "Yeni Kullanıcı Ekle",
+  "Message.Loading": "Kullanıcı verileri yükleniyor...",
+  "Label.NoData": "Kayıtlı kullanıcı bulunamadı.",
+  "Label.Actions": "İşlemler",
+  "Label.ActionEdit": "Düzenle",
+  "Label.Id": "ID",
+  "Label.FirstName": "Adı",
+  "Label.LastName": "Soyadı",
+  "Label.Email": "Email"
 }

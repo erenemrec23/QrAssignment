@@ -122,8 +122,8 @@ builder.Host.UseSerilog((context, loggerConfig) =>
                 AutoCreateSqlTable = true 
             }));
 builder.Services.AddSingleton<IAppLocalizer, AppLocalizer>();
- 
- 
+builder.Services.AddScoped<ILocalizationService, JsonLocalizationManager>();
+
 
 var app = builder.Build();
 app.UseExceptionHandler();
