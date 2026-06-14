@@ -60,5 +60,16 @@
   "Label.NoRecords": "Kayıt bulunamadı.",
   "Label.VehicleQrCode": "Araç QR Kodu",
   "Button.Print": "Yazdır",
-  "Button.Close": "Kapat"
+  "Button.Close": "Kapat",
+
+  "QrLocation.Form.Title.Create": "Yeni Qr Lokasyon Ekle",
+  "QrLocation.Form.Title.Edit": "Qr Lokasyon Düzenle",
+  "Label.ApplicationName": "Başvuru Adı",
+  "Placeholder.ApplicationName": "Örn: Kadıköy Şube, Merkez Depo",
+  "Error.ApplicationNameRequired": "Başvuru adı zorunludur ve en az 3 karakter olmalıdır.",
+  "Error.LocationNameRequired": "Lokasyon adı zorunludur ve en az 3 karakter olmalıdır.",
+  "Label.StartDate": "Başlangıç Tarihi",
+  "Label.EndDate": "Bitiş Tarihi",
+  "Label.ParentLocationId": "Bağlı Olduğu Üst Lokasyon (ID)",
+  "Placeholder.ParentLocationId": "Varsa üst lokasyonun benzersiz ID bilgisini girin"
 }
