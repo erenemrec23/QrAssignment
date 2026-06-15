@@ -1,0 +1,43 @@
+﻿using AutoMapper;
+using MediatR;
+using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Shared;
+
+namespace QrAssignment.Application.Features.Tenants.Commands.Delete
+{
+    public class DeleteTenantCommandHandler : IRequestHandler<DeleteTenantCommand, Result<DeleteTenantResponse>>
+    {
+        private readonly ITenantRepository _tenantRepository;
+        private readonly IMapper _mapper;
+        private readonly IAppLocalizer _localizer;
+
+        public DeleteTenantCommandHandler(ITenantRepository tenantRepository, IMapper mapper, IAppLocalizer localizer)
+        {
+            _tenantRepository = tenantRepository;
+            _mapper = mapper;
+            _localizer = localizer;
+        }
+
+        public async Task<Result<DeleteTenantResponse>> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
+        { 
+            if (!request.Id.HasValue)
+                throw new Exception(_localizer["Messages.IdIsNull"]);
+             
+            var tenant = await _tenantRepository.GetByIdAsync(request.Id.Value, cancellationToken);
+
+            if (tenant == null)
+                throw new Exception(_localizer["Messages.TenantNotFound"]);
+             
+            _tenantRepository.Delete(tenant);
+             
+            var response = new DeleteTenantResponse
+            {
+                Id = tenant.Id
+            };
+             
+
+            return Result.Success(response);
+        }
+    }
+}

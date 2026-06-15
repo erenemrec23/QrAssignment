@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Features.Tenants.Commands.Create;
+using QrAssignment.Application.Features.Tenants.Commands.Delete;
 using QrAssignment.Application.Features.Tenants.Commands.Update;
 using QrAssignment.Application.Features.Tenants.Queries.GetById;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
@@ -28,6 +29,17 @@ namespace QrAssignment.Presentation.Controllers
             return Ok(result);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            // 1. Gelen ID'yi Command nesnemizin içine koyuyoruz
+            var command = new DeleteTenantCommand { Id = id };
+
+            // 2. MediatR'a komutu gönderip Handler'ın çalışmasını bekliyoruz
+            var result = await _mediator.Send(command, cancellationToken);
+
+            return Ok(result);
+        }
 
         [HttpPost("GetList")]  
         public async Task<IActionResult> GetList([FromBody] GetListTenantQuery request) // 2. FromQuery yerine FromBody yapıyoruz

@@ -10,6 +10,7 @@
   "Validations.BrandNameMinLength": "Marka adı en az 3 karakter olmalıdır.",
   "Validations.ValidationErrors": "Doğrulama hataları mevcut.",
 
+
   "PageTitle.Users": "Sistem Kullanıcı Listesi",
   "Label.Add": "Yeni Ekle",
   "Label.AddButton": "Yeni Kullanıcı Ekle",
@@ -41,7 +42,7 @@
   "Label.Password": "Parola",
   "Placeholder.Password": "Örn: 123456",
   "Error.PasswordRequired": "Parola zorunludur ve en az 6 karakter olmalıdır.",
-    
+
   "Label.Saving": "Kaydediliyor...",
 
   "PageTitle.QrLocations": "Qr Lokasyon Listesi",
@@ -67,10 +68,14 @@
   "Placeholder.ParentLocationId": "Varsa üst lokasyonun benzersiz ID bilgisini girin",
   "PageTitle.Tenants": "Firmalar",
   "Label.AddTenant": "Yeni Firma Ekle",
-  "Label.TenantName": "Firma Adı",  
+  "Label.TenantName": "Firma Adı",
   "Label.NoTenants": "Kayıtlı firma bulunamadı.",
   "Label.TotalRecords": "Toplam Kayıt",
   "Label.Page": "Sayfa",
   "Label.Previous": "Önceki",
-  "Label.Next": "Sonraki"
+  "Label.Next": "Sonraki",
+  "Label.ItemsPerPage": "Kayıt Sayısı",
+  "Label.TotalRecordCount": "Toplam Kayıt Sayısı",
+  "Label.FirstPage": "İlk Sayfa",
+  "Messages.DeleteConfirmation":  "Silmek İstediğinize Emin Misiniz?"
 }

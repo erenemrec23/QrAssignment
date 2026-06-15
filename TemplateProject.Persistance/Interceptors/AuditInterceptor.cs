@@ -46,10 +46,12 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
             }
             else if (entry.State == EntityState.Deleted && entry.Entity.IsDeleted == false)
             {
+                entry.State = EntityState.Modified;
                 entry.Entity.IsDeleted = true;
                 entry.Entity.ModifiedByUserId = currentUserId;
                 entry.Entity.ModifiedDate = currentTime;
-            } 
+            }
+             
         }
 
 
