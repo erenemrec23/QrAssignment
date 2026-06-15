@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QrAssignment.Application.DTOs.List;
+using QrAssignment.Application.Extensions;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Persistance.Context;
+using System.Linq.Dynamic.Core;
 
 namespace QrAssignment.Persistance.Repositories;
 
@@ -13,21 +16,41 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
     {
         _context = context;
     }
+     
+    public async Task<Paginate<TenantListItemDto>> GetListAsync(GetListTenantQuery request, CancellationToken cancellationToken)
+    { 
+        IQueryable<Tenant> query = _context.Tenants.AsNoTracking();
+         
+        int totalItemCount = await query.CountAsync(cancellationToken);
 
+        if (request.DynamicFilterAndSort != null)
+        { 
+            query = query.ToDynamic(request.DynamicFilterAndSort);
+        }
+         
+        int totalFilteredItemCount = await query.CountAsync(cancellationToken);
+         
+        int size = request.PageSize;
+        int index = request.PageIndex;
 
-
-
-
-    public async Task<List<TenantListItemDto>> GetList(CancellationToken cancellationToken)
-    {
-        return await _context.Tenants
-            .AsNoTracking()
-            .Select(c => new TenantListItemDto
+        var items = await query
+            .Skip(index * size)
+            .Take(size)
+            .Select(t => new TenantListItemDto
             {
-                Id = c.Id, 
-                Name = c.Name, 
+                Id = t.Id,
+                Name = t.Name
             })
             .ToListAsync(cancellationToken);
+         
+        return new Paginate<TenantListItemDto>
+        {
+            Index = index,
+            PageSize = size,
+            TotalItemCount = totalItemCount,
+            TotalFilteredItemCount = totalFilteredItemCount,
+            Items = items
+        };
     }
     public async Task<TenantItemDto> GetById(Guid id, CancellationToken cancellationToken)
     {

@@ -29,11 +29,11 @@ namespace QrAssignment.Presentation.Controllers
         }
 
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> GetList([FromQuery] GetListTenantQuery query)
+        [HttpPost("GetList")]  
+        public async Task<IActionResult> GetList([FromBody] GetListTenantQuery request) // 2. FromQuery yerine FromBody yapıyoruz
         {
-            var response = await _mediator.Send(query);
-            return Ok(response);
+            var result = await _mediator.Send(request);
+            return Ok(result);
         }
 
         [HttpGet("{id:guid}")]

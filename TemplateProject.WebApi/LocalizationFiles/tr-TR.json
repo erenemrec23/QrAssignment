@@ -11,6 +11,7 @@
   "Validations.ValidationErrors": "Doğrulama hataları mevcut.",
 
   "PageTitle.Users": "Sistem Kullanıcı Listesi",
+  "Label.Add": "Yeni Ekle",
   "Label.AddButton": "Yeni Kullanıcı Ekle",
   "Message.Loading": "Kullanıcı verileri yükleniyor...",
   "Label.NoData": "Kayıtlı kullanıcı bulunamadı.",
@@ -20,6 +21,8 @@
   "Label.FirstName": "Adı",
   "Label.LastName": "Soyadı",
   "Label.Email": "Email",
+  "Label.Refresh": "Yenile",
+  "Title.RefreshList": "Listeyi Yenile",
   "Messages.UserNotFound": "Kullanıcı bulunamadı.",
   "User.Form.Title.Create": "Yeni Kullanıcı Tanımla",
   "User.Form.Title.Edit": "Kullanıcı Bilgilerini Düzenle",
@@ -38,17 +41,7 @@
   "Label.Password": "Parola",
   "Placeholder.Password": "Örn: 123456",
   "Error.PasswordRequired": "Parola zorunludur ve en az 6 karakter olmalıdır.",
-
-  "PageTitle.Tenants": "Kiracı Listesi",
-  "Label.AddTenant": "Yeni Kiracı Ekle",
-  "Label.TenantName": "Kiracı Adı",
-  "Label.NoTenants": "Henüz kiracı bulunmamaktadır.",
-
-  "Tenant.Form.Title.Create": "Yeni Kiracı Tanımla",
-  "Tenant.Form.Title.Edit": "Kiracı Bilgilerini Düzenle",
-  "Label.TenantCompany": "Kiracı (Şirket) Adı",
-  "Placeholder.TenantCompany": "Örn: Akme Holding, Çağlar Teknoloji",
-  "Error.TenantCompanyRequired": "Kiracı adı zorunludur ve en az 3 karakter olmalıdır.",
+    
   "Label.Saving": "Kaydediliyor...",
 
   "PageTitle.QrLocations": "Qr Lokasyon Listesi",
@@ -71,5 +64,13 @@
   "Label.StartDate": "Başlangıç Tarihi",
   "Label.EndDate": "Bitiş Tarihi",
   "Label.ParentLocationId": "Bağlı Olduğu Üst Lokasyon (ID)",
-  "Placeholder.ParentLocationId": "Varsa üst lokasyonun benzersiz ID bilgisini girin"
+  "Placeholder.ParentLocationId": "Varsa üst lokasyonun benzersiz ID bilgisini girin",
+  "PageTitle.Tenants": "Firmalar",
+  "Label.AddTenant": "Yeni Firma Ekle",
+  "Label.TenantName": "Firma Adı",  
+  "Label.NoTenants": "Kayıtlı firma bulunamadı.",
+  "Label.TotalRecords": "Toplam Kayıt",
+  "Label.Page": "Sayfa",
+  "Label.Previous": "Önceki",
+  "Label.Next": "Sonraki"
 }
