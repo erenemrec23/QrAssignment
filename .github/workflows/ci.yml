@@ -1,0 +1,35 @@
+name: .NET Core Continuous Integration
+
+# Hangi durumlarda bu test hattı çalışsın?
+on:
+  push:
+    branches: [ "main", "develop" ] # main veya develop branch'ine push yapıldığında
+  pull_request:
+    branches: [ "main", "develop" ] # Bu branch'lere PR açıldığında
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Testlerin koşacağı sanal makine işletim sistemi
+
+    steps:
+    # 1. Adım: GitHub'daki kodları sanal makineye çek
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. Adım: Sanal makineye .NET SDK kurulumu yap
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.x # Projenizin .NET sürümü neyse (örn: 8.x, 9.x) onu yazın
+
+    # 3. Adım: NuGet paketlerini restore et (indir)
+    - name: Restore dependencies
+      run: dotnet restore
+
+    # 4. Adım: Projeyi derle (Compile)
+    - name: Build project
+      run: dotnet build --no-restore --configuration Release
+
+    # 5. Adım: Tüm testleri (yazdığımız mimari test dahil) çalıştır
+    - name: Run Tests
+      run: dotnet test --no-build --verbosity normal
