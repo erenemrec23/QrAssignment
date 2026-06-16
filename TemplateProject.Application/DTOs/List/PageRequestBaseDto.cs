@@ -6,6 +6,14 @@
         public int PageIndex { get; set; } = 0; // Sayfa numarası (0 veya 1'den başlatmak sana kalmış)
         public int PageSize { get; set; } = 10; // Sayfa başına kayıt
         public DynamicQueryDto? DynamicFilterAndSort { get; set; } // Sıralama ve Filtreleme detayları
+
+        public GlobalSearchDto? GlobalSearch { get; set; }
+    }
+
+    public class GlobalSearchDto
+    {
+        public List<string> Fields { get; set; } = new(); // Hangi kolonlarda aranacak?
+        public string Value { get; set; } = string.Empty; // Aranan kelime ne?
     }
 
     // 2. Dinamik Sorgu Gövdesi

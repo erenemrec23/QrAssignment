@@ -74,8 +74,17 @@
   "Label.Page": "Sayfa",
   "Label.Previous": "Önceki",
   "Label.Next": "Sonraki",
-  "Label.ItemsPerPage": "Kayıt Sayısı",
   "Label.TotalRecordCount": "Toplam Kayıt Sayısı",
   "Label.FirstPage": "İlk Sayfa",
-  "Messages.DeleteConfirmation":  "Silmek İstediğinize Emin Misiniz?"
+  "Messages.DeleteConfirmation": "Silmek İstediğinize Emin Misiniz?",
+  "Label.ActionDelete": "Sil",
+  "Label.LastPage": "Son Sayfa",
+  "Label.Records": "kayıt",
+  "Label.ItemsPerPage": "adet / sayfa",
+  "Label.ClearFilters": "Filtreleri Temizle",
+  "Label.SearchData": "Genel arama...",
+  "Label.Filter": "Filtrele...",
+  "Label.Contains": "İçerir",
+  "Label.Equals": "Eşittir",
+  "Label.StartsWith": "İle Başlar"
 }

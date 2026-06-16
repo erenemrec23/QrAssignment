@@ -23,6 +23,12 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
          
         int totalItemCount = await query.CountAsync(cancellationToken);
 
+        if (request.GlobalSearch != null && request.GlobalSearch.Fields.Any() && !string.IsNullOrWhiteSpace(request.GlobalSearch.Value))
+        { 
+            string searchClause = string.Join(" || ", request.GlobalSearch.Fields.Select(field => $"{field}.Contains(@0)"));
+             
+            query = query.Where(searchClause, request.GlobalSearch.Value);
+        }
         if (request.DynamicFilterAndSort != null)
         { 
             query = query.ToDynamic(request.DynamicFilterAndSort);
