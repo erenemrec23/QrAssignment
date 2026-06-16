@@ -1,11 +1,10 @@
-﻿using MediatR;
-using QrAssignment.Application.Abstractions;
+﻿using QrAssignment.Application.Abstractions;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.QrLocations.Commands.Create
 {
 
-    public class CreateQrLocationCommand : IRequest<Result<Guid>>
+    public class CreateQrLocationCommand : ICommand<Result<Guid>>
     {
         public string Name { get; set; } 
 
