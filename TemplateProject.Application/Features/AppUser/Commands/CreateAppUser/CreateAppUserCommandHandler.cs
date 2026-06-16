@@ -1,9 +1,6 @@
 ﻿using MediatR;
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Shared;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QrAssignment.Application.Features.AppUser.Commands.CreateAppUser
 {
