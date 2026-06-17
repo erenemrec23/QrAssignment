@@ -5,6 +5,7 @@ using QrAssignment.Application.Features.Tenants.Commands.Delete;
 using QrAssignment.Application.Features.Tenants.Commands.Update;
 using QrAssignment.Application.Features.Tenants.Queries.GetById;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
+using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -58,6 +59,22 @@ namespace QrAssignment.Presentation.Controllers
                 return BadRequest(result);
 
             return Ok(result);
+        }
+
+        [HttpPost("export")]
+        public async Task<IActionResult> ExportExcel([FromBody] GetListTenantExportExcelQuery query, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess || result.Value == null)
+            {
+                return BadRequest(result.Error);
+            }
+
+            var fileDto = result.Value;
+
+            // Dosyayı Blob formatında istemciye fırlat
+            return File(fileDto.Data, fileDto.ContentType, fileDto.FileName);
         }
     }
 }

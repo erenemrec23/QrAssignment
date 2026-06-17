@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using QrAssignment.Application;
@@ -16,6 +17,7 @@ using Serilog.Sinks.MSSqlServer;
 using Serilog.Ui.Core.Extensions;
 using Serilog.Ui.MsSqlServerProvider.Extensions;
 using Serilog.Ui.Web.Extensions;
+using System.Globalization;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -102,6 +104,7 @@ builder.Services.AddSingleton<JsonLocalizationManager>();
 
 // 3. .NET'e "Kendi Localizer'ını değil, bizim yazdığımız JSON Localizer Factory'sini kullan" diyoruz
 builder.Services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
+
  
 var supportedCultures = new[] { "tr-TR", "en-US" };
 builder.Services.Configure<RequestLocalizationOptions>(options =>
@@ -130,7 +133,26 @@ app.UseExceptionHandler();
 app.UseRouting();
 //app.UseCors("AllowAngularApp");
 app.UseCors("AllowAll");
-app.UseRequestLocalization();
+// ... (diğer app.Use... middleware tanımları) ...
+
+// --- LOKALİZASYON (ÇOKLU DİL) AYARLARI ---
+var supportedCultures1 = new[] { new CultureInfo("tr-TR"), new CultureInfo("en-US") };
+
+var localizationOptions = new RequestLocalizationOptions
+{
+    // Sistemin varsayılan (Default) dili kesinlikle Türkçe olsun
+    DefaultRequestCulture = new RequestCulture("tr-TR"),
+    SupportedCultures = supportedCultures1,
+    SupportedUICultures = supportedCultures1
+};
+
+// DİKKAT: TARAYICI DİLİNİ TAMAMEN EZMEK İÇİN
+// Eğer tarayıcıdan Accept-Language: en-US gelse bile sistemin her zaman tr-TR 
+// olarak çalışmasını istiyorsan, .NET'in o dili yakalayan sağlayıcılarını silebilirsin.
+// Şimdilik bu satırı açman sorunu %100 çözecektir:
+localizationOptions.RequestCultureProviders.Clear();
+
+app.UseRequestLocalization(localizationOptions);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

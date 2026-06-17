@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QrAssignment.Application.DTOs.List;
+using QrAssignment.Application.Extensions;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Abstractions;
 using QrAssignment.Persistance.Context;
 using System;
 using System.Collections.Generic;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -84,6 +87,73 @@ namespace QrAssignment.Persistance.Repositories
             {
                 Delete(entity);
             }
+        }
+
+        protected async Task<Paginate<TDto>> GetPaginatedListAsync<TDto>(
+      IQueryable<T> query,
+      PageRequestBaseDto request,
+      Expression<Func<T, TDto>> projection, // Entity'yi DTO'ya çevirecek kural
+      CancellationToken cancellationToken = default)
+        {
+            // 1. Filtresiz toplam kayıt sayısı
+            int totalItemCount = await query.CountAsync(cancellationToken);
+
+            // 2. Filtreleri ve Global Arama'yı uygula
+            query = ApplyFilters(query, request.DynamicFilterAndSort, request.GlobalSearch);
+
+            // 3. Filtreli toplam kayıt sayısı
+            int totalFilteredItemCount = await query.CountAsync(cancellationToken);
+
+            // 4. Sayfalama ve DTO'ya dönüştürme işlemi
+            var items = await query
+                .Skip(request.PageIndex * request.PageSize)
+                .Take(request.PageSize)
+                .Select(projection) // Dışarıdan gelen DTO haritalama kuralını uyguluyoruz
+                .ToListAsync(cancellationToken);
+
+            return new Paginate<TDto>
+            {
+                Index = request.PageIndex,
+                PageSize = request.PageSize,
+                TotalItemCount = totalItemCount,
+                TotalFilteredItemCount = totalFilteredItemCount,
+                Items = items
+            };
+        }
+
+        /// <summary>
+        /// Jenerik IQueryable filtreleme yardımcı metodu
+        /// </summary>
+        private IQueryable<T> ApplyFilters(IQueryable<T> query, DynamicQueryDto? dynamicFilter, GlobalSearchDto? globalSearch)
+        {
+            if (globalSearch != null && globalSearch.Fields.Any() && !string.IsNullOrWhiteSpace(globalSearch.Value))
+            {
+                string searchClause = string.Join(" || ", globalSearch.Fields.Select(field => $"{field}.Contains(@0)"));
+                query = query.Where(searchClause, globalSearch.Value);
+            }
+
+            if (dynamicFilter != null)
+            {
+                query = query.ToDynamic(dynamicFilter);
+            }
+
+            return query;
+        }
+
+        // BaseRepository.cs içine eklenecek:
+
+        protected async Task<List<TDto>> GetFilteredListWithoutPaginationAsync<TDto>(
+            IQueryable<T> query,
+            PageRequestBaseDto request,
+            Expression<Func<T, TDto>> projection,
+            CancellationToken cancellationToken = default)
+        {
+            // Daha önce yazdığımız ortak filtreleme metodunu çağırıyoruz
+            query = ApplyFilters(query, request.DynamicFilterAndSort, request.GlobalSearch);
+             
+            return await query
+                .Select(projection)
+                .ToListAsync(cancellationToken);
         }
     }
 }

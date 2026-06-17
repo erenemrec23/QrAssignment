@@ -2,6 +2,7 @@
 using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Extensions;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
+using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Persistance.Context;
@@ -17,46 +18,30 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
         _context = context;
     }
      
-    public async Task<Paginate<TenantListItemDto>> GetListAsync(GetListTenantQuery request, CancellationToken cancellationToken)
-    { 
+    public async Task<Paginate<TenantListItemDto>> GetListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
+    {
         IQueryable<Tenant> query = _context.Tenants.AsNoTracking();
          
-        int totalItemCount = await query.CountAsync(cancellationToken);
-
-        if (request.GlobalSearch != null && request.GlobalSearch.Fields.Any() && !string.IsNullOrWhiteSpace(request.GlobalSearch.Value))
-        { 
-            string searchClause = string.Join(" || ", request.GlobalSearch.Fields.Select(field => $"{field}.Contains(@0)"));
-             
-            query = query.Where(searchClause, request.GlobalSearch.Value);
-        }
-        if (request.DynamicFilterAndSort != null)
-        { 
-            query = query.ToDynamic(request.DynamicFilterAndSort);
-        }
-         
-        int totalFilteredItemCount = await query.CountAsync(cancellationToken);
-         
-        int size = request.PageSize;
-        int index = request.PageIndex;
-
-        var items = await query
-            .Skip(index * size)
-            .Take(size)
-            .Select(t => new TenantListItemDto
+        return await GetPaginatedListAsync(
+            query,
+            request,
+            t => new TenantListItemDto
             {
                 Id = t.Id,
                 Name = t.Name
-            })
-            .ToListAsync(cancellationToken);
-         
-        return new Paginate<TenantListItemDto>
-        {
-            Index = index,
-            PageSize = size,
-            TotalItemCount = totalItemCount,
-            TotalFilteredItemCount = totalFilteredItemCount,
-            Items = items
-        };
+            },
+            cancellationToken); ;
+    }
+
+    public Task<List<TenantListItemExcelDto>> GetExportListAsync(GetListTenantExportExcelQuery request, CancellationToken cancellationToken)
+    {
+        IQueryable<Tenant> query = _context.Tenants.AsNoTracking();
+
+        return GetFilteredListWithoutPaginationAsync(
+            query,
+            request, // ExportTenantsQuery artık PageRequestBaseDto'dan miras almalı
+            t => new TenantListItemExcelDto { Name = t.Name },
+            cancellationToken);
     }
     public async Task<TenantItemDto> GetById(Guid id, CancellationToken cancellationToken)
     {

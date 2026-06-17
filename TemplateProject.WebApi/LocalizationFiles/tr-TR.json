@@ -88,5 +88,6 @@
   "Label.Equals": "Eşittir",
   "Label.StartsWith": "İle Başlar",
   "Label.ExportExcel": "Excel",
-  "Title.ExportExcel": "Listeyi Excel formatında indir"
+  "Title.ExportExcel": "Listeyi Excel formatında indir",
+  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_Queries_GetListExportExcel_TenantListItemExcelDto_Name": "Firma Adı"
 }
