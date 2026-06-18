@@ -89,5 +89,20 @@
   "Label.StartsWith": "İle Başlar",
   "Label.ExportExcel": "Excel",
   "Title.ExportExcel": "Listeyi Excel formatında indir",
-  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_Queries_GetListExportExcel_TenantListItemExcelDto_Name": "Firma Adı"
+  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_Queries_GetListExportExcel_TenantListItemExcelDto_Name": "Firma Adı",
+
+  "Label.ExcelImportTitle": "Excel Veri Aktarımı (Server-Side)",
+  "Label.ExcelBrowseClick": "göz atmak için tıklayın",
+  "Label.Uploading": "Yükleniyor...",
+  "Messages.ExcelDropActive": "Dosyayı şimdi bırakabilirsiniz...",
+  "Messages.ExcelDropPrompt": "Excel dosyasını buraya sürükleyin veya",
+  "Messages.ExcelSupportedFormats": "Desteklenen formatlar: .xlsx, .xls",
+  "Messages.ExcelUploadSuccess": "Dosya sunucuya başarıyla aktarıldı ve işlendi.",
+  "Messages.ExcelUploadError": "Yükleme sırasında bir hata oluştu. Lütfen tekrar deneyin.",
+  "Messages.InvalidExcelFormat": "Lütfen sadece geçerli bir Excel dosyası (.xlsx veya .xls) seçiniz.",
+  "Messages.ExcelUploadConsoleError": "Excel yükleme hatası detayları:",
+  "Messages.Byte": "Bytes",
+  "Messages.Kb": "KB",
+  "Messages.Mb": "MB"
 }
+ 
