@@ -1,11 +1,16 @@
-﻿using MediatR;
+﻿using ExcelDataReader;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Features.Tenants.Commands.Create;
 using QrAssignment.Application.Features.Tenants.Commands.Delete;
+using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
+using QrAssignment.Application.Features.Tenants.Commands.Excel.Validate;
 using QrAssignment.Application.Features.Tenants.Commands.Update;
 using QrAssignment.Application.Features.Tenants.Queries.GetById;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
 using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
+using QrAssignment.Application.Repositories;
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -75,6 +80,37 @@ namespace QrAssignment.Presentation.Controllers
 
             // Dosyayı Blob formatında istemciye fırlat
             return File(fileDto.Data, fileDto.ContentType, fileDto.FileName);
+        }
+
+        [HttpPost("validate-excel")]
+        public async Task<IActionResult> ValidateExcel(IFormFile file, CancellationToken cancellationToken)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Geçerli bir dosya yüklenmedi.");
+
+            // Dosyayı byte array'e çıkarıyoruz (Application katmanını HTTP bağımlılığından kurtarmak için)
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream, cancellationToken);
+
+            var query = new ValidateTenantExcelQuery
+            {
+                FileBytes = memoryStream.ToArray()
+            };
+
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (result.IsSuccess)
+                return Ok(result.Value); // Angular tarafına ExcelValidationResponseDto döner
+
+            return BadRequest(result.Error);
+        }
+        // 2. ADIM: Önizlemeden onay alan temiz datayı kaydet
+        [HttpPost("bulk-create")]
+        public async Task<IActionResult> BulkCreate([FromBody] BulkCreateTenantCommand command, CancellationToken cancellationToken)
+        {
+            var response = await _mediator.Send(command, cancellationToken);
+            if (response.IsSuccess) return Ok(response);
+            return BadRequest(response);
         }
     }
 }

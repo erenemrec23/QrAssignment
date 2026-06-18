@@ -103,6 +103,35 @@
   "Messages.ExcelUploadConsoleError": "Excel yükleme hatası detayları:",
   "Messages.Byte": "Bytes",
   "Messages.Kb": "KB",
-  "Messages.Mb": "MB"
+  "Messages.Mb": "MB",
+
+  "ExcelImport.WizardTitle": "Excel ile Hızlı Giriş Sihirbazı",
+  "ExcelImport.DownloadTemplate": "Mevcut Sistem Verisini Excel Olarak İndir (Şablon)",
+  "ExcelImport.SelectFile": "Bilgisayardan Excel Dosyası Seçin",
+  "ExcelImport.Analyzing": "Backend verileri doğrulanıyor, lütfen bekleyin...",
+  "ExcelImport.AnalysisResult": "Excel Analiz Sonucu ({count} Satır)",
+  "ExcelImport.Status": "Durum",
+  "ExcelImport.RowNumber": "Satır No",
+  "ExcelImport.Description": "Açıklama / Hata Nedeni",
+  "ExcelImport.ValidationSuccess": "Doğrulama Başarılı",
+  "ExcelImport.SaveAll": "Tüm Satırları Sisteme Kaydet",
+  "ExcelImport.ValidationErrorAlert": "⚠ Listenizde hatalı satırlar var. Kaydetme butonunun aktif olması için lütfen Excel'i düzeltip yeniden yükleyin.",
+  "ExcelImport.AnalysisError": "Dosya analiz edilirken bir hata oluştu.",
+  "ExcelImport.SaveError": "Kaydedilirken bir hata oluştu.",
+
+  "Title.RefreshList": "Listeyi Yenile",
+  "Title.ExportExcel": "Verileri Excel Olarak Dışarı Aktar",
+  "Title.ImportExcel": "Excel ile Toplu Veri Girişi",
+  
+  "Label.Refresh": "Yenile",
+  "Label.ExportExcel": "Excel Export",
+  "Label.ImportExcel": "Excel Import",
+  "Label.Add": "Yeni Ekle",
+
+  "Tenant.ListTitle": "Tenant Yönetimi",
+  "Tenant.Name": "Firma Adı (Name)",
+  "Tenant.Title": "Unvan (Title)",
+   
+  "Message.InvalidExcelFormat": "Hatalı dosya formatı! Lütfen sadece .xlsx veya .xls uzantılı dosyaları yükleyin."
 }
  
