@@ -100,9 +100,9 @@ namespace QrAssignment.Presentation.Controllers
             var result = await _mediator.Send(query, cancellationToken);
 
             if (result.IsSuccess)
-                return Ok(result.Value); // Angular tarafına ExcelValidationResponseDto döner
+                return Ok(result); // Angular tarafına ExcelValidationResponseDto döner
 
-            return BadRequest(result.Error);
+            return BadRequest(result);
         }
         // 2. ADIM: Önizlemeden onay alan temiz datayı kaydet
         [HttpPost("bulk-create")]
