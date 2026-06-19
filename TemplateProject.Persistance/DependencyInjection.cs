@@ -1,5 +1,8 @@
 ﻿using Audit.Core;
+using Audit.EntityFramework;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QrAssignment.Application.Abstractions;
@@ -11,8 +14,10 @@ using QrAssignment.Persistance.Context;
 using QrAssignment.Persistance.Interceptors;
 using QrAssignment.Persistance.Repositories;
 using QrAssignment.Persistance.Services;
+using System.Data.Entity;
+using System.Security.Claims;
+using System.Security.Claims;
 using System.Text.Json;
-
 
 namespace QrAssignment.Persistance
 {
@@ -41,7 +46,7 @@ namespace QrAssignment.Persistance
                 options.User.RequireUniqueEmail = true;
             })
     .AddEntityFrameworkStores<AppDbContext>();
-             
+
             //services.AddScoped<IQrLocationRepository, QrLocationRepository>();
             services.Scan(scan => scan
                 .FromCallingAssembly()
@@ -50,35 +55,45 @@ namespace QrAssignment.Persistance
                 .WithScopedLifetime());
 
             Audit.Core.Configuration.Setup()
-    .UseEntityFramework(ef => ef
-        .AuditTypeMapper(t => typeof(SystemAuditLog))
-        .AuditEntityAction<SystemAuditLog>((ev, entry, auditEntity) =>
-        {
+                .UseEntityFramework(ef => ef
+                    .AuditTypeMapper(t => typeof(SystemAuditLog))
+                    .AuditEntityAction<SystemAuditLog>((ev, entry, auditEntity) =>
+                    {
+                        // 1. O ANKİ İŞLEMİ YAPAN DB CONTEXT'İ YAKALA
+                        var dbContext = ev.GetEntityFrameworkEvent().GetDbContext();
+                        var httpContextAccessor = dbContext.GetService<IHttpContextAccessor>();
 
-            auditEntity.TableName = entry.Table;
-            auditEntity.Action = entry.Action;
-            auditEntity.PrimaryKey = JsonSerializer.Serialize(entry.PrimaryKey);
+                        var userId = httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                        var tenantClaim = httpContextAccessor?.HttpContext?.User?.FindFirst("TenantId")?.Value;
+                        auditEntity.UserId = userId;
+                        if (Guid.TryParse(tenantClaim, out var tenantId))
+                        {
+                            auditEntity.TenantId = tenantId;
+                        }
+                        auditEntity.TableName = entry.Table;
+                        auditEntity.Action = entry.Action;
+                        auditEntity.PrimaryKey = JsonSerializer.Serialize(entry.PrimaryKey);
 
-            auditEntity.ColumnValues = JsonSerializer.Serialize(entry.ColumnValues);
-            if (entry.Action == "Insert")
-            {
-                auditEntity.OldValues = null;
-                auditEntity.NewValues = JsonSerializer.Serialize(entry.ColumnValues);
-            }
-            else if (entry.Action == "Update")
-            {
-                auditEntity.OldValues = entry.Changes == null ? null :
-                    JsonSerializer.Serialize(entry.Changes.ToDictionary(c => c.ColumnName, c => c.OriginalValue));
+                        auditEntity.ColumnValues = JsonSerializer.Serialize(entry.ColumnValues);
+                        if (entry.Action == "Insert")
+                        {
+                            auditEntity.OldValues = null;
+                            auditEntity.NewValues = JsonSerializer.Serialize(entry.ColumnValues);
+                        }
+                        else if (entry.Action == "Update")
+                        {
+                            auditEntity.OldValues = entry.Changes == null ? null :
+                                JsonSerializer.Serialize(entry.Changes.ToDictionary(c => c.ColumnName, c => c.OriginalValue));
 
-                auditEntity.NewValues = entry.Changes == null ? null :
-                    JsonSerializer.Serialize(entry.Changes.ToDictionary(c => c.ColumnName, c => c.NewValue));
-            }
-            else if (entry.Action == "Delete")
-            {
-                auditEntity.OldValues = JsonSerializer.Serialize(entry.ColumnValues);
-                auditEntity.NewValues = null;
-            }
-        })
+                            auditEntity.NewValues = entry.Changes == null ? null :
+                                JsonSerializer.Serialize(entry.Changes.ToDictionary(c => c.ColumnName, c => c.NewValue));
+                        }
+                        else if (entry.Action == "Delete")
+                        {
+                            auditEntity.OldValues = JsonSerializer.Serialize(entry.ColumnValues);
+                            auditEntity.NewValues = null;
+                        }
+                    })
         .IgnoreMatchedProperties(true)
     );
 
