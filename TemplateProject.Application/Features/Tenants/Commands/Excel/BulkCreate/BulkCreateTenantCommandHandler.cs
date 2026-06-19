@@ -23,12 +23,12 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate
             {
                 return Result.Failure<List<Guid>>(new Error("Yüklenecek geçerli bir veri bulunamadı.", "TENANT_BULK_CREATE_NO_DATA"));
             }
-             
+
             var tenantList = _mapper.Map<List<Tenant>>(request.Tenants);
-             
-            await _tenantRepository.AddRangeAsync(tenantList, cancellationToken);
-             
+
+            await _tenantRepository.AddRangeAsync(tenantList, cancellationToken); 
             var createdIds = tenantList.Select(t => t.Id).ToList();
+             
 
             return Result.Success(createdIds);
         }
