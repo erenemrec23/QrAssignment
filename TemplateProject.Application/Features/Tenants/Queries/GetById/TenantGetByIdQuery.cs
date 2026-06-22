@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using QrAssignment.Application.Features.Tenants.Queries.GetList;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Queries.GetById

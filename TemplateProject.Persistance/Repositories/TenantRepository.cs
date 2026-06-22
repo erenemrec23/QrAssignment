@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Extensions;
+using QrAssignment.Application.Features.Tenants.Queries.GetById;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
 using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 using QrAssignment.Application.Repositories;

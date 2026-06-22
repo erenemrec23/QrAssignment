@@ -89,7 +89,7 @@
   "Label.StartsWith": "İle Başlar",
   "Label.ExportExcel": "Excel",
   "Title.ExportExcel": "Listeyi Excel formatında indir",
-  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_Queries_GetListExportExcel_TenantListItemExcelDto_Name": "Firma Adı", 
+  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_Queries_GetListExportExcel_TenantListItemExcelDto_Name": "Firma Adı",
   "Label.ExcelImportTitle": "Excel Veri Aktarımı (Server-Side)",
   "Label.ExcelBrowseClick": "göz atmak için tıklayın",
   "Label.Uploading": "Yükleniyor...",
@@ -102,7 +102,7 @@
   "Messages.ExcelUploadConsoleError": "Excel yükleme hatası detayları:",
   "Messages.Byte": "Bytes",
   "Messages.Kb": "KB",
-  "Messages.Mb": "MB", 
+  "Messages.Mb": "MB",
   "ExcelImport.WizardTitle": "Excel ile Hızlı Giriş Sihirbazı",
   "ExcelImport.DownloadTemplate": "Mevcut Sistem Verisini Excel Olarak İndir (Şablon)",
   "ExcelImport.SelectFile": "Bilgisayardan Excel Dosyası Seçin",
@@ -115,12 +115,14 @@
   "ExcelImport.SaveAll": "Tüm Satırları Sisteme Kaydet",
   "ExcelImport.ValidationErrorAlert": "⚠ Listenizde hatalı satırlar var. Kaydetme butonunun aktif olması için lütfen Excel'i düzeltip yeniden yükleyin.",
   "ExcelImport.AnalysisError": "Dosya analiz edilirken bir hata oluştu.",
-  "ExcelImport.SaveError": "Kaydedilirken bir hata oluştu.", 
-  "Title.ImportExcel": "Excel ile Toplu Veri Girişi", 
-  "Label.ImportExcel": "Excel Import",  
+  "ExcelImport.SaveError": "Kaydedilirken bir hata oluştu.",
+  "Title.ImportExcel": "Excel ile Toplu Veri Girişi",
+  "Label.ImportExcel": "Excel Import",
   "Tenant.ListTitle": "Tenant Yönetimi",
   "Tenant.Name": "Firma Adı (Name)",
-  "Tenant.Title": "Unvan (Title)", 
-  "Message.InvalidExcelFormat": "Hatalı dosya formatı! Lütfen sadece .xlsx veya .xls uzantılı dosyaları yükleyin."
+  "Tenant.Title": "Unvan (Title)",
+  "Message.InvalidExcelFormat": "Hatalı dosya formatı! Lütfen sadece .xlsx veya .xls uzantılı dosyaları yükleyin.",
+  "BulkCreate.SuccessMessage": "İşlem Başarılı Bir Şekilde Tamamlandı",
+  "Message.ExcelExported": "Excel İndiriliyor"
 }
  
