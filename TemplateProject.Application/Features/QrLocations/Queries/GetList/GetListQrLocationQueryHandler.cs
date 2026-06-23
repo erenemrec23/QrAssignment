@@ -1,10 +1,11 @@
 ﻿using MediatR;
+using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.QrLocations.Queries.GetList
 {
-    public class GetListQrLocationQueryHandler : IRequestHandler<GetListQrLocationQuery, Result<List<QrLocationListItemDto>>>
+    public class GetListQrLocationQueryHandler : IRequestHandler<GetListQrLocationQuery, Result<Paginate<QrLocationListItemDto>>>
     {
         private readonly IQrLocationRepository _qrLocationRepository;
 
@@ -13,9 +14,9 @@ namespace QrAssignment.Application.Features.QrLocations.Queries.GetList
             _qrLocationRepository = qrLocationRepository;
         }
 
-        public async Task<Result<List<QrLocationListItemDto>>> Handle(GetListQrLocationQuery request, CancellationToken cancellationToken)
+        public async Task<Result<Paginate<QrLocationListItemDto>>> Handle(GetListQrLocationQuery request, CancellationToken cancellationToken)
         {
-            var result = await _qrLocationRepository.GetList(cancellationToken);
+            var result = await _qrLocationRepository.GetList(request,cancellationToken);
 
             return Result.Success(result);
         }
