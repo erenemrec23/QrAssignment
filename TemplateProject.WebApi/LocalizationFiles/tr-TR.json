@@ -1,6 +1,7 @@
 {
   "Messages.Success": "İşlem başarıyla tamamlandı.",
   "Errors.Unexpected": "Beklenmeyen bir hata gerçekleşti. Lütfen daha sonra tekrar deneyiniz.",
+  "Errors.Unauthorized": "Yetkiniz Bulunmamaktadır.",
   "Messages.UserMailUserPasswordNotFound": "Mail adresiniz veya şifreniz hatalıdır. Lütfen tekar deneyiniz.",
   "Messages.MailAlreadyExists": "Bu email adresi zaten kullanımda!",
   "Messages.IdIsNull": "Parametre Bulunamadı",
@@ -139,6 +140,7 @@
   "PageTitle.User-Permisson-Form": "Kullanıcı / Sayfa Yetkilendirme",
   "Label.SelectUser": "Kullanıcı",
   "Placeholder.SearchPage": "Sayfa Arama",
-  "Tenant.Form.Title.Edit":  "Firma Formu"
+  "Tenant.Form.Title.Edit": "Firma Formu",
+  "Messages.PermissionsUpdatedSuccess": "Yetkiler başarıyla güncellendi."
 }
  

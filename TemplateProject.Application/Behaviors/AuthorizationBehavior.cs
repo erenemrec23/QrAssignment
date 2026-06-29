@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.IdentityModel.JsonWebTokens;
 using QrAssignment.Application.DTOs;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Shared;
@@ -29,24 +30,18 @@ namespace QrAssignment.Application.Behaviors
                     throw new UnauthorizedAccessException("Kimlik doğrulama başarısız. Lütfen giriş yapın.");
 
                 // 1. Tüm "permissions" etiketli JSON claimleri çek
-                var permissionClaims = _currentUserService.GetClaims(securedRequest.PageName);
+                var permissionClaims = _currentUserService.GetClaim("permissions");
 
-                if (!permissionClaims.Any())
+                if (string.IsNullOrEmpty(permissionClaims))
                     throw new UnauthorizedAccessException("Sistemde hiçbir yetkiniz bulunmuyor.");
 
                 int totalEffectivePermission = 0;
 
                 // 2. Her bir JSON'u çöz ve ilgili sayfayı bul
-                foreach (var jsonValue in permissionClaims)
+                var permissionList = JsonSerializer.Deserialize<List<PermissionDto>>(permissionClaims);
+                foreach (var parsedJson in permissionList.Where(w=> w.PageName == securedRequest.PageName))
                 {
-                    // JSON'ı Parse et
-                    var parsedJson = JsonSerializer.Deserialize<PermissionDto>(jsonValue);
-
-                    // Sadece bu isteğin ait olduğu sayfayı (Örn: Page_Tenants) filtrele
-                    if (parsedJson != null && parsedJson.PageName == securedRequest.PageName)
-                    {
-                        totalEffectivePermission |= parsedJson.PermissionValue;
-                    }
+                    totalEffectivePermission |= parsedJson.PermissionValue;
                 }
 
                 // 3. Yetki kontrolü

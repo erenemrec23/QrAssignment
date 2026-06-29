@@ -50,13 +50,13 @@ namespace QrAssignment.Infrastructure.Authentication
 
             if (pagePermissions != null && pagePermissions.Any())
             {
-                foreach (var permission in pagePermissions)
+                var allPermissionsJson = JsonSerializer.Serialize(pagePermissions.Select(p => new
                 {
-                    // JSON'a hiç gerek yok. 
-                    // ClaimType = Sayfa Adı ("Page_Users")
-                    // ClaimValue = Yetki Değeri ("7")
-                    claims.Add(new Claim(permission.PageName, permission.PermissionValue.ToString()));
-                }
+                    pageName = p.PageName,
+                    permissionValue = p.PermissionValue
+                }));
+                 
+                claims.Add(new Claim("permissions", allPermissionsJson));
 
             }
             DateTime expires = DateTime.Now.AddHours(1);

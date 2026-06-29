@@ -74,14 +74,32 @@ namespace QrAssignment.Presentation.Middlewares
                 await httpContext.Response.WriteAsJsonAsync(errorResult, cancellationToken);
                 return true;
             }
+            if (exception is UnauthorizedAccessException unauthorizedAccessException)
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                httpContext.Response.ContentType = "application/json";
 
+                var errorResult = new
+                {
+                    isSuccess = false,
+                    isFailure = true,
+                    error = new
+                    {
+                        code = "Authorization.Forbidden",
+                        message = unauthorizedAccessException.Message
+                    }
+                };
+
+                await httpContext.Response.WriteAsJsonAsync(errorResult, cancellationToken);
+                return true;
+            }
 
             _logger.LogError(exception, "Kritik Hata: {RequestPath}", httpContext.Request.Path);
 
 
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-            string errorMessage = _localizer["Errors.Unexpected"];
+            string errorMessage = _localizer["Errors.Unauthorized"];
 
             var error = new Error("Server.InternalError", errorMessage);
 

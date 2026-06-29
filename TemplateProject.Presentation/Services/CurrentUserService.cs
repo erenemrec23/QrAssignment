@@ -31,5 +31,18 @@ namespace QrAssignment.Presentation.Services
             // FindAll metodu ile hem User'dan hem Role'den gelen tüm aynı isimli claimleri yakalıyoruz
             return user.FindAll(claimType).Select(c => c.Value);
         }
+        public string GetClaim(string claimType)
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user == null)
+            {
+                // Null reference hatalarını önlemek için boş liste dönüyoruz
+                return string.Empty;
+            }
+
+            // FindAll metodu ile hem User'dan hem Role'den gelen tüm aynı isimli claimleri yakalıyoruz
+            return user.FindFirst(claimType)?.Value ?? string.Empty;
+        }
     }
 }
