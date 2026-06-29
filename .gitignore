@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/TemplateProject.Application/Behaviors/AuthorizationBehavior.cs
+/TemplateProject.Application/Interfaces/ISecuredRequest.cs
