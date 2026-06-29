@@ -22,7 +22,7 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
     public async Task<Paginate<TenantListItemDto>> GetListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
     {
         IQueryable<Tenant> query = _context.Tenants.AsNoTracking();
-         
+        
         return await GetPaginatedListAsync(
             query,
             request,

@@ -44,5 +44,7 @@ namespace QrAssignment.Domain.Entity.App
         }
 
         public List<AppUserRole> AppUserRoles { get; set; } = new List<AppUserRole>();
+
+        public virtual ICollection<IdentityUserClaim<Guid>> Claims { get; set; }
     }
 }

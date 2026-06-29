@@ -13,4 +13,4 @@ namespace QrAssignment.Application.Repositories
         Task<List<AppUserListItemDto>> GetList(CancellationToken cancellationToken);
         Task<AppUserItemDto> GetById(Guid? id, CancellationToken cancellationToken);
     }
-}
+    }

@@ -11,7 +11,6 @@
   "Validations.ValidationErrors": "Doğrulama hataları mevcut.",
 
 
-  "PageTitle.Users": "Sistem Kullanıcı Listesi",
   "Label.Add": "Yeni Ekle",
   "Label.AddButton": "Yeni Kullanıcı Ekle",
   "Message.Loading": "Kullanıcı verileri yükleniyor...",
@@ -43,9 +42,8 @@
   "Placeholder.Password": "Örn: 123456",
   "Error.PasswordRequired": "Parola zorunludur ve en az 6 karakter olmalıdır.",
 
-  "Label.Saving": "Kaydediliyor...",
+  "Button.Saving": "Kaydediliyor...",
 
-  "PageTitle.QrLocations": "Qr Lokasyon Listesi",
   "Label.AddQrLocation": "Yeni Qr Lokasyon Ekle",
   "Message.DataLoading": "Veriler yükleniyor...",
   "Label.LocationName": "Lokasyon Adı",
@@ -66,7 +64,6 @@
   "Label.EndDate": "Bitiş Tarihi",
   "Label.ParentLocationId": "Bağlı Olduğu Üst Lokasyon (ID)",
   "Placeholder.ParentLocationId": "Varsa üst lokasyonun benzersiz ID bilgisini girin",
-  "PageTitle.Tenants": "Firmalar",
   "Label.AddTenant": "Yeni Firma Ekle",
   "Label.TenantName": "Firma Adı",
   "Label.NoTenants": "Kayıtlı firma bulunamadı.",
@@ -123,6 +120,25 @@
   "Tenant.Title": "Unvan (Title)",
   "Message.InvalidExcelFormat": "Hatalı dosya formatı! Lütfen sadece .xlsx veya .xls uzantılı dosyaları yükleyin.",
   "BulkCreate.SuccessMessage": "İşlem Başarılı Bir Şekilde Tamamlandı",
-  "Message.ExcelExported": "Excel İndiriliyor"
+  "Message.ExcelExported": "Excel İndiriliyor",
+
+  "Modules.Tenants": "Firmalar Yönetimi",
+  "Modules.Users": "Sistem Kullanıcıları",
+  "Modules.QrLocations": "QR Lokasyonları",
+  "Permissions.View": "Görüntüleme",
+  "Permissions.Insert": "Ekleme",
+  "Permissions.Update": "Güncelleme",
+  "Permissions.Delete": "Silme",
+  "Permissions.ExportExcel": "Excel İndirme",
+  "Permissions.ImportExcel": "Excel Yükleme",
+  "Label.ChooseUserPlaceholder": "Lütfen Kullanıcı Seçiniz",
+  "Label.PermissionsMatrix": "Sayfa Yetki Matrisi",
+  "PageTitle.Tenants": "Firmalar",
+  "PageTitle.QrLocations": "Qr Lokasyon Listesi",
+  "PageTitle.Users": "Sistem Kullanıcı Listesi",
+  "PageTitle.User-Permisson-Form": "Kullanıcı / Sayfa Yetkilendirme",
+  "Label.SelectUser": "Kullanıcı",
+  "Placeholder.SearchPage": "Sayfa Arama",
+  "Tenant.Form.Title.Edit":  "Firma Formu"
 }
  

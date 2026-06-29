@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QrAssignment.Persistance.Context;
 
@@ -11,9 +12,11 @@ using QrAssignment.Persistance.Context;
 namespace TemplateProject.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260623101322_Identity-tables3")]
+    partial class Identitytables3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,8 +75,6 @@ namespace TemplateProject.Persistance.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("AppUserClaims", (string)null);
                 });
@@ -468,15 +469,6 @@ namespace TemplateProject.Persistance.Migrations
                     b.ToTable("SystemRegions");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
-                {
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", null)
-                        .WithMany("Claims")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUserRefreshToken", b =>
                 {
                     b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "AppUser")
@@ -524,8 +516,6 @@ namespace TemplateProject.Persistance.Migrations
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUser", b =>
                 {
                     b.Navigation("AppUserRoles");
-
-                    b.Navigation("Claims");
 
                     b.Navigation("RefreshToken");
                 });

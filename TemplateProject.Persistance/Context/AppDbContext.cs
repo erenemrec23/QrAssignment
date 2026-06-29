@@ -27,6 +27,7 @@ public class AppDbContext : AuditDbContext
 
     public DbSet<AppUserRole> AppUserRole { get; set; }
 
+
     public DbSet<AppRole> AppRoles { get; set; }
     public DbSet<AppUserRefreshToken> AppUserRefreshTokens { get; set; }
 
@@ -46,9 +47,9 @@ public class AppDbContext : AuditDbContext
 
         modelBuilder.Ignore<IdentityUserLogin<string>>();
         modelBuilder.Ignore<IdentityUserRole<string>>();
-        modelBuilder.Ignore<IdentityUserClaim<string>>();
+        //modelBuilder.Ignore<IdentityUserClaim<string>>();
         modelBuilder.Ignore<IdentityUserToken<string>>();
-        modelBuilder.Ignore<IdentityRoleClaim<string>>();
+        //modelBuilder.Ignore<IdentityRoleClaim<string>>();
         modelBuilder.Ignore<IdentityRole<string>>();
 
         modelBuilder.Entity<AppUser>(b =>
@@ -65,6 +66,26 @@ public class AppDbContext : AuditDbContext
                 .IsRowVersion();
         });
 
+        modelBuilder.Entity<IdentityUserClaim<Guid>>(b =>
+        {
+            b.ToTable("AppUserClaims"); // Kişisel yetkilerin tutulacağı tablo
+
+            b.Property<byte[]>("RowVersion")
+                .IsRowVersion();
+            b.HasOne<AppUser>()
+     .WithMany(u => u.Claims)
+     .HasForeignKey(uc => uc.UserId)
+     .IsRequired()
+     .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<IdentityRoleClaim<Guid>>(b =>
+        {
+            b.ToTable("AppRoleClaims"); // Grup yetkilerinin tutulacağı tablo
+
+            b.Property<byte[]>("RowVersion")
+                .IsRowVersion();
+        });
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         { 

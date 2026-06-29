@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace QrAssignment.Infrastructure.Authentication
 {
@@ -16,10 +17,15 @@ namespace QrAssignment.Infrastructure.Authentication
     {
         private readonly JwtOptions _jwtOptions;
         private readonly IAppUserRefreshTokenRepository _appUserRefreshTokenRepository;
-        public JwtProvider(IOptions<JwtOptions> jwtOptions, UserManager<AppUser> userManager, IAppUserRefreshTokenRepository appUserRefreshTokenRepository)
+        private readonly IAppUserClaimRepository _appUserClaimRepository;
+        public JwtProvider(IOptions<JwtOptions> jwtOptions, 
+            UserManager<AppUser> userManager, 
+            IAppUserRefreshTokenRepository appUserRefreshTokenRepository,
+            IAppUserClaimRepository appUserClaimRepository)
         {
             _jwtOptions = jwtOptions.Value;
             _appUserRefreshTokenRepository = appUserRefreshTokenRepository;
+            _appUserClaimRepository = appUserClaimRepository;
         }
 
         public async Task<LoginCommandResponse> CreateTokenAsync(AppUser user)
@@ -38,6 +44,20 @@ namespace QrAssignment.Infrastructure.Authentication
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role.Name));
                 }
+            }
+            var pagePermissions = await _appUserClaimRepository
+                .GetUserWithPermissionsAsync(user.Id);
+
+            if (pagePermissions != null && pagePermissions.Any())
+            {
+                foreach (var permission in pagePermissions)
+                {
+                    // JSON'a hiç gerek yok. 
+                    // ClaimType = Sayfa Adı ("Page_Users")
+                    // ClaimValue = Yetki Değeri ("7")
+                    claims.Add(new Claim(permission.PageName, permission.PermissionValue.ToString()));
+                }
+
             }
             DateTime expires = DateTime.Now.AddHours(1);
 

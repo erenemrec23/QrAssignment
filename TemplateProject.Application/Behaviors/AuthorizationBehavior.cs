@@ -1,9 +1,8 @@
 ﻿using MediatR;
+using QrAssignment.Application.DTOs;
 using QrAssignment.Application.Interfaces;
-using QrAssignment.Domain.Shared; // PagePermissions enum'ının olduğu yer
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using QrAssignment.Domain.Shared;
+using System.Text.Json; // PagePermissions enum'ının olduğu yer
 
 namespace QrAssignment.Application.Behaviors
 {
@@ -29,19 +28,37 @@ namespace QrAssignment.Application.Behaviors
                 if (string.IsNullOrEmpty(userId))
                     throw new UnauthorizedAccessException("Kimlik doğrulama başarısız. Lütfen giriş yapın.");
 
-                // 1. O anki kullanıcının token'ından ilgili sayfanın yetki değerini (Örn: "15") okuyoruz
-                var userClaimValue = _currentUserService.GetClaim(securedRequest.PageName);
+                // 1. Tüm "permissions" etiketli JSON claimleri çek
+                var permissionClaims = _currentUserService.GetClaims(securedRequest.PageName);
 
-                // 2. Eğer sayfaya ait claim yoksa veya bozuksa (sayıya çevrilemiyorsa), yetkisi yok demektir
-                if (string.IsNullOrEmpty(userClaimValue) || !int.TryParse(userClaimValue, out int totalPermissionValue))
+                if (!permissionClaims.Any())
+                    throw new UnauthorizedAccessException("Sistemde hiçbir yetkiniz bulunmuyor.");
+
+                int totalEffectivePermission = 0;
+
+                // 2. Her bir JSON'u çöz ve ilgili sayfayı bul
+                foreach (var jsonValue in permissionClaims)
                 {
-                    throw new UnauthorizedAccessException($"Bu sayfaya ({securedRequest.PageName}) erişim yetkiniz bulunmamaktadır.");
+                    // JSON'ı Parse et
+                    var parsedJson = JsonSerializer.Deserialize<PermissionDto>(jsonValue);
+
+                    // Sadece bu isteğin ait olduğu sayfayı (Örn: Page_Tenants) filtrele
+                    if (parsedJson != null && parsedJson.PageName == securedRequest.PageName)
+                    {
+                        totalEffectivePermission |= parsedJson.PermissionValue;
+                    }
                 }
 
-                // 3. String'den int'e dönen sayıyı kendi Flags Enum'ımıza (PagePermissions) cast ediyoruz
-                var userPermissions = (PagePermissions)totalPermissionValue;
+                // 3. Yetki kontrolü
+                if (totalEffectivePermission == 0)
+                    throw new UnauthorizedAccessException($"Bu sayfaya ({securedRequest.PageName}) erişim yetkiniz bulunmamaktadır.");
 
-                // 4. KONTROL: İstenen spesifik yetki (Örn: ExportExcel) bu toplamın içinde var mı?
+                // ... kalanı aynı (HasFlag vs.)
+
+                // 4. String'den int'e dönen ve birleştirilen sayıyı kendi Flags Enum'ımıza (PagePermissions) cast ediyoruz
+                var userPermissions = (PagePermissions)totalEffectivePermission;
+
+                // 5. KONTROL: İstenen spesifik yetki (Örn: ExportExcel) bu toplamın içinde var mı?
                 if (!userPermissions.HasFlag(securedRequest.RequiredPermission))
                 {
                     throw new UnauthorizedAccessException($"Bu işlemi ({securedRequest.RequiredPermission}) gerçekleştirmek için yetkiniz eksik.");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,6 +11,7 @@ namespace QrAssignment.Application.Features.AppUser.Queries.GetList
         public string FirstName { get; set; } 
         public string LastName { get; set; }
 
+        public string FullName { get { return $"{FirstName} {LastName}";  } }
         public string Email { get; set; }
     }
 }

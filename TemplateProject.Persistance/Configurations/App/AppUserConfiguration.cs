@@ -18,6 +18,13 @@ namespace QrAssignment.Persistance.Configurations.App
                 roleBuilder.HasKey("UserId", "Id"); 
             });
 
+            builder.HasMany(u => u.Claims)
+                   .WithOne() // IdentityUserClaim sınıfının içinde AppUser'a dönen bir navigation property olmadığı için içi boş bırakılır
+                   .HasForeignKey(uc => uc.UserId)
+                   .IsRequired()
+                   .OnDelete(DeleteBehavior.Cascade)
+                   ;
+
         }
     }
 }

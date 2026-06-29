@@ -17,7 +17,9 @@ public sealed class AppUserRepository : IAppUserRepository
     }
 
     public async Task<AppUser?> GetByIdWithRefreshTokenAsync(Guid id, CancellationToken cancellationToken = default)
-    { 
+    {
+        
+
         return await _userManager.Users
             .Include(u => u.RefreshToken) 
             .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
