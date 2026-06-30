@@ -54,6 +54,7 @@
   "Label.VehicleQrCode": "Araç QR Kodu",
   "Button.Print": "Yazdır",
   "Button.Close": "Kapat",
+  "Button.Cancel": "İptal",
 
   "QrLocation.Form.Title.Create": "Yeni Qr Lokasyon Ekle",
   "QrLocation.Form.Title.Edit": "Qr Lokasyon Düzenle",
@@ -141,6 +142,9 @@
   "Label.SelectUser": "Kullanıcı",
   "Placeholder.SearchPage": "Sayfa Arama",
   "Tenant.Form.Title.Edit": "Firma Formu",
-  "Messages.PermissionsUpdatedSuccess": "Yetkiler başarıyla güncellendi."
+  "Messages.PermissionsUpdatedSuccess": "Yetkiler başarıyla güncellendi.",
+  "Label.ItsContinue": "İşlem Devam Ediyor...",
+  "Label.ConfirmMessage": "Değişiklikleri kaydetmek istediğinize emin misiniz?",
+  "Label.ConfirmTitle": "Kayıt Onayı"
 }
  
