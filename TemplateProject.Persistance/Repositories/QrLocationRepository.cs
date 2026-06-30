@@ -1,11 +1,10 @@
-﻿using Azure.Core;
+﻿ 
 using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Features.QrLocations.Queries.GetById;
 using QrAssignment.Application.Features.QrLocations.Queries.GetList;
 using QrAssignment.Application.Repositories;
-using QrAssignment.Domain.Entity;
-using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Entity; 
 using QrAssignment.Persistance.Context;
 
 namespace QrAssignment.Persistance.Repositories;

@@ -3,12 +3,9 @@ using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Extensions;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Abstractions;
-using QrAssignment.Persistance.Context;
-using System;
-using System.Collections.Generic;
+using QrAssignment.Persistance.Context; 
 using System.Linq.Dynamic.Core;
-using System.Linq.Expressions;
-using System.Text;
+using System.Linq.Expressions; 
 
 namespace QrAssignment.Persistance.Repositories
 {
