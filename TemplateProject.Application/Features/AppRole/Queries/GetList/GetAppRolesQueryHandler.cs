@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
+using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared; 
 
 namespace QrAssignment.Application.Features.AppRole.Queries.GetList
 {
     // Handler
-    public sealed class GetAppRolesQueryHandler : IRequestHandler<GetAppRolesQuery, Result<List<AppRoleListItemDto>>>
+    public sealed class GetAppRolesQueryHandler : IRequestHandler<GetAppRolesQuery, Result<Paginate<AppRoleListItemDto>>>
     {
         private readonly IAppRoleRepository _appRoleRepository;
 
@@ -15,9 +16,9 @@ namespace QrAssignment.Application.Features.AppRole.Queries.GetList
             _appRoleRepository = appRoleRepository;
         }
 
-        public async Task<Result<List<AppRoleListItemDto>>> Handle(GetAppRolesQuery request, CancellationToken cancellationToken)
+        public async Task<Result<Paginate<AppRoleListItemDto>>> Handle(GetAppRolesQuery request, CancellationToken cancellationToken)
         {
-            var result = await _appRoleRepository.GetList(cancellationToken);
+            var result = await _appRoleRepository.GetListAsync(request, cancellationToken);
              
             return Result.Success(result);
         }
