@@ -4,10 +4,8 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Commands.Create
 {
-    public class CreateTenantCommand : ICommand<Result<Guid>>, ISecuredRequest
+    public class CreateTenantCommand : ICommand<Result<Guid>>
     {
-        public string PageName => "Page_Tenants";
-        public PagePermissions RequiredPermission => PagePermissions.Insert;
         public required string Name { get; set; }
     }
 }

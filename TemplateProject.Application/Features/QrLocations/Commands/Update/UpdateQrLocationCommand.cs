@@ -4,11 +4,9 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.QrLocations.Commands.Update
 {
-    public class UpdateQrLocationCommand : ICommand<Result<UpdateQrLocationResponse>>, ISecuredRequest
+    public class UpdateQrLocationCommand : ICommand<Result<UpdateQrLocationResponse>>
     {
 
-        public string PageName => "Page_QrLocations";
-        public PagePermissions RequiredPermission => PagePermissions.Update;
         public Guid? Id { get; set; }
         public required string Name { get; set; }
 

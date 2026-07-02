@@ -5,11 +5,9 @@ using QrAssignment.Domain.Shared;
 namespace QrAssignment.Application.Features.QrLocations.Queries.GetById
 {
 
-    public class QrLocationGetByIdQuery : IRequest<Result<List<QrLocationItemGetByIdDto>>>, ISecuredRequest
+    public class QrLocationGetByIdQuery : IRequest<Result<List<QrLocationItemGetByIdDto>>>
     {
 
-        public string PageName => "Page_QrLocations";
-        public PagePermissions RequiredPermission => PagePermissions.View;
         public Guid Id { get; set; }
 
         public QrLocationGetByIdQuery(Guid id)

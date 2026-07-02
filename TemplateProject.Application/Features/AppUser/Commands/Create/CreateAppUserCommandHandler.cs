@@ -2,7 +2,7 @@
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Features.AppUser.Commands.CreateAppUser
+namespace QrAssignment.Application.Features.AppUser.Commands.Create
 {
     internal sealed class CreateAppUserCommandHandler : IRequestHandler<CreateAppUserCommand, Result<Unit>>
     {

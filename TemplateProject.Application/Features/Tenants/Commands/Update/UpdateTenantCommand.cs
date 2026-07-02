@@ -8,11 +8,9 @@ using System.Text;
 
 namespace QrAssignment.Application.Features.Tenants.Commands.Update
 {
-    public class UpdateTenantCommand : ICommand<Result<UpdateTenantResponse>>, ISecuredRequest
+    public class UpdateTenantCommand : ICommand<Result<UpdateTenantResponse>>
     {
 
-        public string PageName => "Page_Tenants";
-        public PagePermissions RequiredPermission => PagePermissions.Update;
         public Guid? Id { get; set; }
         public required string Name { get; set; }
          

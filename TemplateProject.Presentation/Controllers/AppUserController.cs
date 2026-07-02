@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using QrAssignment.Application.Features.AppUser.Commands.CreateAppUser;
-using QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser;
+using QrAssignment.Application.Features.AppUser.Commands.Create;
+using QrAssignment.Application.Features.AppUser.Commands.Update;
 using QrAssignment.Application.Features.AppUser.Queries.GetById;
 using QrAssignment.Application.Features.AppUser.Queries.GetList;
 

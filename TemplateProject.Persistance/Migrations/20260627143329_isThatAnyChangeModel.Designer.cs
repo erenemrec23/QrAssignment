@@ -81,7 +81,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.ToTable("AppUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppRole", b =>
+            modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppRoles", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -493,7 +493,7 @@ namespace TemplateProject.Persistance.Migrations
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUserRole", b =>
                 {
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppRole", "AppRole")
+                    b.HasOne("QrAssignment.Domain.Entity.App.AppRoles", "AppRoles")
                         .WithMany()
                         .HasForeignKey("AppRoleId");
 
@@ -501,7 +501,7 @@ namespace TemplateProject.Persistance.Migrations
                         .WithMany("AppUserRoles")
                         .HasForeignKey("AppUserId");
 
-                    b.Navigation("AppRole");
+                    b.Navigation("AppRoles");
 
                     b.Navigation("AppUser");
                 });

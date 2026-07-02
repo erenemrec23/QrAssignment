@@ -4,11 +4,9 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.AppUser.Queries.GetById
 {
-    public class GetByIdAppUserQuery : IRequest<Result<AppUserItemDto>>, ISecuredRequest
+    public class GetByIdAppUserQuery : IRequest<Result<AppUserItemDto>>
     {
 
-        public string PageName => "Page_AppUsers";
-        public PagePermissions RequiredPermission => PagePermissions.View;
         public GetByIdAppUserQuery(Guid? id)
         {
             Id = id;

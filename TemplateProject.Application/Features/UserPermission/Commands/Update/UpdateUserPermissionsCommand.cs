@@ -9,10 +9,8 @@ namespace QrAssignment.Application.Features.Permission.Commands.Update
 {
     public sealed record UpdateUserPermissionsCommand(
         string UserId,
-        List<PermissionUserUpdateDto> Permissions) : IRequest<Result>, ISecuredRequest
+        List<PermissionUserUpdateDto> Permissions) : IRequest<Result>
     {
 
-        public string PageName => "Page_Users";
-        public PagePermissions RequiredPermission => PagePermissions.Update;
     };
 }

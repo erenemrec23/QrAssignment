@@ -5,11 +5,9 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Queries.GetList
 {
-    public class GetListTenantQuery : PageRequestBaseDto, IRequest<Result<Paginate<TenantListItemDto>>>, ISecuredRequest
+    public class GetListTenantQuery : PageRequestBaseDto, IRequest<Result<Paginate<TenantListItemDto>>>
     {
 
-        public string PageName => "Page_Tenants";
-        public PagePermissions RequiredPermission => PagePermissions.View;
     }
 
     

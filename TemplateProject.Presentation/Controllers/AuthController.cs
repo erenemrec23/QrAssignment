@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QrAssignment.Application.Features.AppUser.Commands.CreateAppUser;
+using QrAssignment.Application.Features.AppUser.Commands.Create;
 using QrAssignment.Application.Features.AuthFeatures.Commands.Login;
 
 namespace QrAssignment.Presentation.Controllers

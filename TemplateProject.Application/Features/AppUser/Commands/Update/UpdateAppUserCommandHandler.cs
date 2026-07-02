@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QrAssignment.Application.Features.AppUser.Commands.UpdateAppUser
+namespace QrAssignment.Application.Features.AppUser.Commands.Update
 {
     internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateAppUserCommand, Result<Unit>>
     {

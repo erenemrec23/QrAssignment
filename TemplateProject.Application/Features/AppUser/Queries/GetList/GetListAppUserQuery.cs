@@ -8,10 +8,5 @@ using System.Text;
 
 namespace QrAssignment.Application.Features.AppUser.Queries.GetList
 {
-    public class GetListAppUserQuery : IRequest<Result<List<AppUserListItemDto>>>, ISecuredRequest
-    {
-
-        public string PageName => "Page_AppUsers";
-        public PagePermissions RequiredPermission => PagePermissions.View;
-    }
+    public class GetListAppUserQuery : IRequest<Result<List<AppUserListItemDto>>>;
 }

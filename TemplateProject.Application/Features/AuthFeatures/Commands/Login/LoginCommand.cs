@@ -7,5 +7,5 @@ namespace QrAssignment.Application.Features.AuthFeatures.Commands.Login
 {
     public sealed record LoginCommand(
     string UserNameOrEmail,
-    string Password) : ICommand<Result<LoginCommandResponse>>, INotSecuredRequest;
+    string Password) : ICommand<Result<LoginCommandResponse>>;
 }
