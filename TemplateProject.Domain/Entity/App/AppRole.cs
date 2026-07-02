@@ -14,9 +14,9 @@ namespace QrAssignment.Domain.Entity.App
         public virtual DateTime? ModifiedDate { get; set; }
 
         public virtual bool? IsDeleted { get; set; }
-        public static AppUserRole Create(string name)
+        public static AppRole Create(string name)
         {
-            return new AppUserRole()
+            return new AppRole()
             {
                 Name = name
             };

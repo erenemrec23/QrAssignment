@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using QrAssignment.Domain.Entity.App;
+using QrAssignment.Application.Features.AppRole.Commands.Create;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.AppRole.Commands.Create
 {
     // Handler
-    public sealed class CreateAppRoleCommandHandler : IRequestHandler<CreateRoleCommand, Result>
+    public sealed class CreateAppRoleCommandHandler : IRequestHandler<CreateAppRoleCommand, Result>
     {
         private readonly RoleManager<QrAssignment.Domain.Entity.App.AppRole> _roleManager;
 
@@ -15,7 +15,7 @@ namespace QrAssignment.Application.Features.AppRole.Commands.Create
             _roleManager = roleManager;
         }
 
-        public async Task<Result> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreateAppRoleCommand request, CancellationToken cancellationToken)
         {
             var roleExists = await _roleManager.RoleExistsAsync(request.Name);
             if (roleExists)

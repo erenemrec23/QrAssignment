@@ -19,6 +19,7 @@ using Serilog.Ui.MsSqlServerProvider.Extensions;
 using Serilog.Ui.Web.Extensions;
 using System.Globalization;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -127,6 +128,33 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 builder.Services.AddSingleton<IAppLocalizer, AppLocalizer>();
 builder.Services.AddScoped<ILocalizationService, JsonLocalizationManager>();
 
+builder.Services.AddRateLimiter(options =>
+{
+    // Kurala 429 Too Many Requests durum kodu atıyoruz
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Limit aşıldığında Client'a dönülecek özel JSON (Kendi Result yapına uydurabilirsin)
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.ContentType = "application/json";
+        var errorResponse = "{\"success\": false, \"message\": \"Çok fazla istek attınız. Lütfen bir süre bekleyip tekrar deneyin.\"}";
+        await context.HttpContext.Response.WriteAsync(errorResponse, cancellationToken: token);
+    };
+
+    // "IpBasedRateLimit" adında bir kural seti (Policy) oluşturuyoruz
+    options.AddPolicy("IpBasedRateLimit", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            // Partition Key: İstek atan kişinin IP adresi. Eğer IP bulunamazsa "unknown" olarak grupla.
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,             // Süre dolduğunda limiti otomatik yenile
+                PermitLimit = 60,                     // Maksimum İstek Sayısı
+                QueueLimit = 0,                       // Sıraya alma (0 ise limiti aşan anında reddedilir)
+                Window = TimeSpan.FromMinutes(1)      // Zaman Dilimi (1 Dakika)
+            }
+        ));
+});
 
 var app = builder.Build();
 app.UseExceptionHandler();

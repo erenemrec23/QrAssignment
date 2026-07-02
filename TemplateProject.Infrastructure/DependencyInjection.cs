@@ -11,8 +11,7 @@ namespace QrAssignment.Infrastructure
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            // typeof(DependencyInjection) yerine .Assembly ekliyoruz
+        { 
             services.AddHttpContextAccessor();
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IUserContext, UserContext>();

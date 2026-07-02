@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using QrAssignment.Domain.Shared;
-using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Shared; 
 
 namespace QrAssignment.Application.Features.AppRole.Commands.Update
 {

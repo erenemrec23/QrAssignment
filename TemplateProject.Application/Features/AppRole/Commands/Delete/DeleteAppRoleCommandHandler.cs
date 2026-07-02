@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using QrAssignment.Domain.Shared; 
-using QrAssignment.Domain.Entity.App;
 namespace QrAssignment.Application.Features.AppRole.Commands.Delete
 {
     // Handler
     public sealed class DeleteAppRoleCommandHandler : IRequestHandler<DeleteAppRoleCommand, Result>
     {
-        private readonly RoleManager<QrAssignment.Domain.Entity.App.AppRole> _roleManager;
+        private readonly RoleManager<
+ QrAssignment.Domain.Entity.App.AppRole> _roleManager;
 
         public DeleteAppRoleCommandHandler(RoleManager<QrAssignment.Domain.Entity.App.AppRole> roleManager)
         {
