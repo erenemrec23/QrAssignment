@@ -1,10 +1,14 @@
 ﻿using MediatR;
+using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.AppUser.Queries.GetById
 {
-    public class GetByIdAppUserQuery : IRequest<Result<AppUserItemDto>>
+    public class GetByIdAppUserQuery : IRequest<Result<AppUserItemDto>>, ISecuredRequest
     {
+
+        public string PageName => "Page_AppUsers";
+        public PagePermissions RequiredPermission => PagePermissions.View;
         public GetByIdAppUserQuery(Guid? id)
         {
             Id = id;
@@ -12,4 +16,4 @@ namespace QrAssignment.Application.Features.AppUser.Queries.GetById
 
         public Guid? Id { get; set; }
     }
-}
+} 
