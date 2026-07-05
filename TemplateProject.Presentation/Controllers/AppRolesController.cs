@@ -12,11 +12,11 @@ namespace QrAssignment.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AppRoleController : ControllerBase
+    public class AppRolesController : ControllerBase
     {
         private readonly IMediator _mediator;
          
-        public AppRoleController(IMediator mediator)
+        public AppRolesController(IMediator mediator)
         {
             _mediator = mediator;
         }

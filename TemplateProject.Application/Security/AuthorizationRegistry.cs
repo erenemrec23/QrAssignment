@@ -33,17 +33,23 @@ namespace QrAssignment.Application.Security
             { typeof(Features.AppRole.Commands.Create.CreateAppRoleCommand), (AppPages.Roles, PagePermissions.Insert) },
             { typeof(Features.AppRole.Commands.Update.UpdateAppRoleCommand), (AppPages.Roles, PagePermissions.Update) },
             { typeof(Features.AppRole.Commands.Delete.DeleteAppRoleCommand), (AppPages.Roles, PagePermissions.Delete) },
-             
+            { typeof(Features.AppRole.Queries.GetList.GetAppRolesQuery), (AppPages.Roles, PagePermissions.View) },
+
             { typeof(Features.AppUser.Commands.Create.CreateAppUserCommand), (AppPages.Users, PagePermissions.Insert) },
             { typeof(Features.AppUser.Commands.Update.UpdateAppUserCommand), (AppPages.Users, PagePermissions.Update) },
             //{ typeof(Features.AppUser.Commands.Delete.DeleteAppUserCommand), (AppPages.Users, PagePermissions.Delete) }
-             
-            { typeof(Features.Permission.Commands.Update.UpdateUserPermissionsCommand), (AppPages.UserPermissions , PagePermissions.Update) },
-            { typeof(Features.AppRole.Queries.GetList.GetAppRolesQuery), (AppPages.UserPermissions, PagePermissions.View) },
+            { typeof(Features.AppUser.Queries.GetList.GetListAppUserQuery), (AppPages.Users, PagePermissions.View) },
+            { typeof(Features.AppUser.Queries.GetById.GetByIdAppUserQuery), (AppPages.Users, PagePermissions.View) },
+
+
+            { typeof(Features.Permission.Queries.GetByUserId.PermissionUserGetByUserIdQuery), (AppPages.Users, PagePermissions.View) },
+            { typeof(Features.Permission.Commands.Update.UpdateUserPermissionsCommand), (AppPages.Users, PagePermissions.Update) },  
 
 
             { typeof(Features.QrLocations.Commands.Create.CreateQrLocationCommand), (AppPages.QrLocations, PagePermissions.Insert) },
             { typeof(Features.QrLocations.Commands.Update.UpdateQrLocationCommand), (AppPages.QrLocations, PagePermissions.Update) },
+            { typeof(Features.QrLocations.Queries.GetList.GetListQrLocationQuery), (AppPages.QrLocations, PagePermissions.View) },
+            { typeof(Features.QrLocations.Queries.GetById.QrLocationGetByIdQuery), (AppPages.QrLocations, PagePermissions.View) },
             //{ typeof(Features.QrLocations.Commands.Delete.DeleteQrLocationCommand), (AppPages.QrLocations, PagePermissions.Delete) },
 
 
