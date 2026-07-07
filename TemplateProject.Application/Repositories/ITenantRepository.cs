@@ -11,7 +11,7 @@ namespace QrAssignment.Application.Repositories
     {
         Task<Paginate<TenantListItemDto>> GetListAsync(PageRequestBaseDto request, CancellationToken cancellationToken);
         Task<TenantItemDto> GetById(Guid id, CancellationToken cancellationToken);
-        Task<List<TenantListItemExcelDto>> GetExportListAsync(GetListTenantExportExcelQuery request, CancellationToken cancellationToken);
+        Task<List<TenantListItemExcelDto>> GetExportListAsync(GetTenantListExportExcelQuery request, CancellationToken cancellationToken);
 
     }
 }

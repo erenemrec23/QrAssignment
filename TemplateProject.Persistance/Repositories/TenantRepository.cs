@@ -34,7 +34,7 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
             cancellationToken); ;
     }
 
-    public Task<List<TenantListItemExcelDto>> GetExportListAsync(GetListTenantExportExcelQuery request, CancellationToken cancellationToken)
+    public Task<List<TenantListItemExcelDto>> GetExportListAsync(GetTenantListExportExcelQuery request, CancellationToken cancellationToken)
     {
         IQueryable<Tenant> query = _context.Tenants.AsNoTracking();
 

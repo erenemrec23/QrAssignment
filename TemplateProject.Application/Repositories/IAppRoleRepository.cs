@@ -8,7 +8,7 @@ namespace QrAssignment.Application.Repositories
 {
     public interface IAppRoleRepository 
     {
-        Task<Paginate<AppRoleListItemDto>> GetListAsync(PageRequestBaseDto request, CancellationToken cancellationToken = default);
+        Task<Paginate<RoleListItemDto>> GetListAsync(PageRequestBaseDto request, CancellationToken cancellationToken = default);
     }
 }
  

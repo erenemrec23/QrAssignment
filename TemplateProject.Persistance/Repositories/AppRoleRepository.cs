@@ -17,7 +17,7 @@ public sealed class AppRoleRepository : IAppRoleRepository
     {
         _roleManager = roleManager;
     }
-    public async Task<Paginate<AppRoleListItemDto>> GetListAsync(PageRequestBaseDto request, CancellationToken cancellationToken = default)
+    public async Task<Paginate<RoleListItemDto>> GetListAsync(PageRequestBaseDto request, CancellationToken cancellationToken = default)
     {
         // RoleManager.Roles bize doğrudan IQueryable<AppRole> döner.
         IQueryable<AppRole> query = _roleManager.Roles;
@@ -26,7 +26,7 @@ public sealed class AppRoleRepository : IAppRoleRepository
             cancellationToken);
     }
 
-    public async Task<Paginate<AppRoleListItemDto>> GetPaginatedRolesAsync(
+    public async Task<Paginate<RoleListItemDto>> GetPaginatedRolesAsync(
         PageRequestBaseDto request,
         CancellationToken cancellationToken = default)
     {
@@ -57,11 +57,11 @@ public sealed class AppRoleRepository : IAppRoleRepository
         var items = await query
             .Skip(request.PageIndex * request.PageSize)
             .Take(request.PageSize)
-            .Select(r => new AppRoleListItemDto(r.Id.ToString(), r.Name!))
+            .Select(r => new RoleListItemDto(r.Id.ToString(), r.Name!))
             .ToListAsync(cancellationToken);
 
         // 6. Senin standart Paginate nesneni döndür
-        return new Paginate<AppRoleListItemDto>
+        return new Paginate<RoleListItemDto>
         {
             Index = request.PageIndex,
             PageSize = request.PageSize,

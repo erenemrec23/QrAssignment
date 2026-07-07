@@ -9,7 +9,7 @@ using System.Text;
 namespace QrAssignment.Application.Features.Permission.Queries.GetByUserId
 {
      
-    public class GetByIdPermissionUserQueryHandler : IRequestHandler<PermissionUserGetByUserIdQuery, Result<PermissionUserItemDto>>
+    public class GetByIdPermissionUserQueryHandler : IRequestHandler<GetUserPermissionByUserIdQuery, Result<PermissionUserItemDto>>
     {
         private readonly IAppUserClaimRepository  _appUserClaimRepository;
 
@@ -18,7 +18,7 @@ namespace QrAssignment.Application.Features.Permission.Queries.GetByUserId
             _appUserClaimRepository = appUserClaimRepository;
         }
 
-        public async Task<Result<PermissionUserItemDto>> Handle(PermissionUserGetByUserIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PermissionUserItemDto>> Handle(GetUserPermissionByUserIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _appUserClaimRepository.GetUserWithPermissionsAsync(request.UserId, cancellationToken);
 

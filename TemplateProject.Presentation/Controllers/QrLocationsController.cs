@@ -30,7 +30,7 @@ namespace QrAssignment.Presentation.Controllers
 
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetList([FromQuery] GetListQrLocationQuery query)
+        public async Task<IActionResult> GetList([FromQuery] GetQrLocationListQuery query)
         {
             var response = await _mediator.Send(query);
             return Ok(response);
@@ -39,7 +39,7 @@ namespace QrAssignment.Presentation.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var query = new QrLocationGetByIdQuery(id);
+            var query = new GetQrLocationByIdQuery(id);
             var result = await _mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)

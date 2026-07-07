@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QrAssignment.Application.Features.AppUser.Commands.Create;
+using QrAssignment.Application.Features.Users.Commands.Create;
 using QrAssignment.Application.Features.AuthFeatures.Commands.Login;
 
 namespace QrAssignment.Presentation.Controllers
@@ -28,7 +28,7 @@ namespace QrAssignment.Presentation.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] CreateAppUserCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Register([FromBody] CreateUserCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
             return Ok(result);

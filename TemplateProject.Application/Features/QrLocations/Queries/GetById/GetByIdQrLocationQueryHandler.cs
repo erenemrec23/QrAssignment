@@ -4,7 +4,7 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.QrLocations.Queries.GetById
 {
-    public class GetByIdQrLocationQueryHandler : IRequestHandler<QrLocationGetByIdQuery, Result<List<QrLocationItemGetByIdDto>>>
+    public class GetByIdQrLocationQueryHandler : IRequestHandler<GetQrLocationByIdQuery, Result<List<QrLocationItemGetByIdDto>>>
     {
         private readonly IQrLocationRepository _qrLocationRepository;
 
@@ -13,7 +13,7 @@ namespace QrAssignment.Application.Features.QrLocations.Queries.GetById
             _qrLocationRepository = qrLocationRepository;
         }
 
-        public async Task<Result<List<QrLocationItemGetByIdDto>>> Handle(QrLocationGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<QrLocationItemGetByIdDto>>> Handle(GetQrLocationByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _qrLocationRepository.GetById(request.Id, cancellationToken);
 

@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using QrAssignment.Application.Features.AppUser.Commands.Create;
-using QrAssignment.Application.Features.AppUser.Commands.Update;
-using QrAssignment.Application.Features.AppUser.Queries.GetById;
-using QrAssignment.Application.Features.AppUser.Queries.GetList;
+using QrAssignment.Application.Features.Users.Commands.Create;
+using QrAssignment.Application.Features.Users.Commands.Update;
+using QrAssignment.Application.Features.Users.Queries.GetById;
+using QrAssignment.Application.Features.Users.Queries.GetList;
 
 
 namespace QrAssignment.Presentation.Controllers
@@ -22,7 +22,7 @@ namespace QrAssignment.Presentation.Controllers
 
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(CreateAppUserCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(CreateUserCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
             return Ok(result);
@@ -30,7 +30,7 @@ namespace QrAssignment.Presentation.Controllers
 
 
         [HttpPut("[action]")]
-        public async Task<IActionResult> Update([FromBody] UpdateAppUserCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateUserCommand command)
         {
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -38,7 +38,7 @@ namespace QrAssignment.Presentation.Controllers
 
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetList([FromQuery] GetListAppUserQuery query)
+        public async Task<IActionResult> GetList([FromQuery] GetUserListQuery query)
         {
             var response = await _mediator.Send(query);
             return Ok(response);
@@ -48,7 +48,7 @@ namespace QrAssignment.Presentation.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid? id, CancellationToken cancellationToken)
         {
-            var query = new GetByIdAppUserQuery(id);
+            var query = new GetUserByIdQuery(id);
             var result = await _mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)

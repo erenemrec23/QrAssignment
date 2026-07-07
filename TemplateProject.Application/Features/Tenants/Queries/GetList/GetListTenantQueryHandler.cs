@@ -5,7 +5,7 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Queries.GetList
 {
-    public class GetListTenantQueryHandler : IRequestHandler<GetListTenantQuery, Result<Paginate<TenantListItemDto>>>
+    public class GetListTenantQueryHandler : IRequestHandler<GetTenantListQuery, Result<Paginate<TenantListItemDto>>>
     {
         private readonly ITenantRepository _tenantRepository;
 
@@ -14,7 +14,7 @@ namespace QrAssignment.Application.Features.Tenants.Queries.GetList
             _tenantRepository = tenantRepository;
         }
 
-        public async Task<Result<Paginate<TenantListItemDto>>> Handle(GetListTenantQuery request, CancellationToken cancellationToken)
+        public async Task<Result<Paginate<TenantListItemDto>>> Handle(GetTenantListQuery request, CancellationToken cancellationToken)
         {
             var result = await _tenantRepository.GetListAsync(request, cancellationToken);
 

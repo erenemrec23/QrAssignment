@@ -1,11 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using QrAssignment.Application.Features.AppRole.Commands.Create;
-using QrAssignment.Application.Features.AppRole.Commands.Delete;
-using QrAssignment.Application.Features.AppRole.Commands.Update;
-using QrAssignment.Application.Features.AppRole.Queries.GetList;
-using QrAssignment.Application.Features.AppUser.Queries.GetList;
-using QrAssignment.Application.Features.Tenants.Queries.GetList;
+using QrAssignment.Application.Features.Roles.Commands.Create;
+using QrAssignment.Application.Features.Roles.Commands.Delete;
+using QrAssignment.Application.Features.Roles.Commands.Update;
+using QrAssignment.Application.Features.Roles.Queries.GetList;
 
 
 namespace QrAssignment.Presentation.Controllers
@@ -24,13 +22,13 @@ namespace QrAssignment.Presentation.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetList()
         {
-            var result = await _mediator.Send(new GetAppRolesQuery());
+            var result = await _mediator.Send(new GetRoleListQuery());
             return Ok(result);
         }
 
         // POST: api/Roles/Create
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create([FromBody] CreateAppRoleCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateRoleCommand command)
         {
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -38,7 +36,7 @@ namespace QrAssignment.Presentation.Controllers
 
         // PUT: api/Roles/Update
         [HttpPut("[action]")]
-        public async Task<IActionResult> Update([FromBody] UpdateAppRoleCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateRoleCommand command)
         {
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -50,7 +48,7 @@ namespace QrAssignment.Presentation.Controllers
         [HttpDelete("[action]/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var command = new DeleteAppRoleCommand(id);
+            var command = new DeleteRoleCommand(id);
             var result = await _mediator.Send(command);
             return Ok(result);
         }

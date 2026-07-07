@@ -1,5 +1,5 @@
-﻿using QrAssignment.Application.Features.AppUser.Queries.GetById;
-using QrAssignment.Application.Features.AppUser.Queries.GetList;
+﻿using QrAssignment.Application.Features.Users.Queries.GetById;
+using QrAssignment.Application.Features.Users.Queries.GetList;
 using QrAssignment.Domain.Entity.App;
 
 namespace QrAssignment.Application.Repositories

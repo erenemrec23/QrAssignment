@@ -9,7 +9,7 @@ using System.Text;
 namespace QrAssignment.Application.Features.Permission.Commands.Update
 {
     internal sealed class UpdateUserPermissionsCommandHandler
-        : IRequestHandler<UpdateUserPermissionsCommand, Result>
+        : IRequestHandler<UpdateUserPermissionCommand, Result>
     {
         private readonly UserManager<Domain.Entity.App.AppUser> _userManager;
 
@@ -18,7 +18,7 @@ namespace QrAssignment.Application.Features.Permission.Commands.Update
             _userManager = userManager;
         }
 
-        public async Task<Result> Handle(UpdateUserPermissionsCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(UpdateUserPermissionCommand request, CancellationToken cancellationToken)
         {
             // 1. Kullanıcıyı bul
             var user = await _userManager.FindByIdAsync(request.UserId);

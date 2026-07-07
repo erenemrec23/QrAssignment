@@ -20,7 +20,7 @@ namespace QrAssignment.Presentation.Controllers
         }
          
         [HttpPut("[action]")]
-        public async Task<IActionResult> Update([FromBody] UpdateUserPermissionsCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateUserPermissionCommand command)
         {
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -30,7 +30,7 @@ namespace QrAssignment.Presentation.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetListByUserId(Guid? userId, CancellationToken cancellationToken)
         {
-            var query = new PermissionUserGetByUserIdQuery(userId);
+            var query = new GetUserPermissionByUserIdQuery(userId);
             var result = await _mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)
