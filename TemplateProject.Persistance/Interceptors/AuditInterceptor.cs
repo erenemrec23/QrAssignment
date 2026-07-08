@@ -43,6 +43,7 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
             {
                 entry.Entity.ModifiedByUserId = currentUserId;
                 entry.Entity.ModifiedDate = currentTime;
+                entry.Property(x => x.RevNum).IsModified = false; 
             }
             else if (entry.State == EntityState.Deleted && entry.Entity.IsDeleted == false)
             {
@@ -50,6 +51,7 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
                 entry.Entity.IsDeleted = true;
                 entry.Entity.ModifiedByUserId = currentUserId;
                 entry.Entity.ModifiedDate = currentTime;
+                entry.Property(x => x.RevNum).IsModified = false;   // ekleyin 
             }
              
         }

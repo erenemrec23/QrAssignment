@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QrAssignment.Persistance.Context;
 
@@ -11,9 +12,11 @@ using QrAssignment.Persistance.Context;
 namespace TemplateProject.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260707173111_removerevnum")]
+    partial class removerevnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,12 +229,6 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTime>("RefreshTokenExpires")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("RevNum")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
-
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -309,12 +306,6 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("RevNum")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -402,12 +393,6 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<Guid?>("ParentLocationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("RevNum")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
-
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -460,12 +445,6 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.Property<Guid?>("ParentRegionId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("RevNum")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()

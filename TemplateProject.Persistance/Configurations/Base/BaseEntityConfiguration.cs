@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using QrAssignment.Domain.Abstractions;
 
@@ -15,6 +16,13 @@ namespace QrAssignment.Persistance.Configurations.Base
             builder.Property(x => x.RevNum)
                .ValueGeneratedOnAdd()
                .UseIdentityColumn();
+
+            //builder.Property(x => x.RevNum)
+            //   .ValueGeneratedOnAdd()
+            //   .UseIdentityColumn()
+            //   // SİHİRLİ SATIR BURASI: 
+            //   // Kayıt eklendikten sonraki işlemlerde (Update vs) bu kolonu yoksay!
+            //   .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
         }
     }
 }
