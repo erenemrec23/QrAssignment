@@ -145,6 +145,8 @@
   "Messages.PermissionsUpdatedSuccess": "Yetkiler başarıyla güncellendi.",
   "Label.ItsContinue": "İşlem Devam Ediyor...",
   "Label.ConfirmMessage": "Değişiklikleri kaydetmek istediğinize emin misiniz?",
-  "Label.ConfirmTitle": "Kayıt Onayı"
+  "Label.ConfirmTitle": "Kayıt Onayı",
+  "Label.RevNum": "Kod",
+  "Placeholder.Search": "Ara..."
 }
  

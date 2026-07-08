@@ -1,5 +1,7 @@
-﻿using System.Linq.Dynamic.Core;
-using QrAssignment.Application.DTOs.List;
+﻿using QrAssignment.Application.DTOs.List;
+using QrAssignment.Domain.Attributes;
+using System.Globalization;
+using System.Linq.Dynamic.Core;
 
 namespace QrAssignment.Application.Extensions
 {
@@ -7,62 +9,55 @@ namespace QrAssignment.Application.Extensions
     {
         public static IQueryable<T> ToDynamic<T>(this IQueryable<T> query, DynamicQueryDto dynamicQuery)
         {
-            // 1. FİLTRELEME (Where) İŞLEMİ
             if (dynamicQuery.Filter != null)
             {
-                // Parametreleri (örn: "Eren", 30) tutacağımız liste
                 var values = new List<object>();
-
-                // Recursive metot ile SQL where string'ini oluşturuyoruz
-                string whereQuery = Transform(dynamicQuery.Filter, values);
+                string whereQuery = Transform(dynamicQuery.Filter, values, typeof(T));
 
                 if (!string.IsNullOrEmpty(whereQuery))
                 {
-                    // System.Linq.Dynamic.Core'un string tabanlı Where metodu
-                    // Örn: query.Where("Name.Contains(@0) and Age > @1", "Eren", 30)
                     query = query.Where(whereQuery, values.ToArray());
                 }
             }
 
-            // 2. SIRALAMA (OrderBy) İŞLEMİ
             if (dynamicQuery.Sort != null && dynamicQuery.Sort.Any())
             {
-                // "Name asc, CreatedDate desc" formatına çeviriyoruz
                 string ordering = string.Join(",", dynamicQuery.Sort.Select(s => $"{s.Field} {s.Dir}"));
-
-                // System.Linq.Dynamic.Core'un string tabanlı OrderBy metodu
                 query = query.OrderBy(ordering);
             }
 
             return query;
         }
 
-        // --- YARDIMCI METOTLAR ---
-
-        // Recursive (Özyineli) Filtre Çevirici
-        private static string Transform(DynamicQueryFilterDto filter, List<object> values)
+        private static string Transform(DynamicQueryFilterDto filter, List<object> values, Type entityType)
         {
+
             string comparison = string.Empty;
 
-            // Eğer geçerli bir alan ve operatör varsa, bu bir uç (leaf) filtredir
             if (!string.IsNullOrEmpty(filter.Field) && !string.IsNullOrEmpty(filter.Operator))
             {
-                int index = values.Count; // @0, @1, @2 için sayaç
-                comparison = GetComparison(filter.Operator, filter.Field, index);
+                var property = entityType.GetProperty(filter.Field);
 
-                // Değeri (@0'ın karşılığını) listeye ekliyoruz
-                values.Add(filter.Value!);
+                if (property == null)
+                    throw new ArgumentException($"'{filter.Field}' alanı bulunamadı.");
+                 
+                bool isFilterable = property.GetCustomAttributes(typeof(FilterableAttribute), inherit: true).Any();
+                if (!isFilterable)
+                    throw new UnauthorizedAccessException($"'{filter.Field}' alanı üzerinden filtreleme yapılamaz.");
+
+                int index = values.Count;
+                comparison = GetComparison(filter.Operator, filter.Field, index, property.PropertyType);
+                values.Add(ConvertValue(filter.Value, property.PropertyType));
             }
 
-            // Alt filtreler (Filters dizisi) varsa, kendi içinde tekrar (recursive) dön
             if (filter.Filters != null && filter.Filters.Any())
             {
-                string logic = filter.Logic ?? "and"; // Logic yoksa varsayılan AND kabul et
+                string logic = filter.Logic ?? "and";
                 var subFilters = new List<string>();
 
                 foreach (var subFilter in filter.Filters)
                 {
-                    var subTransformed = Transform(subFilter, values);
+                    var subTransformed = Transform(subFilter, values, entityType);
                     if (!string.IsNullOrEmpty(subTransformed))
                     {
                         subFilters.Add(subTransformed);
@@ -73,13 +68,11 @@ namespace QrAssignment.Application.Extensions
                 {
                     string subFilterString = string.Join($" {logic} ", subFilters);
 
-                    // Hem kendi üst filtresi hem de alt filtreler varsa ikisini parantezle bağla
                     if (!string.IsNullOrEmpty(comparison))
                     {
                         return $"({comparison} {logic} ({subFilterString}))";
                     }
 
-                    // Sadece grup filtresiyse (Örn: Sadece AND ve altındakiler varsa)
                     return $"({subFilterString})";
                 }
             }
@@ -87,9 +80,11 @@ namespace QrAssignment.Application.Extensions
             return comparison;
         }
 
-        // Operatörleri System.Linq.Dynamic.Core formatına çeviren metot
-        private static string GetComparison(string op, string field, int index)
+        private static string GetComparison(string op, string field, int index, Type propertyType)
         {
+            bool isString = propertyType == typeof(string);
+            string target = isString ? field : $"{field}.ToString()";
+
             return op.ToLower() switch
             {
                 "eq" => $"{field} == @{index}",
@@ -98,12 +93,43 @@ namespace QrAssignment.Application.Extensions
                 "gte" => $"{field} >= @{index}",
                 "lt" => $"{field} < @{index}",
                 "lte" => $"{field} <= @{index}",
-                "startswith" => $"{field}.StartsWith(@{index})",
-                "endswith" => $"{field}.EndsWith(@{index})",
-                "contains" => $"{field}.Contains(@{index})",
-                "doesnotcontain" => $"!{field}.Contains(@{index})",
-                _ => $"{field} == @{index}" // Bilinmeyen bir şey gelirse eşittir kabul et
+                "startswith" => $"{target}.StartsWith(@{index})",
+                "endswith" => $"{target}.EndsWith(@{index})",
+                "contains" => $"{target}.Contains(@{index})",
+                "doesnotcontain" => $"!{target}.Contains(@{index})",
+                _ => $"{field} == @{index}"
             };
+        }
+
+        /// <summary>
+        /// Gelen string değeri (filter.Value), hedef property'nin gerçek tipine çevirir.
+        /// "eq"/"gt" gibi operatörlerde Dynamic LINQ'in tip uyuşmazlığından patlamaması için gereklidir.
+        /// "contains" gibi string bazlı operatörlerde zaten target alan ToString()'e çevrildiği için
+        /// value'yu string olarak bırakmak yeterlidir.
+        /// </summary>
+        private static object ConvertValue(string? value, Type propertyType)
+        {
+            if (value is null) return null!;
+
+            var underlyingType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+
+            try
+            {
+                if (underlyingType == typeof(string)) return value;
+                if (underlyingType == typeof(Guid)) return Guid.Parse(value);
+                if (underlyingType == typeof(bool)) return bool.Parse(value);
+                if (underlyingType == typeof(DateTime)) return DateTime.Parse(value, CultureInfo.InvariantCulture);
+                if (underlyingType == typeof(DateTimeOffset)) return DateTimeOffset.Parse(value, CultureInfo.InvariantCulture);
+                if (underlyingType.IsEnum) return Enum.Parse(underlyingType, value, ignoreCase: true);
+
+                // int, long, decimal, double, float vb. IConvertible tipler
+                return Convert.ChangeType(value, underlyingType, CultureInfo.InvariantCulture);
+            }
+            catch (Exception ex) when (ex is FormatException or OverflowException or InvalidCastException)
+            {
+                throw new ArgumentException(
+                    $"'{value}' değeri '{propertyType.Name}' tipine dönüştürülemedi.", ex);
+            }
         }
     }
 }

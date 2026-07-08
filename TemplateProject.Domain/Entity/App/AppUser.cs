@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
 using QrAssignment.Domain.Abstractions;
+using QrAssignment.Domain.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -8,12 +9,15 @@ namespace QrAssignment.Domain.Entity.App
 {
     public class AppUser :  IdentityUser<Guid>, IBaseEntity, IMustHaveTenant
     {
-        public Guid? TenantId { get; set; }
+        [Filterable]
         public virtual string FirstName { get; set; } = default!;
+        [Filterable]
         public virtual string LastName { get; set; } = default!;
+        [Filterable]
         public virtual string FullName => $"{FirstName} {LastName}";
 
-         
+
+        public Guid? TenantId { get; set; }
         public virtual DateTimeOffset CreatedDate { get; set; }
         public virtual DateTimeOffset? ModifiedDate { get; set; }
         public bool IsDeleted { get; set; }
