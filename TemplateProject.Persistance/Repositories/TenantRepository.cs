@@ -29,7 +29,8 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
             t => new TenantListItemDto
             {
                 Id = t.Id,
-                Name = t.Name
+                Name = t.Name,
+                RevNum = t.RevNum,
             },
             cancellationToken); ;
     }
