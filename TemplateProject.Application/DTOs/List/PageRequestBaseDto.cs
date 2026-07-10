@@ -48,14 +48,12 @@ namespace QrAssignment.Application.DTOs.List
     // 4. Kolon Bazlı Dinamik Filtre (Kendi içinde Recursive/Özyineli çalışır)
     public class DynamicQueryFilterDto
     {
-        public string Field { get; set; }      // Filtrelenecek kolon (Örn: "Name")
-        public string Operator { get; set; }   // eq, contains, startswith, gt (büyük), lt (küçük) vb.
+        public string? Field { get; set; }      // nullable yapıldı
+        public string? Operator { get; set; }   // nullable yapıldı
 
         [JsonConverter(typeof(FlexibleStringConverter))]
-        public string? Value { get; set; }     // Aranan değer
-        public string? Logic { get; set; }     // "and" veya "or" (Alt filtreleri bağlamak için)
-
-        // İşin sırrı burası: Filtreleri iç içe gruplamanı sağlar!
+        public string? Value { get; set; }
+        public string? Logic { get; set; }
         public IEnumerable<DynamicQueryFilterDto>? Filters { get; set; }
 
         public DynamicQueryFilterDto() { }
