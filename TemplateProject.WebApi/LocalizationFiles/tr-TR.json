@@ -10,8 +10,6 @@
   "Validations.BrandNameRequired": "Marka adı boş geçilemez.",
   "Validations.BrandNameMinLength": "Marka adı en az 3 karakter olmalıdır.",
   "Validations.ValidationErrors": "Doğrulama hataları mevcut.",
-
-
   "Label.Add": "Yeni Ekle",
   "Label.AddButton": "Yeni Kullanıcı Ekle",
   "Message.Loading": "Kullanıcı verileri yükleniyor...",
@@ -29,22 +27,16 @@
   "User.Form.Title.Edit": "Kullanıcı Bilgilerini Düzenle",
   "Button.Save": "Kaydet",
   "Button.Update": "Güncelle",
-
   "Placeholder.Email": "Örn: ahmet@example.com",
   "Error.EmailRequired": "Email zorunludur ve geçerli bir email formatında olmalıdır.",
-
   "Placeholder.FirstName": "Örn: Ahmet",
   "Error.FirstNameRequired": "Kullanıcı adı zorunludur ve en az 2 karakter olmalıdır.",
-
   "Placeholder.LastName": "Örn: Yılmaz",
   "Error.LastNameRequired": "Kullanıcı soyadı zorunludur ve en az 2 karakter olmalıdır.",
-
   "Label.Password": "Parola",
   "Placeholder.Password": "Örn: 123456",
   "Error.PasswordRequired": "Parola zorunludur ve en az 6 karakter olmalıdır.",
-
   "Button.Saving": "Kaydediliyor...",
-
   "Label.AddQrLocation": "Yeni Qr Lokasyon Ekle",
   "Message.DataLoading": "Veriler yükleniyor...",
   "Label.LocationName": "Lokasyon Adı",
@@ -55,7 +47,6 @@
   "Button.Print": "Yazdır",
   "Button.Close": "Kapat",
   "Button.Cancel": "İptal",
-
   "QrLocation.Form.Title.Create": "Yeni Qr Lokasyon Ekle",
   "QrLocation.Form.Title.Edit": "Qr Lokasyon Düzenle",
   "Label.ApplicationName": "Başvuru Adı",
@@ -83,9 +74,6 @@
   "Label.ClearFilters": "Filtreleri Temizle",
   "Label.SearchData": "Genel arama...",
   "Label.Filter": "Filtrele...",
-  "Label.Contains": "İçerir",
-  "Label.Equals": "Eşittir",
-  "Label.StartsWith": "İle Başlar",
   "Label.ExportExcel": "Excel",
   "Title.ExportExcel": "Listeyi Excel formatında indir",
   "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_Queries_GetListExportExcel_TenantListItemExcelDto_Name": "Firma Adı",
@@ -123,7 +111,6 @@
   "Message.InvalidExcelFormat": "Hatalı dosya formatı! Lütfen sadece .xlsx veya .xls uzantılı dosyaları yükleyin.",
   "BulkCreate.SuccessMessage": "İşlem Başarılı Bir Şekilde Tamamlandı",
   "Message.ExcelExported": "Excel İndiriliyor",
-
   "Modules.Tenants": "Firmalar Yönetimi",
   "Modules.Users": "Sistem Kullanıcıları",
   "Modules.QrLocations": "QR Lokasyonları",
@@ -147,6 +134,31 @@
   "Label.ConfirmMessage": "Değişiklikleri kaydetmek istediğinize emin misiniz?",
   "Label.ConfirmTitle": "Kayıt Onayı",
   "Label.RevNum": "Kod",
-  "Placeholder.Search": "Ara..."
+  "Placeholder.Search": "Ara...",
+  "Label.Equals": "Eşittir",
+  "Label.NotEquals": "Eşit Değildir",
+  "Label.GreaterThan": "Büyüktür",
+  "Label.GreaterThanOrEqual": "Büyük Eşittir",
+  "Label.LessThan": "Küçüktür",
+  "Label.LessThanOrEqual": "Küçük Eşittir",
+  "Label.StartsWith": "İle Başlar",
+  "Label.EndsWith": "İle Biter",
+  "Label.Contains": "İçerir",
+  "Label.DoesNotContain": "İçermez",
+  "Label.ActionView": "İncele",
+  "Error.Required": "Bu alan zorunludur.",
+  "Error.MinLength": "En az {{requiredLength}} karakter olmalıdır.",
+  "Error.MaxLength": "En fazla {{requiredLength}} karakter olmalıdır.",
+  "Error.Pattern": "Geçersiz format.",
+  "Error.Email": "Geçerli bir e-posta adresi giriniz.",
+  "Error.Min": "En az {{min}} olmalıdır.",
+  "Error.Max": "En fazla {{max}} olmalıdır.",
+  "Error.Generic": "Bu alan geçersizdir.",
+  "Error.FormInvalidTitle": "",
+  "Label.TenantCompany": "Firma Adı",
+  "Placeholder.TenantCompany": "Firma Adını Giriniz...",
+  "Common.Active": "Aktif",
+  "Common.Inactive": "Pasif"
+
 }
  

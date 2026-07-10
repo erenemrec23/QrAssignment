@@ -1,4 +1,7 @@
-﻿namespace QrAssignment.Application.DTOs.List
+﻿using QrAssignment.Application.Converters;
+using System.Text.Json.Serialization;
+
+namespace QrAssignment.Application.DTOs.List
 {
     // 1. En Üst Kapsayıcı Sınıf
     public class PageRequestFilterBaseDto
@@ -47,6 +50,8 @@
     {
         public string Field { get; set; }      // Filtrelenecek kolon (Örn: "Name")
         public string Operator { get; set; }   // eq, contains, startswith, gt (büyük), lt (küçük) vb.
+
+        [JsonConverter(typeof(FlexibleStringConverter))]
         public string? Value { get; set; }     // Aranan değer
         public string? Logic { get; set; }     // "and" veya "or" (Alt filtreleri bağlamak için)
 
