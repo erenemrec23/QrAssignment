@@ -5,11 +5,11 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Queries.GetById
 {
-    public class GetTenantByIdQuery : ICommand<Result<TenantItemDto>>
+    public class GetByIdTenantQuery : ICommand<Result<TenantItemDto>>, IIdQuery
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
-        public GetTenantByIdQuery(Guid id)
+        public GetByIdTenantQuery(Guid? id)
         {
             Id = id;
         }

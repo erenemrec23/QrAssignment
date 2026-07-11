@@ -9,8 +9,8 @@ namespace QrAssignment.Application.Repositories
 {
     public interface ITenantRepository : IGenericRepository<Tenant>
     {
-        Task<Paginate<TenantListItemDto>> GetListAsync(PageRequestBaseDto request, CancellationToken cancellationToken);
-        Task<TenantItemDto> GetById(Guid id, CancellationToken cancellationToken);
+        Task<Paginate<TenantListItemDto>> GetDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken);
+        Task<TenantItemDto> GetDtoByIdAsync(Guid id, CancellationToken cancellationToken);
         Task<List<TenantListItemExcelDto>> GetExportListAsync(GetTenantListExportExcelQuery request, CancellationToken cancellationToken);
 
     }

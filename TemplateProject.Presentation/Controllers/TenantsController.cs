@@ -48,7 +48,7 @@ namespace QrAssignment.Presentation.Controllers
         }
 
         [HttpPost("GetList")]  
-        public async Task<IActionResult> GetList([FromBody] GetTenantListQuery request) // 2. FromQuery yerine FromBody yapıyoruz
+        public async Task<IActionResult> GetList([FromBody] GetListTenantQuery request) // 2. FromQuery yerine FromBody yapıyoruz
         {
             var result = await _mediator.Send(request);
             return Ok(result);
@@ -57,7 +57,7 @@ namespace QrAssignment.Presentation.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var query = new GetTenantByIdQuery(id);
+            var query = new GetByIdTenantQuery(id);
             var result = await _mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)

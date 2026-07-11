@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Features.Roles.Commands.Create;
 using QrAssignment.Application.Features.Roles.Commands.Delete;
 using QrAssignment.Application.Features.Roles.Commands.Update;
+using QrAssignment.Application.Features.Roles.Queries.GetById;
 using QrAssignment.Application.Features.Roles.Queries.GetList;
+using QrAssignment.Application.Features.Tenants.Queries.GetById;
 
 
 namespace QrAssignment.Presentation.Controllers
@@ -22,7 +24,7 @@ namespace QrAssignment.Presentation.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetList()
         {
-            var result = await _mediator.Send(new GetRoleListQuery());
+            var result = await _mediator.Send(new GetListRoleQuery());
             return Ok(result);
         }
 
@@ -41,10 +43,7 @@ namespace QrAssignment.Presentation.Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
-
-        // DELETE: api/Roles/Delete
-        // Delete işleminde genellikle ID URL üzerinden (Route parameter) alınır.
-        // Eğer Command nesnesini body'den göndermek istersen [FromBody] olarak değiştirebilirsin.
+         
         [HttpDelete("[action]/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -52,6 +51,18 @@ namespace QrAssignment.Presentation.Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
+         
 
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById(Guid? id, CancellationToken cancellationToken)
+        {
+            var query = new GetByIdRoleQuery(id);
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
     }
 }

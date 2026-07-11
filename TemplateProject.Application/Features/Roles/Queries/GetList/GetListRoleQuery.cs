@@ -8,5 +8,5 @@ namespace QrAssignment.Application.Features.Roles.Queries.GetList
 
     // Query
     // Result nesnesinin generic versiyonu (Result<T>) ile data dönüyoruz
-    public sealed class GetRoleListQuery : PageRequestBaseDto, IRequest<Result<Paginate<RoleListItemDto>>>;
+    public sealed class GetListRoleQuery : PageRequestBaseDto, IRequest<Result<Paginate<RoleListItemDto>>>;
 }

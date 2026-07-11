@@ -21,6 +21,7 @@ namespace QrAssignment.Application
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddValidatorsFromAssembly(typeof(SharedResource).Assembly);
+            services.AddTransient(typeof(IValidator<>), typeof(GetByIdQueryValidator<>));
             return services;
         }
     }

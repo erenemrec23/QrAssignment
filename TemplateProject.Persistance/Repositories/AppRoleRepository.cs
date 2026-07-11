@@ -44,20 +44,13 @@ public sealed class AppRoleRepository : IAppRoleRepository
             query = query.Where(r => r.Name.ToLower().Contains(searchTerm));
         }
 
-        // İSTEĞE BAĞLI: Eğer AppRole için de Dynamic LINQ (Sıralama vb.) kullanmak istersen
-        // if (request.DynamicFilterAndSort != null)
-        // {
-        //     query = query.ToDynamic(request.DynamicFilterAndSort);
-        // }
-
-        // 4. Filtre uygulandıktan sonraki toplam kayıt sayısı
         int totalFilteredItemCount = await query.CountAsync(cancellationToken);
 
         // 5. Sayfalama (Skip & Take) ve DTO'ya Dönüştürme
         var items = await query
             .Skip(request.PageIndex * request.PageSize)
             .Take(request.PageSize)
-            .Select(r => new RoleListItemDto(r.Id.ToString(), r.Name!))
+            .Select(r => new RoleListItemDto(r.Id, r.Name!))
             .ToListAsync(cancellationToken);
 
         // 6. Senin standart Paginate nesneni döndür
@@ -69,5 +62,21 @@ public sealed class AppRoleRepository : IAppRoleRepository
             TotalFilteredItemCount = totalFilteredItemCount,
             Items = items
         };
+    }
+
+
+
+    public async Task<RoleListItemDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        // Roles havuzu IQueryable olduğu için doğrudan Guid tipindeki id ile sorgu atabiliriz
+        var role = await _roleManager.Roles
+            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+
+        if (role == null)
+        {
+            return null;
+        }
+
+        return new RoleListItemDto(role.Id, role.Name);
     }
 }

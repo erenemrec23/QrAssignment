@@ -25,15 +25,15 @@ namespace QrAssignment.Application.Security
             { typeof(Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantCommand), (AppPages.Tenants, PagePermissions.ImportExcel) },
             { typeof(Features.Tenants.Commands.Update.UpdateTenantCommand), (AppPages.Tenants, PagePermissions.Update) },
             { typeof(Features.Tenants.Commands.Delete.DeleteTenantCommand), (AppPages.Tenants, PagePermissions.Delete) },
-            { typeof(Features.Tenants.Queries.GetById.GetTenantByIdQuery), (AppPages.Tenants, PagePermissions.View) },
-            { typeof(Features.Tenants.Queries.GetList.GetTenantListQuery), (AppPages.Tenants, PagePermissions.View) },
+            { typeof(Features.Tenants.Queries.GetById.GetByIdTenantQuery), (AppPages.Tenants, PagePermissions.View) },
+            { typeof(Features.Tenants.Queries.GetList.GetListTenantQuery), (AppPages.Tenants, PagePermissions.View) },
             { typeof(Features.Tenants.Queries.GetListExportExcel.GetTenantListExportExcelQuery), (AppPages.Tenants, PagePermissions.ExportExcel) },
             
             // Role İşlemleri
             { typeof(Features.Roles.Commands.Create.CreateRoleCommand), (AppPages.Roles, PagePermissions.Insert) },
             { typeof(Features.Roles.Commands.Update.UpdateRoleCommand), (AppPages.Roles, PagePermissions.Update) },
             { typeof(Features.Roles.Commands.Delete.DeleteRoleCommand), (AppPages.Roles, PagePermissions.Delete) },
-            { typeof(Features.Roles.Queries.GetList.GetRoleListQuery), (AppPages.Roles, PagePermissions.View) },
+            { typeof(Features.Roles.Queries.GetList.GetListRoleQuery), (AppPages.Roles, PagePermissions.View) },
 
             { typeof(Features.Users.Commands.Create.CreateUserCommand), (AppPages.Users, PagePermissions.Insert) },
             { typeof(Features.Users.Commands.Update.UpdateUserCommand), (AppPages.Users, PagePermissions.Update) },

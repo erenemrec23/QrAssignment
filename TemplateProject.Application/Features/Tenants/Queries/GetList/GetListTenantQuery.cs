@@ -5,7 +5,7 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Queries.GetList
 {
-    public class GetTenantListQuery : PageRequestBaseDto, IRequest<Result<Paginate<TenantListItemDto>>>
+    public class GetListTenantQuery : PageRequestBaseDto, IRequest<Result<Paginate<TenantListItemDto>>>
     {
 
     }

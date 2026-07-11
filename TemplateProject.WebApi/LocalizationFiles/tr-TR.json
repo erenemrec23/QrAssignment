@@ -163,7 +163,9 @@
   "Messages.ConfirmTitle": "Bu işlemi gerçekleştirmek istediğinizden emin misiniz?",
   "Messages.ConfirmButtonText": "Evet, Onaylıyorum",
   "Messages.CancelButtonText": "Hayır, Vazgeç",
-  "Label.NoRecordDescription": "Aradığınız kriterlere uygun veri bulunamadı veya henüz bir tanımlama yapılmadı."
+  "Label.NoRecordDescription": "Aradığınız kriterlere uygun veri bulunamadı veya henüz bir tanımlama yapılmadı.",
+  "Messages.KeyRequired": "Anahtar Parametresi Alanı Zorunludur.",
+  "Messages.ValueRequired": "Değer Parametresi Alanı Zorunludur."
 
 
 }

@@ -5,7 +5,7 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Queries.GetById
 {
-    public class GetByIdTenantQueryHandler : IRequestHandler<GetTenantByIdQuery, Result<TenantItemDto>>
+    public class GetByIdTenantQueryHandler : IRequestHandler<GetByIdTenantQuery, Result<TenantItemDto>>
     {
 
 
@@ -16,9 +16,9 @@ namespace QrAssignment.Application.Features.Tenants.Queries.GetById
             _tenantRepository = tenantRepository;
         }
 
-        public async Task<Result<TenantItemDto>> Handle(GetTenantByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<TenantItemDto>> Handle(GetByIdTenantQuery request, CancellationToken cancellationToken)
         {
-            var result = await _tenantRepository.GetById(request.Id, cancellationToken);
+            var result = await _tenantRepository.GetDtoByIdAsync(request.Id.Value, cancellationToken);
 
             return Result.Success(result);
         }
