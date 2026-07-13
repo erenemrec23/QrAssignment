@@ -57,6 +57,33 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
         }
 
 
+        var entries2 = dbContext.ChangeTracker.Entries<IBaseEntity>();
+
+        foreach (var entry in entries2)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.IsDeleted = false;
+                entry.Entity.CreatedByUserId = currentUserId;
+                entry.Entity.CreatedDate = currentTime;
+
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.ModifiedByUserId = currentUserId;
+                entry.Entity.ModifiedDate = currentTime;
+                entry.Property(x => x.RevNum).IsModified = false;
+            }
+            else if (entry.State == EntityState.Deleted && entry.Entity.IsDeleted == false)
+            {
+                entry.State = EntityState.Modified;
+                entry.Entity.IsDeleted = true;
+                entry.Entity.ModifiedByUserId = currentUserId;
+                entry.Entity.ModifiedDate = currentTime;
+                entry.Property(x => x.RevNum).IsModified = false;   // ekleyin 
+            }
+
+        }
         var entriesHasTenantId = dbContext.ChangeTracker.Entries<TenantBaseEntity>();
 
         foreach (var entry in entriesHasTenantId)
@@ -65,7 +92,18 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
             {
                 entry.Entity.TenantId = _tenantService.GetTenantId(); 
             }
-            
+
+        }
+
+        var entriesHasTenantBaseId = dbContext.ChangeTracker.Entries<IMustHaveTenant>();
+
+        foreach (var entry in entriesHasTenantBaseId)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.TenantId = _tenantService.GetTenantId();
+            }
+
         }
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }

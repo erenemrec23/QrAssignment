@@ -30,7 +30,7 @@ namespace QrAssignment.Presentation.Controllers
 
         // POST: api/Roles/Create
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create([FromBody] CreateRoleCommand command)
+        public async Task<IActionResult> Create(CreateRoleCommand command)
         {
             var result = await _mediator.Send(command);
             return Ok(result);

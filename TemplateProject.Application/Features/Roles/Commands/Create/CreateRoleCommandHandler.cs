@@ -25,8 +25,7 @@ namespace QrAssignment.Application.Features.Roles.Commands.Create
 
             var appRole = new QrAssignment.Domain.Entity.App.AppRole
             {
-                Name = request.Name,
-                // AppRole içinde tanımladığın ekstra alanlar varsa buraya ekleyebilirsin
+                Name = request.Name.Trim(),  
             };
 
             var result = await _roleManager.CreateAsync(appRole);

@@ -143,9 +143,7 @@ public class AppDbContext : AuditDbContext
     }
     private void SetTenantQueryFilter<TEntity>(ModelBuilder builder)
        where TEntity : class, IMustHaveTenant
-    {
-        // KRİTİK NOKTA: tenantId'yi dışarıda değişkene atamıyoruz! 
-        // İfadeyi doğrudan this._tenantService üzerine kuruyoruz ki EF Core bunu anlık okusun.
+    { 
         builder.Entity<TEntity>().HasQueryFilter(x => x.TenantId == _tenantService.GetTenantId());
     }
 
