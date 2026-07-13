@@ -13,6 +13,10 @@ namespace QrAssignment.Domain.Abstractions
         DateTimeOffset CreatedDate { get; set; }
         DateTimeOffset? ModifiedDate { get; set; }
 
+        Guid? CreatedByUserId { get; set; }
+        Guid? ModifiedByUserId { get; set; }
+
+        long RevNum { get; set; }
         bool IsDeleted { get; set; }
 
 

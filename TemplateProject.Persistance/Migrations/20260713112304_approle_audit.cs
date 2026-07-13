@@ -6,42 +6,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TemplateProject.Persistance.Migrations
 {
     /// <inheritdoc />
-    public partial class eksik_kolonlar : Migration
+    public partial class approle_audit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<Guid>(
-                name: "CreatedByUserId",
-                table: "AppUsers",
-                type: "uniqueidentifier",
-                nullable: true);
+            // RowVersion'ı alter etmek yerine drop + add
+            migrationBuilder.DropColumn(
+                name: "RowVersion",
+                table: "AppRoles");
 
-            migrationBuilder.AddColumn<Guid>(
-                name: "ModifiedByUserId",
-                table: "AppUsers",
-                type: "uniqueidentifier",
-                nullable: true);
-
-            migrationBuilder.AddColumn<long>(
-                name: "RevNum",
-                table: "AppUsers",
-                type: "bigint",
-                nullable: false,
-                defaultValue: 0L)
-                .Annotation("SqlServer:Identity", "1, 1");
-
-            migrationBuilder.AlterColumn<byte[]>(
+            migrationBuilder.AddColumn<byte[]>(
                 name: "RowVersion",
                 table: "AppRoles",
                 type: "rowversion",
                 rowVersion: true,
                 nullable: false,
-                defaultValue: new byte[0],
-                oldClrType: typeof(byte[]),
-                oldType: "rowversion",
-                oldRowVersion: true,
-                oldNullable: true);
+                defaultValue: new byte[8]); // rowversion 8 byte'tır, new byte[0] değil new byte[8] daha doğru olur ama SQL Server zaten kendi değerini atayacak
 
             migrationBuilder.AlterColumn<DateTimeOffset>(
                 name: "ModifiedDate",
@@ -50,16 +31,6 @@ namespace TemplateProject.Persistance.Migrations
                 nullable: true,
                 oldClrType: typeof(DateTime),
                 oldType: "datetime2",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<bool>(
-                name: "IsDeleted",
-                table: "AppRoles",
-                type: "bit",
-                nullable: false,
-                defaultValue: false,
-                oldClrType: typeof(bool),
-                oldType: "bit",
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<DateTimeOffset>(
@@ -91,42 +62,19 @@ namespace TemplateProject.Persistance.Migrations
                 .Annotation("SqlServer:Identity", "1, 1");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "CreatedByUserId",
-                table: "AppUsers");
+            migrationBuilder.DropColumn(name: "CreatedByUserId", table: "AppRoles");
+            migrationBuilder.DropColumn(name: "ModifiedByUserId", table: "AppRoles");
+            migrationBuilder.DropColumn(name: "RevNum", table: "AppRoles");
 
-            migrationBuilder.DropColumn(
-                name: "ModifiedByUserId",
-                table: "AppUsers");
-
-            migrationBuilder.DropColumn(
-                name: "RevNum",
-                table: "AppUsers");
-
-            migrationBuilder.DropColumn(
-                name: "CreatedByUserId",
-                table: "AppRoles");
-
-            migrationBuilder.DropColumn(
-                name: "ModifiedByUserId",
-                table: "AppRoles");
-
-            migrationBuilder.DropColumn(
-                name: "RevNum",
-                table: "AppRoles");
-
-            migrationBuilder.AlterColumn<byte[]>(
+            migrationBuilder.DropColumn(name: "RowVersion", table: "AppRoles");
+            migrationBuilder.AddColumn<byte[]>(
                 name: "RowVersion",
                 table: "AppRoles",
                 type: "rowversion",
                 rowVersion: true,
-                nullable: true,
-                oldClrType: typeof(byte[]),
-                oldType: "rowversion",
-                oldRowVersion: true);
+                nullable: true);
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "ModifiedDate",
@@ -136,14 +84,6 @@ namespace TemplateProject.Persistance.Migrations
                 oldClrType: typeof(DateTimeOffset),
                 oldType: "datetimeoffset",
                 oldNullable: true);
-
-            migrationBuilder.AlterColumn<bool>(
-                name: "IsDeleted",
-                table: "AppRoles",
-                type: "bit",
-                nullable: true,
-                oldClrType: typeof(bool),
-                oldType: "bit");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedDate",

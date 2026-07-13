@@ -12,8 +12,8 @@ using QrAssignment.Persistance.Context;
 namespace TemplateProject.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260713101410_eksik_kolonlar")]
-    partial class eksik_kolonlar
+    [Migration("20260713110829_tenant_manage")]
+    partial class tenant_manage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,20 +90,14 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("ModifiedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset?>("ModifiedDate")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -112,15 +106,8 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<string>("NormalizedName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("RevNum")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
-
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
