@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using QrAssignment.Application.DTOs.List;
-using QrAssignment.Application.Extensions;
+using QrAssignment.Application.DTOs.List; 
 using QrAssignment.Application.Features.Tenants.Queries.GetById;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
 using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
@@ -57,6 +56,11 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
                 RowVersion = c.RowVersion,
             })
             .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task BulkDelete(List<Guid> ids, CancellationToken cancellationToken)
+    {
+        DeleteRange(ids, cancellationToken);
     }
 }
 

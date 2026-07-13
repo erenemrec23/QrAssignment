@@ -30,7 +30,7 @@ public class ApplicationArchitectureTests
         if (!result.IsSuccessful && result.FailingTypes != null)
         {
             // FailingTypes içindeki her bir Type nesnesinin Name özelliğini seçiyoruz
-            var failingClasses = string.Join(", ", result.FailingTypes.Select(t => t.Name));
+            var failingClasses = string.Join(", ", result.FailingTypes.Select(t => t.FullName));
 
             Assert.Fail($"Şu komut sınıfları ICommand arayüzünü uygulamıyor: {failingClasses}");
         }

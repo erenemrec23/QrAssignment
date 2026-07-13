@@ -8,7 +8,7 @@ using System.Text;
 
 namespace QrAssignment.Application.Features.Tenants.Commands.Update
 {
-    public class UpdateTenantCommand : ICommand<Result<UpdateTenantResponse>>
+    public class UpdateTenantCommand : ICommand<Result<UpdateTenantResponse>>, IdValidationBase
     {
 
         public Guid? Id { get; set; }

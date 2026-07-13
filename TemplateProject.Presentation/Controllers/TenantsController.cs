@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Features.Tenants.Commands.Create;
 using QrAssignment.Application.Features.Tenants.Commands.Delete;
+using QrAssignment.Application.Features.Tenants.Commands.BulkDelete;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.Validate;
 using QrAssignment.Application.Features.Tenants.Commands.Update;
@@ -11,6 +12,7 @@ using QrAssignment.Application.Features.Tenants.Queries.GetById;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
 using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -45,6 +47,21 @@ namespace QrAssignment.Presentation.Controllers
             var result = await _mediator.Send(command, cancellationToken);
 
             return Ok(result);
+        }
+
+        [HttpPost("bulk-delete")]
+        public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteTenantCommand command, CancellationToken cancellationToken)
+        {
+            // Command nesnesini handler'a gönderiyoruz
+            Result result = await _mediator.Send(command, cancellationToken);
+
+            // Result nesnesinin başarılı olup olmadığını kontrol ederek uygun HTTP durum kodunu dönüyoruz
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error); // Projenizdeki Result yapısına göre result.ToProblemDetails() vb. de kullanabilirsiniz
+            }
+
+            return Ok(result); // Vear NoContent();
         }
 
         [HttpPost("GetList")]  

@@ -165,7 +165,8 @@
   "Messages.CancelButtonText": "Hayır, Vazgeç",
   "Label.NoRecordDescription": "Aradığınız kriterlere uygun veri bulunamadı veya henüz bir tanımlama yapılmadı.",
   "Messages.KeyRequired": "Anahtar Parametresi Alanı Zorunludur.",
-  "Messages.ValueRequired": "Değer Parametresi Alanı Zorunludur."
+  "Messages.ValueRequired": "Değer Parametresi Alanı Zorunludur.",
+  "Error.SelectedItemsCannotBeEmpty":  "Lütfen Seçim Yapınız"
 
 
 }

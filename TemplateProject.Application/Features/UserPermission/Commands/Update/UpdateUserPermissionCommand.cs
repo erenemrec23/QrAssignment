@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using QrAssignment.Application.Abstractions;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Shared;
 using System;
@@ -9,7 +10,7 @@ namespace QrAssignment.Application.Features.Permission.Commands.Update
 {
     public sealed record UpdateUserPermissionCommand(
         string UserId,
-        List<PermissionUserUpdateDto> Permissions) : IRequest<Result>
+        List<PermissionUserUpdateDto> Permissions) : ICommand<Result>
     {
 
     };

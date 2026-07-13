@@ -4,10 +4,11 @@ using QrAssignment.Application;
 using QrAssignment.Application.Abstractions;
 
 public sealed class GetByIdQueryValidator<TRequest> : AbstractValidator<TRequest>
-    where TRequest : IIdQuery
+    where TRequest : IdValidationBase
 {
     public GetByIdQueryValidator(IStringLocalizer<SharedResource> localizer)
     {
         RuleFor(x => x.Id).MustBeValidId(localizer);
     }
 }
+

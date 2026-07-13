@@ -37,6 +37,6 @@ namespace QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel
 
             return Result.Success(resultDto);
         }
-
+        
     }
 }

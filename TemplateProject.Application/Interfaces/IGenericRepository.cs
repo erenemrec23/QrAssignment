@@ -17,4 +17,7 @@ public interface IGenericRepository<T> where T : class, IBaseEntity
     void Update(T entity);
     void Delete(T entity);
     Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    void DeleteRange(IEnumerable<T> entities);
+    Task DeleteRange(IEnumerable<Guid> ids, CancellationToken cancellationToken = default);
 }

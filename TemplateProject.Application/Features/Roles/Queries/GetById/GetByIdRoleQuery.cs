@@ -5,7 +5,7 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Roles.Queries.GetById
 {
-    public sealed class GetByIdRoleQuery : IRequest<Result<RoleListItemDto>> , IIdQuery
+    public sealed class GetByIdRoleQuery : IRequest<Result<RoleListItemDto>> , IdValidationBase
     {
         public GetByIdRoleQuery(Guid? id)
         {

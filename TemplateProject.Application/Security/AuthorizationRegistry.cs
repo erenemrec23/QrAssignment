@@ -1,7 +1,4 @@
-﻿using QrAssignment.Application.Features.Permission.Commands.Update;
-using QrAssignment.Domain.Shared; // PagePermissions enum'ının olduğu yer
-using System;
-using System.Collections.Generic;
+﻿using QrAssignment.Domain.Shared; // PagePermissions enum'ının olduğu yer
 
 namespace QrAssignment.Application.Security
 {
@@ -28,6 +25,7 @@ namespace QrAssignment.Application.Security
             { typeof(Features.Tenants.Queries.GetById.GetByIdTenantQuery), (AppPages.Tenants, PagePermissions.View) },
             { typeof(Features.Tenants.Queries.GetList.GetListTenantQuery), (AppPages.Tenants, PagePermissions.View) },
             { typeof(Features.Tenants.Queries.GetListExportExcel.GetTenantListExportExcelQuery), (AppPages.Tenants, PagePermissions.ExportExcel) },
+            { typeof(Features.Tenants.Commands.Excel.Validate.ValidateTenantExcelQuery), (AppPages.Tenants, PagePermissions.ImportExcel) },
             
             // Role İşlemleri
             { typeof(Features.Roles.Commands.Create.CreateRoleCommand), (AppPages.Roles, PagePermissions.Insert) },
@@ -52,7 +50,10 @@ namespace QrAssignment.Application.Security
             { typeof(Features.QrLocations.Queries.GetById.GetQrLocationByIdQuery), (AppPages.QrLocations, PagePermissions.View) },
             //{ typeof(Features.QrLocations.Commands.Delete.DeleteQrLocationCommand), (AppPages.QrLocations, PagePermissions.Delete) },
 
+                   
+            { typeof(Features.Roles.Queries.GetById.GetByIdRoleQuery), (AppPages.Roles, PagePermissions.View) },
 
+            
         };
 
         // 2. SERBEST KOMUTLAR: Herkese açık işlemler (Login, Register vb.)

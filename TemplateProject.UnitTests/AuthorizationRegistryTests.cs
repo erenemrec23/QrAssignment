@@ -13,7 +13,7 @@ namespace QrAssignment.Tests.Architecture
             var assembly = typeof(QrAssignment.Application.Features.Tenants.Commands.Create.CreateTenantCommand).Assembly;
 
             var commandTypes = assembly.GetTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.Name.EndsWith("Command"))
+                .Where(t => t.IsClass && !t.IsAbstract && (t.Name.EndsWith("Command") || t.Name.EndsWith("Query")) && !t.Name.Equals("IdValidationBase"))
                 .ToList();
 
             var unhandledCommands = new List<string>();

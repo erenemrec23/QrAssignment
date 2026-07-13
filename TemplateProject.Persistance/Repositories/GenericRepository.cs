@@ -152,5 +152,22 @@ namespace QrAssignment.Persistance.Repositories
                 .Select(projection)
                 .ToListAsync(cancellationToken);
         }
+
+        public void DeleteRange(IEnumerable<T> entities)
+        {
+            _dbSet.RemoveRange(entities);
+        }
+
+        public async Task DeleteRange(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+        { 
+            var entities = await _dbSet
+                .Where(e => ids.Contains(e.Id))
+                .ToListAsync(cancellationToken);
+             
+            if (entities.Any())
+            {
+                DeleteRange(entities);
+            }
+        }
     }
 }

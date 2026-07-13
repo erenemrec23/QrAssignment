@@ -16,7 +16,7 @@ namespace QrAssignment.Application.Features.Roles.Commands.Update
 
         public async Task<Result> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
         {
-            var role = await _roleManager.FindByIdAsync(request.Id);
+            var role = await _roleManager.FindByIdAsync(request.Id.ToString());
             if (role == null)
             {
                 return Result.Failure(new Error("Güncellenecek rol bulunamadı.",""));
