@@ -153,7 +153,7 @@ namespace QrAssignment.Persistance.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public void DeleteRange(IEnumerable<T> entities)
+        public  void DeleteRange(IEnumerable<T> entities)
         {
             _dbSet.RemoveRange(entities);
         }

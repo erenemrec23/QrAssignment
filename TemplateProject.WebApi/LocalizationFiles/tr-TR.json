@@ -166,8 +166,14 @@
   "Label.NoRecordDescription": "Aradığınız kriterlere uygun veri bulunamadı veya henüz bir tanımlama yapılmadı.",
   "Messages.KeyRequired": "Anahtar Parametresi Alanı Zorunludur.",
   "Messages.ValueRequired": "Değer Parametresi Alanı Zorunludur.",
-  "Error.SelectedItemsCannotBeEmpty":  "Lütfen Seçim Yapınız"
-
+  "Error.SelectedItemsCannotBeEmpty": "Lütfen Seçim Yapınız",
+  "Label.SelectAll": "Tümünü Seç",
+  "Label.ClearSelectedRows": "Seçilenleri Kaldır",
+  "Label.DeleteAllSelected": "Seçilenler Sil",
+  "Label.ActionSelect": "Seç",
+  "PageTitle.Tenant.List": "Firma Listesi",
+  "PageTitle.Tenant.Form.Edit": "Firma Güncelleme",
+  "PageTitle.Tenant.Form.New" : "Yeni Firma"
 
 }
  

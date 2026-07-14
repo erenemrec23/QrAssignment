@@ -60,7 +60,7 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
 
     public async Task BulkDelete(List<Guid> ids, CancellationToken cancellationToken)
     {
-        DeleteRange(ids, cancellationToken);
+       await DeleteRange(ids, cancellationToken);
     }
 }
 

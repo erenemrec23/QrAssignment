@@ -6,11 +6,11 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Commands.BulkDelete
 {
-    public class BulkDeleteCommandHandler : IRequestHandler<BulkDeleteTenantCommand, Result>
+    public class BulkDeleteTenantCommandHandler : IRequestHandler<BulkDeleteTenantCommand, Result>
     {
         private readonly ITenantRepository _tenantRepository; 
 
-        public BulkDeleteCommandHandler(ITenantRepository tenantRepository, IMapper mapper, IAppLocalizer localizer)
+        public BulkDeleteTenantCommandHandler(ITenantRepository tenantRepository, IMapper mapper, IAppLocalizer localizer)
         {
             _tenantRepository = tenantRepository; 
         }

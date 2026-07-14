@@ -48,21 +48,7 @@ namespace QrAssignment.Presentation.Controllers
 
             return Ok(result);
         }
-
-        [HttpPost("bulk-delete")]
-        public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteTenantCommand command, CancellationToken cancellationToken)
-        {
-            // Command nesnesini handler'a gönderiyoruz
-            Result result = await _mediator.Send(command, cancellationToken);
-
-            // Result nesnesinin başarılı olup olmadığını kontrol ederek uygun HTTP durum kodunu dönüyoruz
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Error); // Projenizdeki Result yapısına göre result.ToProblemDetails() vb. de kullanabilirsiniz
-            }
-
-            return Ok(result); // Vear NoContent();
-        }
+         
 
         [HttpPost("GetList")]  
         public async Task<IActionResult> GetList([FromBody] GetListTenantQuery request) // 2. FromQuery yerine FromBody yapıyoruz
@@ -125,6 +111,15 @@ namespace QrAssignment.Presentation.Controllers
         [HttpPost("bulk-create")]
         public async Task<IActionResult> BulkCreate([FromBody] BulkCreateTenantCommand command, CancellationToken cancellationToken)
         {
+            var response = await _mediator.Send(command, cancellationToken);
+            if (response.IsSuccess) return Ok(response);
+            return BadRequest(response);
+        }
+
+        [HttpDelete("Bulk-Delete")]
+        public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteTenantCommand command, CancellationToken cancellationToken)
+        {
+
             var response = await _mediator.Send(command, cancellationToken);
             if (response.IsSuccess) return Ok(response);
             return BadRequest(response);
