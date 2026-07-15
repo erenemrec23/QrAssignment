@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace QrAssignment.Domain.Entity.App
 {
 
-    public class AppRole : IdentityRole<Guid>, IMustHaveTenant, IBaseEntity
+    public class AppRole : IdentityRole<Guid>, IMustHaveTenant, IBaseEntity, ISoftDelete
     {
         public Guid? TenantId { get; set; }
         [Filterable]
@@ -26,7 +26,7 @@ namespace QrAssignment.Domain.Entity.App
 
         [Timestamp]
         public byte[] RowVersion { get; set; } = null!;
-        bool IBaseEntity.IsDeleted { get; set; }
+        bool ISoftDelete.IsDeleted { get; set; }
 
         public static AppRole Create(string name)
         {

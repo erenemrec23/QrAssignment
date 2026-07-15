@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QrAssignment.Domain.Entity.App
 {
-    public class AppUser : IdentityUser<Guid>, IBaseEntity, IMustHaveTenant
+    public class AppUser : IdentityUser<Guid>, IBaseEntity, IMustHaveTenant, ISoftDelete
     {
         [Filterable]
         public virtual string FirstName { get; set; } = default!;
@@ -20,7 +20,7 @@ namespace QrAssignment.Domain.Entity.App
 
         public Guid? TenantId { get; set; }
         public virtual DateTimeOffset CreatedDate { get; set; }
-        public virtual DateTimeOffset? ModifiedDate { get; set; }
+        public virtual DateTimeOffset? ModifiedDate { get; set; } 
         public bool IsDeleted { get; set; }
 
         [Timestamp]

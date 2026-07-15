@@ -6,7 +6,7 @@ using System.Numerics;
 namespace QrAssignment.Domain.Abstractions
 {
 
-    public interface IBaseEntity
+    public interface IBaseEntity: ISoftDelete
     {
         Guid Id { get; set; }
 
@@ -16,14 +16,13 @@ namespace QrAssignment.Domain.Abstractions
         Guid? CreatedByUserId { get; set; }
         Guid? ModifiedByUserId { get; set; }
 
-        long RevNum { get; set; }
-        bool IsDeleted { get; set; }
+        long RevNum { get; set; } 
 
 
         [Timestamp]
         byte[] RowVersion { get; set; }
     }
-    public class BaseEntity : IBaseEntity
+    public class BaseEntity : IBaseEntity, ISoftDelete
     { 
         public Guid Id { get; set; } = Guid.CreateVersion7();
         public Guid? CreatedByUserId { get; set; }

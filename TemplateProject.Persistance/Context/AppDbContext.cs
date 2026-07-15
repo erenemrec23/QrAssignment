@@ -88,43 +88,64 @@ public class AppDbContext : AuditDbContext
         });
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        { 
-            if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType) && entityType.ClrType != typeof(BaseEntity))
-            { 
-                var filter = ConvertFilterExpressionOfIsDeleted(entityType.ClrType);
-                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
+        {
+            var type = entityType.ClrType;
+
+            // 1. Soft Delete Filtresi
+            if (typeof(ISoftDelete).IsAssignableFrom(type))
+            {
+                // EF Core 10 Named Query Filter tanımı
+                modelBuilder.Entity(type)
+                    .HasQueryFilter("SoftDeleteFilter", ConvertFilterExpressionOfIsDeleted(type));
             }
-             
+
+            // 2. Tenant İzolasyonu Filtresi
+            if (typeof(IMustHaveTenant).IsAssignableFrom(type))
+            {
+                // EF Core 10 Named Query Filter tanımı
+                modelBuilder.Entity(type)
+                    .HasQueryFilter("TenantFilter", CreateTenantExpression(type));
+            }
         }
 
+        // foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        // { 
+        //     if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType) && entityType.ClrType != typeof(BaseEntity))
+        //     { 
+        //         var filter = ConvertFilterExpressionOfIsDeleted(entityType.ClrType);
+        //         modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
+        //     }
 
-        var softDeleteEntities = modelBuilder.Model.GetEntityTypes()
-       .Where(e => e.ClrType != typeof(BaseEntity) && e.BaseType == null &&
-                    typeof(BaseEntity).IsAssignableFrom(e.ClrType) ||
-                   e.ClrType == typeof(AppUser) ||
-                   e.ClrType == typeof(AppRole));
-        foreach (var entityType in softDeleteEntities)
-        {
-
-            modelBuilder.Entity(entityType.ClrType).HasQueryFilter(ConvertFilterExpressionOfIsDeleted(entityType.ClrType));
-        }
+        // }
 
 
-        var tenantEntityTypes = modelBuilder.Model.GetEntityTypes()
-            .Where(e => typeof(IMustHaveTenant).IsAssignableFrom(e.ClrType) && e.ClrType.IsClass);
+        // var softDeleteEntities = modelBuilder.Model.GetEntityTypes()
+        //.Where(e => e.ClrType != typeof(BaseEntity) && e.BaseType == null &&
+        //             typeof(BaseEntity).IsAssignableFrom(e.ClrType) ||
+        //            e.ClrType == typeof(AppUser) ||
+        //            e.ClrType == typeof(AppRole));
+        // foreach (var entityType in softDeleteEntities)
+        // {
 
-        // 2. Her bir tablo için dinamik Query Filter metodumuzu çalıştır
-        foreach (var entityType in tenantEntityTypes)
-        {
-            var method = typeof(AppDbContext)
-                .GetMethod(nameof(SetTenantQueryFilter), BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.MakeGenericMethod(entityType.ClrType);
+        //     modelBuilder.Entity(entityType.ClrType).HasQueryFilter(ConvertFilterExpressionOfIsDeleted(entityType.ClrType));
+        // }
 
-            method?.Invoke(this, new object[] { modelBuilder });
-        }
+
+        // var tenantEntityTypes = modelBuilder.Model.GetEntityTypes()
+        //     .Where(e => typeof(IMustHaveTenant).IsAssignableFrom(e.ClrType) && e.ClrType.IsClass);
+
+        // // 2. Her bir tablo için dinamik Query Filter metodumuzu çalıştır
+        // foreach (var entityType in tenantEntityTypes)
+        // {
+        //     var method = typeof(AppDbContext)
+        //         .GetMethod(nameof(SetTenantQueryFilter), BindingFlags.NonPublic | BindingFlags.Instance)
+        //         ?.MakeGenericMethod(entityType.ClrType);
+
+        //     method?.Invoke(this, new object[] { modelBuilder });
+        // }
 
     }
-
+    public Guid CurrentTenantId => _tenantService.GetTenantId();
     private static LambdaExpression ConvertFilterExpressionOfIsDeleted(Type entityType)
     {
         var parameter = Expression.Parameter(entityType, "p");
@@ -147,5 +168,36 @@ public class AppDbContext : AuditDbContext
         builder.Entity<TEntity>().HasQueryFilter(x => x.TenantId == _tenantService.GetTenantId());
     }
 
-   
+
+
+    // p => p.TenantId == _tenantProvider.TenantId ifadesini dinamik oluşturur
+    private LambdaExpression CreateTenantExpression(Type type)
+    {
+        var parameter = Expression.Parameter(type, "p");
+
+        // Entity üzerindeki TenantId property'sini alıyoruz (Guid ya da Guid?)
+        var property = Expression.Property(parameter, nameof(IMustHaveTenant.TenantId));
+
+        // DbContext üzerindeki CurrentTenantId değerini alıyoruz (Guid ya da int vb.)
+        var tenantIdProperty = Expression.Property(Expression.Constant(this), nameof(CurrentTenantId));
+
+        Expression compare;
+
+        // Eğer entity'deki TenantId alanı Nullable (Guid?) ise ve DbContext'teki değer non-nullable (Guid) ise
+        if (property.Type != tenantIdProperty.Type)
+        {
+            // DbContext'ten gelen non-nullable Guid değerini, Nullable<Guid>'e convert (cast) ediyoruz
+            var convertedTenantId = Expression.Convert(tenantIdProperty, property.Type);
+            compare = Expression.Equal(property, convertedTenantId);
+        }
+        else
+        {
+            // Tipler birebir aynı ise (örneğin ikisi de Guid ya da ikisi de Guid?) doğrudan karşılaştır
+            compare = Expression.Equal(property, tenantIdProperty);
+        }
+
+        return Expression.Lambda(compare, parameter);
+    }
+
+
 }
