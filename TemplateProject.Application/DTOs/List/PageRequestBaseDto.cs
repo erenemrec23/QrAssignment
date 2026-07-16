@@ -5,7 +5,7 @@ namespace QrAssignment.Application.DTOs.List
 {
     // 1. En Üst Kapsayıcı Sınıf
     public class PageRequestFilterBaseDto
-    { 
+    {
         public DynamicQueryDto? DynamicFilterAndSort { get; set; } // Sıralama ve Filtreleme detayları
 
         public GlobalSearchDto? GlobalSearch { get; set; }
@@ -15,7 +15,8 @@ namespace QrAssignment.Application.DTOs.List
     {
         public int PageIndex { get; set; } = 0; // Sayfa numarası (0 veya 1'den başlatmak sana kalmış)
         public int PageSize { get; set; } = 10; // Sayfa başına kayıt
-         
+        public bool IncludeSetPassive { get; set; } = false;
+
     }
 
     public class GlobalSearchDto

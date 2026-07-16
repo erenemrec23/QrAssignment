@@ -107,49 +107,14 @@ public class AppDbContext : AuditDbContext
                     .HasQueryFilter("TenantFilter", CreateTenantExpression(type));
             }
         }
-
-        // foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        // { 
-        //     if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType) && entityType.ClrType != typeof(BaseEntity))
-        //     { 
-        //         var filter = ConvertFilterExpressionOfIsDeleted(entityType.ClrType);
-        //         modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
-        //     }
-
-        // }
-
-
-        // var softDeleteEntities = modelBuilder.Model.GetEntityTypes()
-        //.Where(e => e.ClrType != typeof(BaseEntity) && e.BaseType == null &&
-        //             typeof(BaseEntity).IsAssignableFrom(e.ClrType) ||
-        //            e.ClrType == typeof(AppUser) ||
-        //            e.ClrType == typeof(AppRole));
-        // foreach (var entityType in softDeleteEntities)
-        // {
-
-        //     modelBuilder.Entity(entityType.ClrType).HasQueryFilter(ConvertFilterExpressionOfIsDeleted(entityType.ClrType));
-        // }
-
-
-        // var tenantEntityTypes = modelBuilder.Model.GetEntityTypes()
-        //     .Where(e => typeof(IMustHaveTenant).IsAssignableFrom(e.ClrType) && e.ClrType.IsClass);
-
-        // // 2. Her bir tablo için dinamik Query Filter metodumuzu çalıştır
-        // foreach (var entityType in tenantEntityTypes)
-        // {
-        //     var method = typeof(AppDbContext)
-        //         .GetMethod(nameof(SetTenantQueryFilter), BindingFlags.NonPublic | BindingFlags.Instance)
-        //         ?.MakeGenericMethod(entityType.ClrType);
-
-        //     method?.Invoke(this, new object[] { modelBuilder });
-        // }
+         
 
     }
     public Guid CurrentTenantId => _tenantService.GetTenantId();
     private static LambdaExpression ConvertFilterExpressionOfIsDeleted(Type entityType)
     {
         var parameter = Expression.Parameter(entityType, "p");
-        var propertyAccess = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
+        var propertyAccess = Expression.Property(parameter, nameof(ISoftDelete.IsDeleted));
          
         Expression falseConstant = Expression.Constant(false);
          

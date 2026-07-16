@@ -3,9 +3,9 @@ using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Extensions;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Abstractions;
-using QrAssignment.Persistance.Context; 
+using QrAssignment.Persistance.Context;
 using System.Linq.Dynamic.Core;
-using System.Linq.Expressions; 
+using System.Linq.Expressions;
 
 namespace QrAssignment.Persistance.Repositories
 {
@@ -63,15 +63,15 @@ namespace QrAssignment.Persistance.Repositories
             if (entity.RowVersion != null)
             {
                 var entry = _context.Entry(entity);
-                 
+
                 var rowVersionProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "RowVersion");
 
                 if (rowVersionProperty != null)
-                { 
+                {
                     rowVersionProperty.OriginalValue = entity.RowVersion;
                 }
             }
-        } 
+        }
         public void Delete(T entity)
         {
             _dbSet.Remove(entity);
@@ -92,6 +92,9 @@ namespace QrAssignment.Persistance.Repositories
       Expression<Func<T, TDto>> projection, // Entity'yi DTO'ya çevirecek kural
       CancellationToken cancellationToken = default)
         {
+            // 0. IncludeSetPassive=true ise global soft-delete filtresini bypass edip sadece silinenleri getir
+            query = ApplyDeletedFilter(query, request.IncludeSetPassive);
+
             // 1. Filtresiz toplam kayıt sayısı
             int totalItemCount = await query.CountAsync(cancellationToken);
 
@@ -137,6 +140,23 @@ namespace QrAssignment.Persistance.Repositories
             return query;
         }
 
+        /// <summary>
+        /// IncludeSetPassive=true ise SADECE "SoftDeleteFilter" adlı named query filter'ı
+        /// IgnoreQueryFilters(["SoftDeleteFilter"]) ile devre dışı bırakır ve IsDeleted == true
+        /// olan kayıtları döner. "TenantFilter" aktif kalır, böylece cross-tenant veri sızıntısı olmaz.
+        /// NOT: T tipinin "IsDeleted" adında bir bool property'si olduğu varsayılır (IBaseEntity/ISoftDelete).
+        /// Filtre adı AppDbContext.OnModelCreating içindeki HasQueryFilter("SoftDeleteFilter", ...) ile birebir eşleşmeli.
+        /// </summary>
+        private IQueryable<T> ApplyDeletedFilter(IQueryable<T> query, bool includeDeleted)
+        {
+            if (includeDeleted)
+            {
+                query = query.IgnoreQueryFilters(["SoftDeleteFilter"]).Where("IsDeleted == true");
+            }
+
+            return query;
+        }
+
         // BaseRepository.cs içine eklenecek:
 
         protected async Task<List<TDto>> GetFilteredListWithoutPaginationAsync<TDto>(
@@ -145,25 +165,28 @@ namespace QrAssignment.Persistance.Repositories
             Expression<Func<T, TDto>> projection,
             CancellationToken cancellationToken = default)
         {
+            // IncludeSetPassive=true ise global soft-delete filtresini bypass edip sadece silinenleri getir
+            query = ApplyDeletedFilter(query, request.IncludeSetPassive);
+
             // Daha önce yazdığımız ortak filtreleme metodunu çağırıyoruz
             query = ApplyFilters(query, request.DynamicFilterAndSort, request.GlobalSearch);
-             
+
             return await query
                 .Select(projection)
                 .ToListAsync(cancellationToken);
         }
 
-        public  void DeleteRange(IEnumerable<T> entities)
+        public void DeleteRange(IEnumerable<T> entities)
         {
             _dbSet.RemoveRange(entities);
         }
 
         public async Task DeleteRange(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
-        { 
+        {
             var entities = await _dbSet
                 .Where(e => ids.Contains(e.Id))
                 .ToListAsync(cancellationToken);
-             
+
             if (entities.Any())
             {
                 DeleteRange(entities);
