@@ -173,7 +173,9 @@
   "Label.ActionSelect": "Seç",
   "PageTitle.Tenant.List": "Firma Listesi",
   "PageTitle.Tenant.Form.Edit": "Firma Güncelleme",
-  "PageTitle.Tenant.Form.New" : "Yeni Firma"
+  "PageTitle.Tenant.Form.New": "Yeni Firma",
+  "Label.Active": "Aktif",
+  "Label.Passive":  "Pasif"
 
 }
  
