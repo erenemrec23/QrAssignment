@@ -196,7 +196,9 @@
   "PageTitle.User.Form.New": "Yeni Kullanıcı",
   "PageTitle.QrLocation.List": "Lokasyon Listesi",
   "PageTitle.QrLocation.Form.New": "Yeni Lokasyon",
-  "PageTitle.QrLocation.Form.Edit": "Lokasyon Düzenle"
+  "PageTitle.QrLocation.Form.Edit": "Lokasyon Düzenle",
+  "Label.SetActiveAllSelected": "Seçilenleri Aktif Et",
+  "Label.ActionSetActive":  "Aktif Yap"
 
 
 }

@@ -1,16 +1,15 @@
 ﻿using MediatR;
 using QrAssignment.Application.Abstractions;
 using QrAssignment.Application.Features.Tenants.DTOs;
-using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Features.Tenants.Queries.GetById
+namespace QrAssignment.Application.Features.Tenants.Queries.GetPassiveById
 {
-    public class GetByIdTenantQuery : IRequest<Result<TenantItemDto>>, IdValidationBase
+    public class GetPassivedByIdTenantQuery : IRequest<Result<TenantItemDto>>, IdValidationBase
     {
         public Guid? Id { get; set; }
 
-        public GetByIdTenantQuery(Guid? id)
+        public GetPassivedByIdTenantQuery(Guid? id)
         {
             Id = id;
         }

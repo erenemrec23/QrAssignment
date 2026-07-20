@@ -10,12 +10,13 @@ namespace QrAssignment.Domain.Shared
         None = 0,
         View = 1,          
         Insert = 2,         
-        Update = 4,        
+        Update = 4,
         SetPassive = 8,
-        SetActive = 16,
-        Delete = 32,
-        ExportExcel = 64,  
-        ImportExcel = 128,
+        ViewPassive = 16,
+        SetActive = 32,
+        Delete = 64,
+        ExportExcel = 128,  
+        ImportExcel = 256,
 
         // Sık kullanılan kombinasyonlar (Opsiyonel)
         ViewAndInsert = View | Insert,  

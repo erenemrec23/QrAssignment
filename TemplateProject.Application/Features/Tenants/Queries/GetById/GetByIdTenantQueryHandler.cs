@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using QrAssignment.Application.Features.Tenants.DTOs;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
@@ -22,5 +23,5 @@ namespace QrAssignment.Application.Features.Tenants.Queries.GetById
 
             return Result.Success(result);
         }
-    } 
+    }
 }

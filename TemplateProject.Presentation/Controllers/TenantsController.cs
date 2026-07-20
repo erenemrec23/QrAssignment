@@ -1,16 +1,20 @@
 ﻿using ExcelDataReader;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QrAssignment.Application.Features.Tenants.Commands.BulkDelete;
 using QrAssignment.Application.Features.Tenants.Commands.Create;
 using QrAssignment.Application.Features.Tenants.Commands.Delete;
-using QrAssignment.Application.Features.Tenants.Commands.BulkDelete;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.Validate;
 using QrAssignment.Application.Features.Tenants.Commands.Update;
+using QrAssignment.Application.Features.Tenants.DTOs;
 using QrAssignment.Application.Features.Tenants.Queries.GetById;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
 using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
+using QrAssignment.Application.Features.Tenants.Queries.GetPassiveById;
+using QrAssignment.Application.Features.Tenants.Queries.GetPassivedList;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 
@@ -24,16 +28,16 @@ namespace QrAssignment.Presentation.Controllers
         public TenantsController(IMediator mediator) => _mediator = mediator;
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(CreateTenantCommand command)
+        public async Task<IActionResult> Create(CreateTenantCommand command, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command, cancellationToken);
 
             return Ok(result);
         }
         [HttpPut("[action]")]
-        public async Task<IActionResult> Update([FromBody] UpdateTenantCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateTenantCommand command, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command, cancellationToken);
             return Ok(result);
         }
 
@@ -51,9 +55,9 @@ namespace QrAssignment.Presentation.Controllers
          
 
         [HttpPost("GetList")]  
-        public async Task<IActionResult> GetList([FromBody] GetListTenantQuery request) // 2. FromQuery yerine FromBody yapıyoruz
+        public async Task<IActionResult> GetList([FromBody] GetListTenantQuery request, CancellationToken cancellationToken) // 2. FromQuery yerine FromBody yapıyoruz
         {
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
 
@@ -123,6 +127,25 @@ namespace QrAssignment.Presentation.Controllers
             var response = await _mediator.Send(command, cancellationToken);
             if (response.IsSuccess) return Ok(response);
             return BadRequest(response);
+        }
+
+        [HttpGet("Passived/{id}")] 
+        public async Task<IActionResult> GetPassivedById(Guid? id, CancellationToken cancellationToken)
+        {
+            var query = new GetPassivedByIdTenantQuery(id);
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [HttpPost("GetPassivedList")]
+        public async Task<IActionResult> GetPassivedList([FromBody] GetPassivedListTenantQuery query, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(query, cancellationToken);
+            return Ok(result);
         }
     }
 }

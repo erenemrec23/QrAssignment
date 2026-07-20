@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using QrAssignment.Application.DTOs.List; 
-using QrAssignment.Application.Features.Tenants.Queries.GetById;
-using QrAssignment.Application.Features.Tenants.Queries.GetList;
+using QrAssignment.Application.DTOs.List;
+using QrAssignment.Application.Features.Tenants.DTOs; 
 using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
@@ -34,6 +33,23 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
             cancellationToken); ;
     }
 
+    public async Task<Paginate<TenantListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
+    {
+        IQueryable<Tenant> query = _context.Tenants.AsNoTracking();
+
+        query = query.IgnoreQueryFilters(["SoftDeleteFilter"]).Where("IsPassived == true");
+
+        return await GetPaginatedListAsync(
+            query,
+            request,
+            t => new TenantListItemDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                RevNum = t.RevNum,
+            },
+            cancellationToken); ;
+    }
     public Task<List<TenantListItemExcelDto>> GetExportListAsync(GetTenantListExportExcelQuery request, CancellationToken cancellationToken)
     {
         IQueryable<Tenant> query = _context.Tenants.AsNoTracking();
@@ -47,6 +63,21 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
     public async Task<TenantItemDto> GetDtoByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _context.Tenants
+            .AsNoTracking()
+            .Where(c => c.Id == id)
+            .Select(c => new TenantItemDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                RowVersion = c.RowVersion,
+            })
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
+
+    public async Task<TenantItemDto> GetPassivedDtoByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.Tenants.IgnoreQueryFilters(["SoftDeleteFilter"])
             .AsNoTracking()
             .Where(c => c.Id == id)
             .Select(c => new TenantItemDto

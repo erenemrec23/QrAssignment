@@ -1,7 +1,6 @@
 ﻿using QrAssignment.Application.Attributes;
-using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 
-namespace QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel
+namespace QrAssignment.Application.Features.Tenants.DTOs
 {
     public class TenantListItemExcelDto
     { 

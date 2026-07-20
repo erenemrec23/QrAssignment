@@ -92,9 +92,7 @@ namespace QrAssignment.Persistance.Repositories
       Expression<Func<T, TDto>> projection, // Entity'yi DTO'ya çevirecek kural
       CancellationToken cancellationToken = default)
         {
-            // 0. IncludeSetPassive=true ise global soft-delete filtresini bypass edip sadece silinenleri getir
-            query = ApplyDeletedFilter(query, request.IncludeSetPassive);
-
+                         
             // 1. Filtresiz toplam kayıt sayısı
             int totalItemCount = await query.CountAsync(cancellationToken);
 
@@ -140,22 +138,7 @@ namespace QrAssignment.Persistance.Repositories
             return query;
         }
 
-        /// <summary>
-        /// IncludeSetPassive=true ise SADECE "SoftDeleteFilter" adlı named query filter'ı
-        /// IgnoreQueryFilters(["SoftDeleteFilter"]) ile devre dışı bırakır ve IsPassived == true
-        /// olan kayıtları döner. "TenantFilter" aktif kalır, böylece cross-tenant veri sızıntısı olmaz.
-        /// NOT: T tipinin "IsPassived" adında bir bool property'si olduğu varsayılır (IBaseEntity/ISoftDelete).
-        /// Filtre adı AppDbContext.OnModelCreating içindeki HasQueryFilter("SoftDeleteFilter", ...) ile birebir eşleşmeli.
-        /// </summary>
-        private IQueryable<T> ApplyDeletedFilter(IQueryable<T> query, bool includeDeleted)
-        {
-            if (includeDeleted)
-            {
-                query = query.IgnoreQueryFilters(["SoftDeleteFilter"]).Where("IsPassived == true");
-            }
-
-            return query;
-        }
+       
 
         // BaseRepository.cs içine eklenecek:
 
@@ -164,11 +147,7 @@ namespace QrAssignment.Persistance.Repositories
             PageRequestBaseDto request,
             Expression<Func<T, TDto>> projection,
             CancellationToken cancellationToken = default)
-        {
-            // IncludeSetPassive=true ise global soft-delete filtresini bypass edip sadece silinenleri getir
-            query = ApplyDeletedFilter(query, request.IncludeSetPassive);
-
-            // Daha önce yazdığımız ortak filtreleme metodunu çağırıyoruz
+        { 
             query = ApplyFilters(query, request.DynamicFilterAndSort, request.GlobalSearch);
 
             return await query

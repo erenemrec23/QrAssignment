@@ -1,4 +1,5 @@
-﻿using QrAssignment.Domain.Shared; // PagePermissions enum'ının olduğu yer
+﻿
+using QrAssignment.Domain.Shared; // PagePermissions enum'ının olduğu yer
 
 namespace QrAssignment.Application.Security
 {
@@ -25,6 +26,8 @@ namespace QrAssignment.Application.Security
             { typeof(Features.Tenants.Commands.BulkDelete.BulkDeleteTenantCommand), (AppPages.Tenants, PagePermissions.Delete) },
             { typeof(Features.Tenants.Queries.GetById.GetByIdTenantQuery), (AppPages.Tenants, PagePermissions.View) },
             { typeof(Features.Tenants.Queries.GetList.GetListTenantQuery), (AppPages.Tenants, PagePermissions.View) },
+            { typeof(Features.Tenants.Queries.GetPassiveById.GetPassivedByIdTenantQuery), (AppPages.Tenants, PagePermissions.ViewPassive) },
+            { typeof(Features.Tenants.Queries.GetPassivedList.GetPassivedListTenantQuery), (AppPages.Tenants, PagePermissions.ViewPassive) },
             { typeof(Features.Tenants.Queries.GetListExportExcel.GetTenantListExportExcelQuery), (AppPages.Tenants, PagePermissions.ExportExcel) },
             { typeof(Features.Tenants.Commands.Excel.Validate.ValidateTenantExcelQuery), (AppPages.Tenants, PagePermissions.ImportExcel) },
             
