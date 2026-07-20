@@ -8,14 +8,12 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Delete
 {
     public class DeleteTenantCommandHandler : IRequestHandler<DeleteTenantCommand, Result<DeleteTenantResponse>>
     {
-        private readonly ITenantRepository _tenantRepository;
-        private readonly IMapper _mapper;
+        private readonly ITenantRepository _tenantRepository; 
         private readonly IAppLocalizer _localizer;
 
         public DeleteTenantCommandHandler(ITenantRepository tenantRepository, IMapper mapper, IAppLocalizer localizer)
         {
-            _tenantRepository = tenantRepository;
-            _mapper = mapper;
+            _tenantRepository = tenantRepository; 
             _localizer = localizer;
         }
 

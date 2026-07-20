@@ -114,7 +114,7 @@ public class AppDbContext : AuditDbContext
     private static LambdaExpression ConvertFilterExpressionOfIsDeleted(Type entityType)
     {
         var parameter = Expression.Parameter(entityType, "p");
-        var propertyAccess = Expression.Property(parameter, nameof(ISoftDelete.IsDeleted));
+        var propertyAccess = Expression.Property(parameter, nameof(ISoftDelete.IsPassived));
          
         Expression falseConstant = Expression.Constant(false);
          

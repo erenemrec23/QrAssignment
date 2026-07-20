@@ -20,8 +20,8 @@ namespace QrAssignment.Domain.Entity.App
 
         public Guid? TenantId { get; set; }
         public virtual DateTimeOffset CreatedDate { get; set; }
-        public virtual DateTimeOffset? ModifiedDate { get; set; } 
-        public bool IsDeleted { get; set; }
+        public virtual DateTimeOffset? ModifiedDate { get; set; }
+        public bool IsPassived { get; set; } = false;
 
         [Timestamp]
         public byte[] RowVersion { get; set; } = null!;

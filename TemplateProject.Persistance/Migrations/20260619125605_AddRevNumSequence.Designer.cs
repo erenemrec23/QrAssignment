@@ -39,7 +39,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("IsDeleted")
+                    b.Property<bool?>("IsPassive")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("ModifiedDate")
@@ -90,7 +90,7 @@ namespace TemplateProject.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("IsPassive")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -159,7 +159,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("IsPassive")
                         .HasColumnType("bit");
 
                     b.Property<Guid?>("ModifiedByUserId")
@@ -210,7 +210,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("IsDeleted")
+                    b.Property<bool?>("IsPassive")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("ModifiedDate")
@@ -243,7 +243,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("IsPassive")
                         .HasColumnType("bit");
 
                     b.Property<Guid?>("ModifiedByUserId")
@@ -326,7 +326,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTimeOffset?>("EndDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("IsPassive")
                         .HasColumnType("bit");
 
                     b.Property<string>("LocationName")
@@ -382,7 +382,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("IsPassive")
                         .HasColumnType("bit");
 
                     b.Property<int>("Level")

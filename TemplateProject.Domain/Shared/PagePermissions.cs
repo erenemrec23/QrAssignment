@@ -8,15 +8,17 @@ namespace QrAssignment.Domain.Shared
     public enum PagePermissions : int
     {
         None = 0,
-        View = 1,          // 2^0
-        Insert = 2,        // 2^1
-        Update = 4,        // 2^2
-        Delete = 8,        // 2^3
-        ExportExcel = 16,  // 2^4
-        ImportExcel = 32,  // 2^5
+        View = 1,          
+        Insert = 2,         
+        Update = 4,        
+        SetPassive = 8,
+        SetActive = 16,
+        Delete = 32,
+        ExportExcel = 64,  
+        ImportExcel = 128,
 
         // Sık kullanılan kombinasyonlar (Opsiyonel)
-        ViewAndInsert = View | Insert, // 3
-        All = View | Insert | Update | Delete | ExportExcel | ImportExcel // 63
+        ViewAndInsert = View | Insert,  
+        All = View | Insert | Update | Delete | SetPassive | SetActive | ExportExcel | ImportExcel 
     }
 }

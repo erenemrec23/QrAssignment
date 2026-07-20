@@ -33,7 +33,7 @@ namespace QrAssignment.Domain.Abstractions
         [Filterable]
         public DateTimeOffset? ModifiedDate { get; set; }
         public Guid? ModifiedByUserId { get; set; }
-        public bool IsDeleted { get; set; }
+        public  bool IsPassived { get; set; } 
 
         [Timestamp] 
         public byte[] RowVersion { get; set; } = null!;

@@ -142,16 +142,16 @@ namespace QrAssignment.Persistance.Repositories
 
         /// <summary>
         /// IncludeSetPassive=true ise SADECE "SoftDeleteFilter" adlı named query filter'ı
-        /// IgnoreQueryFilters(["SoftDeleteFilter"]) ile devre dışı bırakır ve IsDeleted == true
+        /// IgnoreQueryFilters(["SoftDeleteFilter"]) ile devre dışı bırakır ve IsPassived == true
         /// olan kayıtları döner. "TenantFilter" aktif kalır, böylece cross-tenant veri sızıntısı olmaz.
-        /// NOT: T tipinin "IsDeleted" adında bir bool property'si olduğu varsayılır (IBaseEntity/ISoftDelete).
+        /// NOT: T tipinin "IsPassived" adında bir bool property'si olduğu varsayılır (IBaseEntity/ISoftDelete).
         /// Filtre adı AppDbContext.OnModelCreating içindeki HasQueryFilter("SoftDeleteFilter", ...) ile birebir eşleşmeli.
         /// </summary>
         private IQueryable<T> ApplyDeletedFilter(IQueryable<T> query, bool includeDeleted)
         {
             if (includeDeleted)
             {
-                query = query.IgnoreQueryFilters(["SoftDeleteFilter"]).Where("IsDeleted == true");
+                query = query.IgnoreQueryFilters(["SoftDeleteFilter"]).Where("IsPassived == true");
             }
 
             return query;

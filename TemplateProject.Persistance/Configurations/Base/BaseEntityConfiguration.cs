@@ -17,12 +17,7 @@ namespace QrAssignment.Persistance.Configurations.Base
                .ValueGeneratedOnAdd()
                .UseIdentityColumn();
 
-            //builder.Property(x => x.RevNum)
-            //   .ValueGeneratedOnAdd()
-            //   .UseIdentityColumn()
-            //   // SİHİRLİ SATIR BURASI: 
-            //   // Kayıt eklendikten sonraki işlemlerde (Update vs) bu kolonu yoksay!
-            //   .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+            builder.Property(x => x.IsPassived).HasColumnName("IsPassived").HasDefaultValue(false);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace QrAssignment.Domain.Entity.App
         public virtual DateTimeOffset CreatedDate { get; set; }
         public virtual DateTimeOffset? ModifiedDate { get; set; }
 
-        public virtual bool? IsDeleted { get; set; }
+        public virtual bool IsPassived { get; set; } = false;
         public Guid? CreatedByUserId { get; set; }
         public Guid? ModifiedByUserId { get; set; }
         [Filterable]
@@ -25,8 +25,7 @@ namespace QrAssignment.Domain.Entity.App
         public long RevNum { get; set; }
 
         [Timestamp]
-        public byte[] RowVersion { get; set; } = null!;
-        bool ISoftDelete.IsDeleted { get; set; }
+        public byte[] RowVersion { get; set; } = null!; 
 
         public static AppRole Create(string name)
         {

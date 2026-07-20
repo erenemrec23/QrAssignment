@@ -12,8 +12,8 @@ using QrAssignment.Persistance.Context;
 namespace TemplateProject.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260623095944_Identity-tables2")]
-    partial class Identitytables2
+    [Migration("20260720071545_rename_isDeleted_to_isPassived")]
+    partial class rename_isDeleted_to_isPassived
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,63 @@ namespace TemplateProject.Persistance.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppRoles", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AppUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,14 +90,20 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool?>("IsPassive")
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsPassived")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -50,8 +112,15 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<string>("NormalizedName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("RevNum")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
@@ -75,6 +144,9 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("datetimeoffset");
 
@@ -88,7 +160,7 @@ namespace TemplateProject.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsPassive")
+                    b.Property<bool>("IsPassived")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -100,6 +172,9 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("datetimeoffset");
@@ -118,6 +193,12 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<long>("RevNum")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -157,7 +238,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("IsPassive")
+                    b.Property<bool>("IsPassived")
                         .HasColumnType("bit");
 
                     b.Property<Guid?>("ModifiedByUserId")
@@ -174,7 +255,10 @@ namespace TemplateProject.Persistance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long>("RevNum")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -208,7 +292,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("IsPassive")
+                    b.Property<bool?>("IsPassived")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("ModifiedDate")
@@ -241,7 +325,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("IsPassive")
+                    b.Property<bool>("IsPassived")
                         .HasColumnType("bit");
 
                     b.Property<Guid?>("ModifiedByUserId")
@@ -255,7 +339,10 @@ namespace TemplateProject.Persistance.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("RevNum")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -324,7 +411,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTimeOffset?>("EndDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("IsPassive")
+                    b.Property<bool>("IsPassived")
                         .HasColumnType("bit");
 
                     b.Property<string>("LocationName")
@@ -344,7 +431,10 @@ namespace TemplateProject.Persistance.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<long>("RevNum")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -380,7 +470,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("IsPassive")
+                    b.Property<bool>("IsPassived")
                         .HasColumnType("bit");
 
                     b.Property<int>("Level")
@@ -400,7 +490,10 @@ namespace TemplateProject.Persistance.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<long>("RevNum")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -413,6 +506,15 @@ namespace TemplateProject.Persistance.Migrations
                     b.HasIndex("ParentRegionId");
 
                     b.ToTable("SystemRegions");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", null)
+                        .WithMany("Claims")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUserRefreshToken", b =>
@@ -428,7 +530,7 @@ namespace TemplateProject.Persistance.Migrations
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUserRole", b =>
                 {
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppRoles", "AppRoles")
+                    b.HasOne("QrAssignment.Domain.Entity.App.AppRole", "AppRole")
                         .WithMany()
                         .HasForeignKey("AppRoleId");
 
@@ -436,7 +538,7 @@ namespace TemplateProject.Persistance.Migrations
                         .WithMany("AppUserRoles")
                         .HasForeignKey("AppUserId");
 
-                    b.Navigation("AppRoles");
+                    b.Navigation("AppRole");
 
                     b.Navigation("AppUser");
                 });
@@ -462,6 +564,8 @@ namespace TemplateProject.Persistance.Migrations
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUser", b =>
                 {
                     b.Navigation("AppUserRoles");
+
+                    b.Navigation("Claims");
 
                     b.Navigation("RefreshToken");
                 });
