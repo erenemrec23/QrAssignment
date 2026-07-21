@@ -198,7 +198,11 @@
   "PageTitle.QrLocation.Form.New": "Yeni Lokasyon",
   "PageTitle.QrLocation.Form.Edit": "Lokasyon Düzenle",
   "Label.SetActiveAllSelected": "Seçilenleri Aktif Et",
-  "Label.ActionSetActive":  "Aktif Yap"
+  "Label.ActionSetActive": "Aktif Yap",
+  "Label.CreatedDateTime": "Oluşturulan Tarih",
+  "Label.CreatedUserFullName": "Oluşturan Kişi",
+  "Label.ModifiedUserFullName": "Güncelleyen Kişi",
+  "Label.ModifiedDateTime": "Güncellenen Tarih"
 
 
 }

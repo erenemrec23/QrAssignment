@@ -1,4 +1,5 @@
 ﻿using QrAssignment.Domain.Attributes;
+using QrAssignment.Domain.Entity.App;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Numerics;
@@ -25,14 +26,12 @@ namespace QrAssignment.Domain.Abstractions
     public class BaseEntity : IBaseEntity, ISoftDelete
     { 
         public Guid Id { get; set; } = Guid.CreateVersion7();
-        public Guid? CreatedByUserId { get; set; }
 
         [Filterable]
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
 
         [Filterable]
         public DateTimeOffset? ModifiedDate { get; set; }
-        public Guid? ModifiedByUserId { get; set; }
         public  bool IsPassived { get; set; } 
 
         [Timestamp] 
@@ -41,6 +40,12 @@ namespace QrAssignment.Domain.Abstractions
         [Filterable]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long RevNum { get; set; }
+
+        public Guid? CreatedByUserId { get; set; }
+        public AppUser? CreatedByUser { get; set; } // Navigation property
+
+        public Guid? ModifiedByUserId { get; set; }
+        public AppUser? ModifiedByUser { get; set; } // Navigation property
     }
 
 

@@ -27,17 +27,18 @@ public class AppDbContext : AuditDbContext
 
     public DbSet<AppUserRole> AppUserRole { get; set; }
 
-
     public DbSet<AppRole> AppRoles { get; set; }
     public DbSet<AppUserRefreshToken> AppUserRefreshTokens { get; set; }
 
-      
-    //public DbSet<QrApplicant> QrApplicants { get; set; }
+    // NOT: QrApplicantConfiguration zaten mevcut ve ApplyConfigurationsFromAssembly
+    // açıldığı için entity modele dahil olacak. Ama context üzerinden sorgulayabilmek
+    // (context.QrApplicants gibi) için DbSet'i açman gerekiyor. Entity hazır olduğunda
+    // aşağıdaki satırı aç:
+    // public DbSet<QrApplicant> QrApplicants { get; set; }
 
     public DbSet<QrLocation> QrLocations { get; set; }
 
     public DbSet<SystemRegion> SystemRegions { get; set; }
-
 
     public DbSet<Tenant> Tenants { get; set; }
 
@@ -47,45 +48,10 @@ public class AppDbContext : AuditDbContext
 
         modelBuilder.Ignore<IdentityUserLogin<string>>();
         modelBuilder.Ignore<IdentityUserRole<string>>();
-        //modelBuilder.Ignore<IdentityUserClaim<string>>();
         modelBuilder.Ignore<IdentityUserToken<string>>();
-        //modelBuilder.Ignore<IdentityRoleClaim<string>>();
         modelBuilder.Ignore<IdentityRole<string>>();
-
-        modelBuilder.Entity<AppUser>(b =>
-        {
-
-            b.Property<byte[]>("RowVersion")  
-                .IsRowVersion();
-
-        });
          
-        modelBuilder.Entity<AppRole>(b =>
-        {
-            b.Property<byte[]>("RowVersion") 
-                .IsRowVersion();
-        });
-
-        modelBuilder.Entity<IdentityUserClaim<Guid>>(b =>
-        {
-            b.ToTable("AppUserClaims"); // Kişisel yetkilerin tutulacağı tablo
-
-            b.Property<byte[]>("RowVersion")
-                .IsRowVersion();
-            b.HasOne<AppUser>()
-     .WithMany(u => u.Claims)
-     .HasForeignKey(uc => uc.UserId)
-     .IsRequired()
-     .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        modelBuilder.Entity<IdentityRoleClaim<Guid>>(b =>
-        {
-            b.ToTable("AppRoleClaims"); // Grup yetkilerinin tutulacağı tablo
-
-            b.Property<byte[]>("RowVersion")
-                .IsRowVersion();
-        });
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
@@ -107,33 +73,26 @@ public class AppDbContext : AuditDbContext
                     .HasQueryFilter("TenantFilter", CreateTenantExpression(type));
             }
         }
-         
-
     }
+
     public Guid CurrentTenantId => _tenantService.GetTenantId();
+
     private static LambdaExpression ConvertFilterExpressionOfIsDeleted(Type entityType)
     {
         var parameter = Expression.Parameter(entityType, "p");
         var propertyAccess = Expression.Property(parameter, nameof(ISoftDelete.IsPassived));
-         
+
         Expression falseConstant = Expression.Constant(false);
-         
+
         if (propertyAccess.Type != typeof(bool))
         {
             falseConstant = Expression.Convert(falseConstant, propertyAccess.Type);
         }
-         
+
         var equalExpression = Expression.Equal(propertyAccess, falseConstant);
 
         return Expression.Lambda(equalExpression, parameter);
     }
-    private void SetTenantQueryFilter<TEntity>(ModelBuilder builder)
-       where TEntity : class, IMustHaveTenant
-    { 
-        builder.Entity<TEntity>().HasQueryFilter(x => x.TenantId == _tenantService.GetTenantId());
-    }
-
-
 
     // p => p.TenantId == _tenantProvider.TenantId ifadesini dinamik oluşturur
     private LambdaExpression CreateTenantExpression(Type type)
@@ -163,6 +122,4 @@ public class AppDbContext : AuditDbContext
 
         return Expression.Lambda(compare, parameter);
     }
-
-
 }

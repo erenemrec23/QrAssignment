@@ -9,6 +9,9 @@ namespace QrAssignment.Persistance.Configurations.App
         public void Configure(EntityTypeBuilder<AppRole> builder)
         {
             builder.ToTable("AppRoles");
+             
+            builder.Property<byte[]>("RowVersion")
+                   .IsRowVersion();
         }
     }
 }

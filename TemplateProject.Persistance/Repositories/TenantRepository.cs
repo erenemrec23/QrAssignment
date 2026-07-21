@@ -19,37 +19,47 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
      
     public async Task<Paginate<TenantListItemDto>> GetDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
     {
-        IQueryable<Tenant> query = _context.Tenants.AsNoTracking();
+        IQueryable<Tenant> query = _context.Tenants 
+            .AsNoTracking();
         
         return await GetPaginatedListAsync(
             query,
             request,
-            t => new TenantListItemDto
-            {
-                Id = t.Id,
-                Name = t.Name,
-                RevNum = t.RevNum,
-            },
+            CreateTenantListItemDto(),
             cancellationToken); ;
     }
 
     public async Task<Paginate<TenantListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
     {
-        IQueryable<Tenant> query = _context.Tenants.AsNoTracking();
+        IQueryable<Tenant> query = _context.Tenants
+            .Include(i => i.CreatedByUser)
+            .Include(i => i.ModifiedByUser)
+            .AsNoTracking();
 
         query = query.IgnoreQueryFilters(["SoftDeleteFilter"]).Where("IsPassived == true");
 
         return await GetPaginatedListAsync(
             query,
             request,
-            t => new TenantListItemDto
-            {
-                Id = t.Id,
-                Name = t.Name,
-                RevNum = t.RevNum,
-            },
+            CreateTenantListItemDto(),
             cancellationToken); ;
     }
+
+    private static System.Linq.Expressions.Expression<Func<Tenant, TenantListItemDto>> CreateTenantListItemDto()
+    {
+        return t => new TenantListItemDto
+        {
+            Id = t.Id,
+            Name = t.Name,
+            RevNum = t.RevNum,
+            CreatedUserFullName = t.CreatedByUser != null ? t.CreatedByUser.FirstName : "",
+            ModifiedUserFullName = t.ModifiedByUser != null ? t.ModifiedByUser.FirstName : "",
+            CreatedDateTime = t.CreatedDate,
+            ModifiedDateTime = t.ModifiedDate
+
+        };
+    }
+
     public Task<List<TenantListItemExcelDto>> GetExportListAsync(GetTenantListExportExcelQuery request, CancellationToken cancellationToken)
     {
         IQueryable<Tenant> query = _context.Tenants.AsNoTracking();

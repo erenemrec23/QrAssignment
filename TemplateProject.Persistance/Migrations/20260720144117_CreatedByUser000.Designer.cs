@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QrAssignment.Persistance.Context;
 
@@ -11,9 +12,11 @@ using QrAssignment.Persistance.Context;
 namespace TemplateProject.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260720144117_CreatedByUser000")]
+    partial class CreatedByUser000
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,33 @@ namespace TemplateProject.Persistance.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppRoleClaims", (string)null);
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
@@ -99,7 +129,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppRoles", (string)null);
+                    b.ToTable("AppRoles");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUser", b =>
@@ -190,7 +220,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppUser", (string)null);
+                    b.ToTable("AppUsers");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUserRefreshToken", b =>
@@ -209,10 +239,7 @@ namespace TemplateProject.Persistance.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("IsPassived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsPassived");
+                        .HasColumnType("bit");
 
                     b.Property<Guid?>("ModifiedByUserId")
                         .HasColumnType("uniqueidentifier");
@@ -222,8 +249,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.Property<string>("RefreshToken")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RefreshTokenExpires")
                         .HasColumnType("datetime2");
@@ -245,11 +271,7 @@ namespace TemplateProject.Persistance.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("ModifiedByUserId");
-
-                    b.ToTable("AppUserRefreshTokens", (string)null);
+                    b.ToTable("AppUserRefreshTokens");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUserRole", b =>
@@ -288,7 +310,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("AppUserRoles", (string)null);
+                    b.ToTable("AppUserRole");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.Tenant", b =>
@@ -304,10 +326,7 @@ namespace TemplateProject.Persistance.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("IsPassived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsPassived");
+                        .HasColumnType("bit");
 
                     b.Property<Guid?>("ModifiedByUserId")
                         .HasColumnType("uniqueidentifier");
@@ -317,8 +336,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("RevNum")
                         .ValueGeneratedOnAdd()
@@ -334,14 +352,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("ModifiedByUserId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Tenants", (string)null);
+                    b.ToTable("Tenants");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.Audit.SystemAuditLog", b =>
@@ -385,77 +396,6 @@ namespace TemplateProject.Persistance.Migrations
                     b.ToTable("SystemAuditLogs");
                 });
 
-            modelBuilder.Entity("QrAssignment.Domain.Entity.QrApplicant", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<bool>("IsPassived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsPassived");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Mail")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<Guid?>("ModifiedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset?>("ModifiedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid?>("RegionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("RevNum")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<string>("TCKN")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("TenantId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("ModifiedByUserId");
-
-                    b.HasIndex("RegionId");
-
-                    b.ToTable("QrApplicants", (string)null);
-                });
-
             modelBuilder.Entity("QrAssignment.Domain.Entity.QrLocation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -472,10 +412,7 @@ namespace TemplateProject.Persistance.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("IsPassived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsPassived");
+                        .HasColumnType("bit");
 
                     b.Property<string>("LocationName")
                         .HasColumnType("nvarchar(max)");
@@ -488,8 +425,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ParentLocationId")
                         .HasColumnType("uniqueidentifier");
@@ -514,13 +450,9 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("ModifiedByUserId");
-
                     b.HasIndex("ParentLocationId");
 
-                    b.ToTable("QrLocations", (string)null);
+                    b.ToTable("QrLocations");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.System.SystemRegion", b =>
@@ -530,8 +462,7 @@ namespace TemplateProject.Persistance.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CreatedByUserId")
                         .HasColumnType("uniqueidentifier");
@@ -540,14 +471,10 @@ namespace TemplateProject.Persistance.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("IsPassived")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsPassived");
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Level")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("ModifiedByUserId")
                         .HasColumnType("uniqueidentifier");
@@ -557,8 +484,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ParentRegionId")
                         .HasColumnType("uniqueidentifier");
@@ -577,13 +503,9 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("ModifiedByUserId");
-
                     b.HasIndex("ParentRegionId");
 
-                    b.ToTable("SystemRegions", (string)null);
+                    b.ToTable("SystemRegions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
@@ -603,125 +525,38 @@ namespace TemplateProject.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("AppUser");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("ModifiedByUser");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.AppUserRole", b =>
                 {
                     b.HasOne("QrAssignment.Domain.Entity.App.AppRole", "AppRole")
                         .WithMany()
-                        .HasForeignKey("AppRoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("AppRoleId");
 
                     b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "AppUser")
                         .WithMany("AppUserRoles")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("AppUserId");
 
                     b.Navigation("AppRole");
 
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("QrAssignment.Domain.Entity.App.Tenant", b =>
-                {
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("ModifiedByUser");
-                });
-
-            modelBuilder.Entity("QrAssignment.Domain.Entity.QrApplicant", b =>
-                {
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("QrAssignment.Domain.Entity.System.SystemRegion", "Region")
-                        .WithMany()
-                        .HasForeignKey("RegionId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("ModifiedByUser");
-
-                    b.Navigation("Region");
-                });
-
             modelBuilder.Entity("QrAssignment.Domain.Entity.QrLocation", b =>
                 {
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("QrAssignment.Domain.Entity.QrLocation", "ParentLocation")
                         .WithMany("SubLocations")
-                        .HasForeignKey("ParentLocationId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("ModifiedByUser");
+                        .HasForeignKey("ParentLocationId");
 
                     b.Navigation("ParentLocation");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.System.SystemRegion", b =>
                 {
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("QrAssignment.Domain.Entity.System.SystemRegion", "ParentRegion")
                         .WithMany("SubLocations")
-                        .HasForeignKey("ParentRegionId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("ModifiedByUser");
+                        .HasForeignKey("ParentRegionId");
 
                     b.Navigation("ParentRegion");
                 });
