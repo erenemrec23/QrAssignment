@@ -63,64 +63,97 @@ namespace QrAssignment.Application.Extensions
                 }
                 else
                 {
-                    var underlyingType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                    bool isDateType = underlyingType == typeof(DateTime) || underlyingType == typeof(DateTimeOffset);
                     string opLower = filter.Operator.ToLower();
 
-                    // Tarih alanlarında (DateTime/DateTimeOffset) veritabanındaki değer saat bilgisi
-                    // taşıyor ama frontend'den sadece tarih ("2026-07-17") geliyor, yani her zaman
-                    // günün başına (00:00) denk geliyor. Bu yüzden:
-                    //  - "eq"  hiçbir zaman eşleşmiyordu    -> gün aralığına (>= başı && <= sonu) çevrildi
-                    //  - "neq" her zaman true dönüyordu     -> gün aralığının dışı olarak çevrildi
-                    //  - "gt"  o günü de yanlışlıkla dahil ediyordu -> günün SONUYLA karşılaştırılıyor
-                    //  - "lte" o günü neredeyse hariç tutuyordu    -> günün SONUYLA karşılaştırılıyor
-                    // "gte" ve "lt" zaten gün başı (00:00) ile doğru çalıştığı için dokunulmadı.
-                    if (isDateType && opLower is "eq" or "neq" or "gt" or "lte")
+                    if (opLower is "isempty" or "isnotempty")
                     {
-                        object dayStart = ConvertValue(filter.Value, property.PropertyType);
-                        object dayEnd = GetEndOfDay(dayStart);
+                        bool isStringField = property.PropertyType == typeof(string);
 
-                        switch (opLower)
+                        // Value type ise ve Nullable<T> DEĞİLSE (örn. non-nullable DateTimeOffset,
+                        // int, Guid, bool, enum), bu alan asla null olamaz. Böyle bir alanı "== null"
+                        // ile karşılaştırmak Dynamic LINQ'te "binary operator Equal is not defined
+                        // for the types 'X' and 'System.Object'" hatasına yol açıyor (value type'lar
+                        // object/null ile bu şekilde karşılaştırılamaz, sadece Nullable<T> karşılaştırılabilir).
+                        // Bu yüzden sonucu sabit olarak belirliyoruz: isempty -> hiçbir zaman true,
+                        // isnotempty -> her zaman true.
+                        bool isNonNullableValueType = property.PropertyType.IsValueType
+                            && Nullable.GetUnderlyingType(property.PropertyType) == null;
+
+                        if (!isStringField && isNonNullableValueType)
                         {
-                            case "eq":
-                                {
-                                    int startIndex = values.Count;
-                                    values.Add(dayStart);
-                                    int endIndex = values.Count;
-                                    values.Add(dayEnd);
-                                    comparison = $"({filter.Field} >= @{startIndex} && {filter.Field} <= @{endIndex})";
-                                    break;
-                                }
-                            case "neq":
-                                {
-                                    int startIndex = values.Count;
-                                    values.Add(dayStart);
-                                    int endIndex = values.Count;
-                                    values.Add(dayEnd);
-                                    comparison = $"({filter.Field} < @{startIndex} || {filter.Field} > @{endIndex})";
-                                    break;
-                                }
-                            case "gt":
-                                {
-                                    int endIndex = values.Count;
-                                    values.Add(dayEnd);
-                                    comparison = $"{filter.Field} > @{endIndex}";
-                                    break;
-                                }
-                            case "lte":
-                                {
-                                    int endIndex = values.Count;
-                                    values.Add(dayEnd);
-                                    comparison = $"{filter.Field} <= @{endIndex}";
-                                    break;
-                                }
+                            comparison = opLower == "isempty" ? "(1 == 2)" : "(1 == 1)";
+                        }
+                        else
+                        {
+                            comparison = opLower == "isempty"
+                                ? (isStringField
+                                    ? $"({filter.Field} == null || {filter.Field} == \"\")"
+                                    : $"{filter.Field} == null")
+                                : (isStringField
+                                    ? $"({filter.Field} != null && {filter.Field} != \"\")"
+                                    : $"{filter.Field} != null");
                         }
                     }
                     else
                     {
-                        int index = values.Count;
-                        comparison = GetComparison(filter.Operator, filter.Field, index, property.PropertyType);
-                        values.Add(ConvertValue(filter.Value, property.PropertyType));
+                        var underlyingType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                        bool isDateType = underlyingType == typeof(DateTime) || underlyingType == typeof(DateTimeOffset);
+
+                        // Tarih alanlarında (DateTime/DateTimeOffset) veritabanındaki değer saat bilgisi
+                        // taşıyor ama frontend'den sadece tarih ("2026-07-17") geliyor, yani her zaman
+                        // günün başına (00:00) denk geliyor. Bu yüzden:
+                        //  - "eq"  hiçbir zaman eşleşmiyordu    -> gün aralığına (>= başı && <= sonu) çevrildi
+                        //  - "neq" her zaman true dönüyordu     -> gün aralığının dışı olarak çevrildi
+                        //  - "gt"  o günü de yanlışlıkla dahil ediyordu -> günün SONUYLA karşılaştırılıyor
+                        //  - "lte" o günü neredeyse hariç tutuyordu    -> günün SONUYLA karşılaştırılıyor
+                        // "gte" ve "lt" zaten gün başı (00:00) ile doğru çalıştığı için dokunulmadı.
+                        if (isDateType && opLower is "eq" or "neq" or "gt" or "lte")
+                        {
+                            object dayStart = ConvertValue(filter.Value, property.PropertyType);
+                            object dayEnd = GetEndOfDay(dayStart);
+
+                            switch (opLower)
+                            {
+                                case "eq":
+                                    {
+                                        int startIndex = values.Count;
+                                        values.Add(dayStart);
+                                        int endIndex = values.Count;
+                                        values.Add(dayEnd);
+                                        comparison = $"({filter.Field} >= @{startIndex} && {filter.Field} <= @{endIndex})";
+                                        break;
+                                    }
+                                case "neq":
+                                    {
+                                        int startIndex = values.Count;
+                                        values.Add(dayStart);
+                                        int endIndex = values.Count;
+                                        values.Add(dayEnd);
+                                        comparison = $"({filter.Field} < @{startIndex} || {filter.Field} > @{endIndex})";
+                                        break;
+                                    }
+                                case "gt":
+                                    {
+                                        int endIndex = values.Count;
+                                        values.Add(dayEnd);
+                                        comparison = $"{filter.Field} > @{endIndex}";
+                                        break;
+                                    }
+                                case "lte":
+                                    {
+                                        int endIndex = values.Count;
+                                        values.Add(dayEnd);
+                                        comparison = $"{filter.Field} <= @{endIndex}";
+                                        break;
+                                    }
+                            }
+                        }
+                        else
+                        {
+                            int index = values.Count;
+                            comparison = GetComparison(filter.Operator, filter.Field, index, property.PropertyType);
+                            values.Add(ConvertValue(filter.Value, property.PropertyType));
+                        }
                     }
                 }
             }

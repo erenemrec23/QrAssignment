@@ -204,7 +204,9 @@
   "Label.ModifiedUserFullName": "Güncelleyen Kişi",
   "Label.ModifiedDateTime": "Güncellenen Tarih",
   "Label.Between": "Aralığında",
-  "Label.ResetFilter":  "Sıfırla"
+  "Label.ResetFilter": "Sıfırla",
+  "Label.IsEmpty": "Boş Olanlar",
+  "Label.IsNotEmpty": "Boş Olmayanlar"
 
 
 }
