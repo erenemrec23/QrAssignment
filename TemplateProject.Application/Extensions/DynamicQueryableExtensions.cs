@@ -51,20 +51,7 @@ namespace QrAssignment.Application.Extensions
                         throw new ArgumentException($"'{filter.Field}' alanı için 'between' operatöründe hem Value hem Value2 zorunludur.");
 
                     object startValue = ConvertValue(filter.Value, property.PropertyType);
-                    object endValue = ConvertValue(filter.Value2, property.PropertyType);
-
-                    // Tarih alanlarında (DateTime/DateTimeOffset) bitiş değeri "2026-07-23" gibi
-                    // saat 00:00'a denk geldiği için o günün kayıtları aralığın dışında kalır.
-                    // Bitişi günün son anına çekerek "23'e kadar (dahil)" beklentisini karşılıyoruz.
-                    var underlyingType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                    if (underlyingType == typeof(DateTime) && endValue is DateTime endDate)
-                    {
-                        endValue = endDate.Date.AddDays(1).AddTicks(-1);
-                    }
-                    else if (underlyingType == typeof(DateTimeOffset) && endValue is DateTimeOffset endDateOffset)
-                    {
-                        endValue = new DateTimeOffset(endDateOffset.Date.AddDays(1).AddTicks(-1), endDateOffset.Offset);
-                    }
+                    object endValue = GetEndOfDay(ConvertValue(filter.Value2, property.PropertyType));
 
                     int startIndex = values.Count;
                     values.Add(startValue);
@@ -76,9 +63,65 @@ namespace QrAssignment.Application.Extensions
                 }
                 else
                 {
-                    int index = values.Count;
-                    comparison = GetComparison(filter.Operator, filter.Field, index, property.PropertyType);
-                    values.Add(ConvertValue(filter.Value, property.PropertyType));
+                    var underlyingType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                    bool isDateType = underlyingType == typeof(DateTime) || underlyingType == typeof(DateTimeOffset);
+                    string opLower = filter.Operator.ToLower();
+
+                    // Tarih alanlarında (DateTime/DateTimeOffset) veritabanındaki değer saat bilgisi
+                    // taşıyor ama frontend'den sadece tarih ("2026-07-17") geliyor, yani her zaman
+                    // günün başına (00:00) denk geliyor. Bu yüzden:
+                    //  - "eq"  hiçbir zaman eşleşmiyordu    -> gün aralığına (>= başı && <= sonu) çevrildi
+                    //  - "neq" her zaman true dönüyordu     -> gün aralığının dışı olarak çevrildi
+                    //  - "gt"  o günü de yanlışlıkla dahil ediyordu -> günün SONUYLA karşılaştırılıyor
+                    //  - "lte" o günü neredeyse hariç tutuyordu    -> günün SONUYLA karşılaştırılıyor
+                    // "gte" ve "lt" zaten gün başı (00:00) ile doğru çalıştığı için dokunulmadı.
+                    if (isDateType && opLower is "eq" or "neq" or "gt" or "lte")
+                    {
+                        object dayStart = ConvertValue(filter.Value, property.PropertyType);
+                        object dayEnd = GetEndOfDay(dayStart);
+
+                        switch (opLower)
+                        {
+                            case "eq":
+                                {
+                                    int startIndex = values.Count;
+                                    values.Add(dayStart);
+                                    int endIndex = values.Count;
+                                    values.Add(dayEnd);
+                                    comparison = $"({filter.Field} >= @{startIndex} && {filter.Field} <= @{endIndex})";
+                                    break;
+                                }
+                            case "neq":
+                                {
+                                    int startIndex = values.Count;
+                                    values.Add(dayStart);
+                                    int endIndex = values.Count;
+                                    values.Add(dayEnd);
+                                    comparison = $"({filter.Field} < @{startIndex} || {filter.Field} > @{endIndex})";
+                                    break;
+                                }
+                            case "gt":
+                                {
+                                    int endIndex = values.Count;
+                                    values.Add(dayEnd);
+                                    comparison = $"{filter.Field} > @{endIndex}";
+                                    break;
+                                }
+                            case "lte":
+                                {
+                                    int endIndex = values.Count;
+                                    values.Add(dayEnd);
+                                    comparison = $"{filter.Field} <= @{endIndex}";
+                                    break;
+                                }
+                        }
+                    }
+                    else
+                    {
+                        int index = values.Count;
+                        comparison = GetComparison(filter.Operator, filter.Field, index, property.PropertyType);
+                        values.Add(ConvertValue(filter.Value, property.PropertyType));
+                    }
                 }
             }
 
@@ -110,6 +153,22 @@ namespace QrAssignment.Application.Extensions
             }
 
             return comparison;
+        }
+
+        /// <summary>
+        /// Bir tarih değerinin (DateTime/DateTimeOffset) günün son anını (23:59:59.9999999) döner.
+        /// Frontend'den gelen tarihler her zaman günün başına (00:00) denk geldiği için,
+        /// "o güne kadar/o gün dahil" gibi karşılaştırmalarda kullanılır.
+        /// Tarih tipi değilse (örn. int, string) değeri değiştirmeden geri döner.
+        /// </summary>
+        private static object GetEndOfDay(object dateValue)
+        {
+            return dateValue switch
+            {
+                DateTime dt => dt.Date.AddDays(1).AddTicks(-1),
+                DateTimeOffset dto => new DateTimeOffset(dto.Date.AddDays(1).AddTicks(-1), dto.Offset),
+                _ => dateValue
+            };
         }
 
         private static string GetComparison(string op, string field, int index, Type propertyType)
