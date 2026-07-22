@@ -31,9 +31,7 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
 
     public async Task<Paginate<TenantListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
     {
-        IQueryable<Tenant> query = _context.Tenants
-            .Include(i => i.CreatedByUser)
-            .Include(i => i.ModifiedByUser)
+        IQueryable<Tenant> query = _context.Tenants 
             .AsNoTracking();
 
         query = query.IgnoreQueryFilters(["SoftDeleteFilter"]).Where("IsPassived == true");

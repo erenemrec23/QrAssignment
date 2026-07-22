@@ -81,7 +81,7 @@
   "Label.ExcelBrowseClick": "göz atmak için tıklayın",
   "Label.Uploading": "Yükleniyor...",
   "ExcelImport.WizardTitle": "Excel ile Hızlı Giriş Sihirbazı",
-  "ExcelImport.DownloadTemplate": "Mevcut Sistem Verisini Excel Olarak İndir (Şablon)",
+  "ExcelImport.DownloadTemplate": "Mevcut Sistem Verisini Excel Olarak İndir",
   "ExcelImport.SelectFile": "Bilgisayardan Excel Dosyası Seçin",
   "ExcelImport.Analyzing": "Backend verileri doğrulanıyor, lütfen bekleyin...",
   "ExcelImport.AnalysisResult": "Excel Analiz Sonucu ({count} Satır)",
@@ -206,7 +206,12 @@
   "Label.Between": "Aralığında",
   "Label.ResetFilter": "Sıfırla",
   "Label.IsEmpty": "Boş Olanlar",
-  "Label.IsNotEmpty": "Boş Olmayanlar"
+  "Label.IsNotEmpty": "Boş Olmayanlar",
+  "Label.PassivedDateTime": "Pasif Yapılan Tarih",
+  "Label.PassivedUserFullName": "Pasif Yapan Kişi",
+  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_DTOs_TenantListItemExcelDto_Name": "Firma Adı",
+  "ExcelImport.DownloadSampleTemplate": "Örnek Excel İndirmek İçin Tıklayınız  (Şablon)"
+
 
 
 }

@@ -39,8 +39,7 @@ namespace QrAssignment.Application.Extensions
                 property = currentType.GetProperty(part);
                 if (property is null)
                     return null;
-
-                // İç içe gitmek için bir sonraki seviyenin tipine geç
+                 
                 currentType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
             }
 
