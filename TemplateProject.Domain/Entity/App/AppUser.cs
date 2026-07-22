@@ -10,12 +10,38 @@ namespace QrAssignment.Domain.Entity.App
 {
     public class AppUser : IdentityUser<Guid>, IBaseEntity, IMustHaveTenant, ISoftDelete
     {
+        private string _firstName = default!;
+        private string _lastName = default!;
         [Filterable]
-        public virtual string FirstName { get; set; } = default!;
+        public virtual string FirstName
+        {
+            get => _firstName;
+            set
+            {
+                _firstName = value;
+                UpdateFullName();
+            }
+        }
+
         [Filterable]
-        public virtual string LastName { get; set; } = default!;
+        public virtual string LastName
+        {
+            get => _lastName;
+            set
+            {
+                _lastName = value;
+                UpdateFullName();
+            }
+        }
+
+        // Artık hem veritabanında gerçek bir kolon hem de filtrelenebilir!
         [Filterable]
-        public virtual string FullName => $"{FirstName} {LastName}";
+        public virtual string FullName { get; private set; } = default!;
+
+        private void UpdateFullName()
+        {
+            FullName = $"{_firstName} {_lastName}".Trim();
+        }
 
 
         public Guid? TenantId { get; set; }

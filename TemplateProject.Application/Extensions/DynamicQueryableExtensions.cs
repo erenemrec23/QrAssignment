@@ -2,6 +2,7 @@
 using QrAssignment.Domain.Attributes;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
+using System.Reflection;
 
 namespace QrAssignment.Application.Extensions
 {
@@ -28,7 +29,23 @@ namespace QrAssignment.Application.Extensions
 
             return query;
         }
+        private static PropertyInfo? ResolveProperty(Type entityType, string path)
+        {
+            PropertyInfo? property = null;
+            var currentType = entityType;
 
+            foreach (var part in path.Split('.'))
+            {
+                property = currentType.GetProperty(part);
+                if (property is null)
+                    return null;
+
+                // İç içe gitmek için bir sonraki seviyenin tipine geç
+                currentType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+            }
+
+            return property;
+        }
         private static string Transform(DynamicQueryFilterDto filter, List<object> values, Type entityType)
         {
 
@@ -36,8 +53,7 @@ namespace QrAssignment.Application.Extensions
 
             if (!string.IsNullOrEmpty(filter.Field) && !string.IsNullOrEmpty(filter.Operator))
             {
-                var property = entityType.GetProperty(filter.Field);
-
+                var property = ResolveProperty(entityType, filter.Field);   // eskiden entityType.GetProperty(filter.Field)
                 if (property == null)
                     throw new ArgumentException($"'{filter.Field}' alanı bulunamadı.");
 
@@ -68,14 +84,7 @@ namespace QrAssignment.Application.Extensions
                     if (opLower is "isempty" or "isnotempty")
                     {
                         bool isStringField = property.PropertyType == typeof(string);
-
-                        // Value type ise ve Nullable<T> DEĞİLSE (örn. non-nullable DateTimeOffset,
-                        // int, Guid, bool, enum), bu alan asla null olamaz. Böyle bir alanı "== null"
-                        // ile karşılaştırmak Dynamic LINQ'te "binary operator Equal is not defined
-                        // for the types 'X' and 'System.Object'" hatasına yol açıyor (value type'lar
-                        // object/null ile bu şekilde karşılaştırılamaz, sadece Nullable<T> karşılaştırılabilir).
-                        // Bu yüzden sonucu sabit olarak belirliyoruz: isempty -> hiçbir zaman true,
-                        // isnotempty -> her zaman true.
+                         
                         bool isNonNullableValueType = property.PropertyType.IsValueType
                             && Nullable.GetUnderlyingType(property.PropertyType) == null;
 

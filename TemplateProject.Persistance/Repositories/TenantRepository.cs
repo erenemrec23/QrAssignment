@@ -52,8 +52,8 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
             Id = t.Id,
             Name = t.Name,
             RevNum = t.RevNum,
-            CreatedUserFullName = t.CreatedByUser != null ? t.CreatedByUser.FirstName : "",
-            ModifiedUserFullName = t.ModifiedByUser != null ? t.ModifiedByUser.FirstName : "",
+            CreatedUserFullName = t.CreatedByUser != null ? t.CreatedByUser.FullName : "",
+            ModifiedUserFullName = t.ModifiedByUser != null ? t.ModifiedByUser.FullName : "",
             CreatedDateTime = t.CreatedDate,
             ModifiedDateTime = t.ModifiedDate
 
