@@ -40,14 +40,46 @@ namespace QrAssignment.Application.Extensions
 
                 if (property == null)
                     throw new ArgumentException($"'{filter.Field}' alanı bulunamadı.");
-                 
+
                 bool isFilterable = property.GetCustomAttributes(typeof(FilterableAttribute), inherit: true).Any();
                 if (!isFilterable)
                     throw new UnauthorizedAccessException($"'{filter.Field}' alanı üzerinden filtreleme yapılamaz.");
 
-                int index = values.Count;
-                comparison = GetComparison(filter.Operator, filter.Field, index, property.PropertyType);
-                values.Add(ConvertValue(filter.Value, property.PropertyType));
+                if (string.Equals(filter.Operator, "between", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (string.IsNullOrEmpty(filter.Value) || string.IsNullOrEmpty(filter.Value2))
+                        throw new ArgumentException($"'{filter.Field}' alanı için 'between' operatöründe hem Value hem Value2 zorunludur.");
+
+                    object startValue = ConvertValue(filter.Value, property.PropertyType);
+                    object endValue = ConvertValue(filter.Value2, property.PropertyType);
+
+                    // Tarih alanlarında (DateTime/DateTimeOffset) bitiş değeri "2026-07-23" gibi
+                    // saat 00:00'a denk geldiği için o günün kayıtları aralığın dışında kalır.
+                    // Bitişi günün son anına çekerek "23'e kadar (dahil)" beklentisini karşılıyoruz.
+                    var underlyingType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                    if (underlyingType == typeof(DateTime) && endValue is DateTime endDate)
+                    {
+                        endValue = endDate.Date.AddDays(1).AddTicks(-1);
+                    }
+                    else if (underlyingType == typeof(DateTimeOffset) && endValue is DateTimeOffset endDateOffset)
+                    {
+                        endValue = new DateTimeOffset(endDateOffset.Date.AddDays(1).AddTicks(-1), endDateOffset.Offset);
+                    }
+
+                    int startIndex = values.Count;
+                    values.Add(startValue);
+
+                    int endIndex = values.Count;
+                    values.Add(endValue);
+
+                    comparison = $"({filter.Field} >= @{startIndex} && {filter.Field} <= @{endIndex})";
+                }
+                else
+                {
+                    int index = values.Count;
+                    comparison = GetComparison(filter.Operator, filter.Field, index, property.PropertyType);
+                    values.Add(ConvertValue(filter.Value, property.PropertyType));
+                }
             }
 
             if (filter.Filters != null && filter.Filters.Any())

@@ -382,7 +382,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SystemAuditLogs");
+                    b.ToTable("SystemAuditLogs", (string)null);
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.QrApplicant", b =>

@@ -53,6 +53,10 @@ namespace QrAssignment.Application.DTOs.List
 
         [JsonConverter(typeof(FlexibleStringConverter))]
         public string? Value { get; set; }
+
+        // "between" operatörü için aralığın bitiş değeri (frontend: value2)
+        [JsonConverter(typeof(FlexibleStringConverter))]
+        public string? Value2 { get; set; }
         public string? Logic { get; set; }
         public IEnumerable<DynamicQueryFilterDto>? Filters { get; set; }
 

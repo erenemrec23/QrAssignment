@@ -202,7 +202,9 @@
   "Label.CreatedDateTime": "Oluşturulan Tarih",
   "Label.CreatedUserFullName": "Oluşturan Kişi",
   "Label.ModifiedUserFullName": "Güncelleyen Kişi",
-  "Label.ModifiedDateTime": "Güncellenen Tarih"
+  "Label.ModifiedDateTime": "Güncellenen Tarih",
+  "Label.Between": "Aralığında",
+  "Label.ResetFilter":  "Sıfırla"
 
 
 }
