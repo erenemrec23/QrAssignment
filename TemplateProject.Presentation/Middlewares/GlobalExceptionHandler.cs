@@ -4,25 +4,20 @@ using Microsoft.Extensions.Logging;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Exceptions;
 using QrAssignment.Domain.Shared;
-using System.Data.Entity;
+
 namespace QrAssignment.Presentation.Middlewares
 {
     internal sealed class GlobalExceptionHandler : IExceptionHandler
     {
-
         private readonly ILogger<GlobalExceptionHandler> _logger;
         private readonly IAppLocalizer _localizer;
-        //private readonly IEmailService _emailService; 
 
         public GlobalExceptionHandler(
             ILogger<GlobalExceptionHandler> logger,
-            IAppLocalizer localizer
-            //, IEmailService emailService
-            )
+            IAppLocalizer localizer)
         {
             _logger = logger;
             _localizer = localizer;
-            //_emailService = emailService;
         }
 
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
@@ -40,7 +35,7 @@ namespace QrAssignment.Presentation.Middlewares
                         message =
                         validationException.Errors == null || !validationException.Errors.Any() ?
                         _localizer["Validations.ValidationErrors"] :
-                        string.Join(". ",  validationException.Errors.Select(e => string.Join(". ", e.Value)).ToList())
+                        string.Join(". ", validationException.Errors.Select(e => string.Join(". ", e.Value)).ToList())
                     },
                     validationErrors = validationException.Errors
                 };
@@ -48,17 +43,33 @@ namespace QrAssignment.Presentation.Middlewares
                 await httpContext.Response.WriteAsJsonAsync(resultValidation, cancellationToken);
                 return true;
             }
-            if (exception is BusinessException businessException)
+
+            // DuplicateEntityException, BusinessException'dan türediği için
+            // onu BusinessException'dan ÖNCE kontrol etmemiz gerekiyor (daha spesifik tip önce gelmeli)
+            if (exception is DuplicateEntityException duplicateEntityException)
             {
-                // Kullanıcı hatası olduğu için 400 döneriz (Loglamaya gerek yok, sistem çökmedi)
-                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
                 httpContext.Response.ContentType = "application/json";
 
-                //// Senin Handler'dan fırlattığın mesajı doğrudan alırız (veya Localizer'dan çeviririz)
-                //// Eğer Handler'dan "Errors.BrandNotFound" gibi bir key yollarsan: _localizer[appException.Message] yapabilirsin.
-                //var businessError = new Error("BusinessRule.Violation", appException.Message);
+                var errorResult = new
+                {
+                    isSuccess = false,
+                    isFailure = true,
+                    error = new
+                    {
+                        code = "Database.DuplicateKey",
+                        message = duplicateEntityException.Message
+                    }
+                };
 
-                //await httpContext.Response.WriteAsJsonAsync(Result.Failure(businessError), cancellationToken);
+                await httpContext.Response.WriteAsJsonAsync(errorResult, cancellationToken);
+                return true;
+            }
+
+            if (exception is BusinessException businessException)
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                httpContext.Response.ContentType = "application/json";
 
                 var errorResult = new
                 {
@@ -67,13 +78,14 @@ namespace QrAssignment.Presentation.Middlewares
                     error = new
                     {
                         code = "BusinessRule.Violation",
-                        message = businessException.Message // "Bu mail adresi zaten kayıtlı" mesajı buraya gelir
+                        message = businessException.Message
                     }
                 };
 
                 await httpContext.Response.WriteAsJsonAsync(errorResult, cancellationToken);
                 return true;
             }
+
             if (exception is UnauthorizedAccessException unauthorizedAccessException)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -96,18 +108,13 @@ namespace QrAssignment.Presentation.Middlewares
 
             _logger.LogError(exception, "Kritik Hata: {RequestPath}", httpContext.Request.Path);
 
-
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-            string errorMessage = _localizer["Errors.Unauthorized"];
-
+            string errorMessage = _localizer["Errors.UnKnownException"];
             var error = new Error("Server.InternalError", errorMessage);
-
             var result = Result.Failure(error);
 
-            // 6. Response'a Result nesnesini yaz
             await httpContext.Response.WriteAsJsonAsync(result, cancellationToken);
-
             return true;
         }
     }
