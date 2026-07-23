@@ -1,13 +1,9 @@
-using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Localization; 
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using QrAssignment.Application;
-using QrAssignment.Application.Behaviors;
 using QrAssignment.Application.Interfaces;
-using QrAssignment.Domain.Shared.Serialization;
 using QrAssignment.Infrastructure;
 using QrAssignment.Infrastructure.Localization;
 using QrAssignment.Persistance;
