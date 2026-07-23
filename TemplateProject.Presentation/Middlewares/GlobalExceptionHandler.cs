@@ -11,17 +11,24 @@ namespace QrAssignment.Presentation.Middlewares
     {
         private readonly ILogger<GlobalExceptionHandler> _logger;
         private readonly IAppLocalizer _localizer;
-
+        private readonly IDbExceptionTranslator _dbExceptionTranslator;
         public GlobalExceptionHandler(
-            ILogger<GlobalExceptionHandler> logger,
-            IAppLocalizer localizer)
+    ILogger<GlobalExceptionHandler> logger,
+    IAppLocalizer localizer,
+    IDbExceptionTranslator dbExceptionTranslator)
         {
             _logger = logger;
             _localizer = localizer;
+            _dbExceptionTranslator = dbExceptionTranslator;
         }
 
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
+            if (_dbExceptionTranslator.TryTranslate(exception, out var translated))
+            {
+                _logger.LogWarning(exception, "Veritabanı kısıt ihlali: {RequestPath}", httpContext.Request.Path);
+                exception = translated;
+            }
             if (exception is ValidationAppException validationException)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;

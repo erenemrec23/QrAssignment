@@ -6,11 +6,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QrAssignment.Application.Abstractions;
+using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Entity.Audit;
 using QrAssignment.Persistance.Context;
+using QrAssignment.Persistance.Exceptions;
 using QrAssignment.Persistance.Interceptors;
 using QrAssignment.Persistance.Repositories;
 using QrAssignment.Persistance.Services;
@@ -37,6 +39,9 @@ namespace QrAssignment.Persistance
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddSingleton<IDbExceptionTranslator, SqlServerExceptionTranslator>();  
+
             services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.Password.RequiredLength = 6;
