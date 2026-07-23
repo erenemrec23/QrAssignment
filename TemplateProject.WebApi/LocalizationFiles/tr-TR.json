@@ -2,6 +2,7 @@
   "Messages.Success": "İşlem başarıyla tamamlandı.",
   "Errors.Unexpected": "Beklenmeyen bir hata gerçekleşti. Lütfen daha sonra tekrar deneyiniz.",
   "Errors.Unauthorized": "Yetkiniz Bulunmamaktadır.",
+  "Errors.UnKnownException": "Beklenmeyen bir hata oluştu lütfen daha sonra tekrar deneyiniz",
   "Messages.UserMailUserPasswordNotFound": "Mail adresiniz veya şifreniz hatalıdır. Lütfen tekar deneyiniz.",
   "Messages.MailAlreadyExists": "Bu email adresi zaten kullanımda!",
   "Messages.IdIsNull": "Parametre Bulunamadı",
@@ -210,7 +211,9 @@
   "Label.PassivedDateTime": "Pasif Yapılan Tarih",
   "Label.PassivedUserFullName": "Pasif Yapan Kişi",
   "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_DTOs_TenantListItemExcelDto_Name": "Firma Adı",
-  "ExcelImport.DownloadSampleTemplate": "Örnek Excel İndirmek İçin Tıklayınız  (Şablon)"
+  "ExcelImport.DownloadSampleTemplate": "Örnek Excel İndirmek İçin Tıklayınız (Şablon)",
+  "Error.DuplicateRecord": "Veritabanı mükerrer kayıt hatası",
+  "Errors.InternalServerError": "InternalServerError"
 
 
 
