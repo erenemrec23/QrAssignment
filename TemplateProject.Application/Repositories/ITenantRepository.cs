@@ -1,4 +1,5 @@
 ﻿using QrAssignment.Application.DTOs.List;
+using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Tenants.DTOs; 
 using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 using QrAssignment.Application.Interfaces;
@@ -16,6 +17,6 @@ namespace QrAssignment.Application.Repositories
         Task BulkDelete(List<Guid> ids, CancellationToken cancellationToken);
 
         Task<Paginate<TenantListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken);
-
+        Task<List<string>> GetDublicateDataList(List<CreateTenantInputDto> datas, CancellationToken cancellationToken);
     }
 }

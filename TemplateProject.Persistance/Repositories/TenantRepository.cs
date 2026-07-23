@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.DTOs.List;
+using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Tenants.DTOs; 
 using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Shared;
 using QrAssignment.Persistance.Context;
 using System.Linq.Dynamic.Core;
 
@@ -100,6 +102,17 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
     public async Task BulkDelete(List<Guid> ids, CancellationToken cancellationToken)
     {
        await DeleteRange(ids, cancellationToken);
+    }
+
+    public async Task<List<string>> GetDublicateDataList(List<CreateTenantInputDto> datas, CancellationToken cancellationToken)
+    {
+        var incomingNames = datas.Select(x => x.Name).ToList();
+        
+        return await _context.Tenants
+            .Where(t => incomingNames.Contains(t.Name))
+            .Select(t => t.Name)
+            .ToListAsync(cancellationToken);
+
     }
 }
 
