@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization; 
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using QrAssignment.Application;
@@ -73,6 +73,12 @@ builder.Services.AddOpenApi(options =>
 builder.Services.AddPresentation();
 builder.Services.AddControllers()
     .AddApplicationPart(QrAssignment.Presentation.AssemblyReference.Assembly);
+    //.AddJsonOptions(opts =>
+    //{
+    //    opts.JsonSerializerOptions.Converters.Add(new ResultJsonConverterFactory());
+    //}); 
+ 
+    
 // 1. Varsayılan doğrulama şemasını JWT olarak belirliyoruz
 builder.Services.AddAuthentication(options =>
 {
@@ -168,21 +174,15 @@ app.UseCors("AllowAll");
 var supportedCultures1 = new[] { new CultureInfo("tr-TR"), new CultureInfo("en-US") };
 
 var localizationOptions = new RequestLocalizationOptions
-{
-    // Sistemin varsayılan (Default) dili kesinlikle Türkçe olsun
+{ 
     DefaultRequestCulture = new RequestCulture("tr-TR"),
     SupportedCultures = supportedCultures1,
     SupportedUICultures = supportedCultures1
 };
-
-// DİKKAT: TARAYICI DİLİNİ TAMAMEN EZMEK İÇİN
-// Eğer tarayıcıdan Accept-Language: en-US gelse bile sistemin her zaman tr-TR 
-// olarak çalışmasını istiyorsan, .NET'in o dili yakalayan sağlayıcılarını silebilirsin.
-// Şimdilik bu satırı açman sorunu %100 çözecektir:
+ 
 localizationOptions.RequestCultureProviders.Clear();
 
-app.UseRequestLocalization(localizationOptions);
-// Configure the HTTP request pipeline.
+app.UseRequestLocalization(localizationOptions); 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi(); 
@@ -191,10 +191,12 @@ app.MapScalarApiReference();
 //app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();  
 app.UseSerilogUi(options =>
 {
     options.WithRoutePrefix("logs");
 });
-app.MapControllers();
+app.MapControllers()
+   .RequireRateLimiting("IpBasedRateLimit");
     //.RequireAuthorization();
 app.Run();
