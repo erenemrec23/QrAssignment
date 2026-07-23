@@ -1,25 +1,28 @@
 ﻿using MediatR;
 using QrAssignment.Application.Abstractions;
+using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Behaviors
-{
-    public sealed class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull, ICommand<TResponse>
+{
+    private readonly IUnitOfWork _unitOfWork;
+
+    public UnitOfWorkBehavior(IUnitOfWork unitOfWork)
     {
-        private readonly IUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+    }
 
-        public UnitOfWorkBehavior(IUnitOfWork unitOfWork)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    {
+        var response = await next();
+         
+        if (response is Result result && result.IsFailure)
         {
-            _unitOfWork = unitOfWork;
-        }
-
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
-        { 
-            var response = await next();
-             
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-             
             return response;
         }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return response;
     }
 }
