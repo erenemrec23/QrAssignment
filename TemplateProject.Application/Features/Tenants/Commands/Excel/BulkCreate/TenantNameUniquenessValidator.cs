@@ -22,6 +22,7 @@ public class TenantNameUniquenessValidator : IExcelRowBusinessValidator<CreateTe
             return;
 
         var names = candidates
+            .Where(w=> !w.Data!.Code!.HasValue)
             .Select(r => r.Data!.Name!)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();

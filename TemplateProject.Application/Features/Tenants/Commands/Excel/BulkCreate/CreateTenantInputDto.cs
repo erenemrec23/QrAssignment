@@ -12,6 +12,7 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate
         [ExcelColumn("Excel.Title.Name")]
         [ExcelRequired(ErrorMessageKey = "Excel.Error.NameRequired")]
         [ExcelMaxLength(200)]
+        [ExcelUniqueInFile(ErrorMessageKey = "Excel.Error.TenantNameDuplicate")]
         public string Name { get; set; } = string.Empty;
     }
 }

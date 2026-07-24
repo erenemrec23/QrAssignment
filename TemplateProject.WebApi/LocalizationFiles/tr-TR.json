@@ -226,8 +226,9 @@
   "Excel.Title.Name": "Firma Adı",
   "Excel.Error.CodeRequired": "Kod alanı boş olamaz.",
   "Excel.Error.CodeDuplicate": "Bu kod dosya içinde birden fazla kez geçiyor.",
+  "Excel.Error.TenantNameDuplicate": "Bu firma adı dosya içinde birden fazla kez geçiyor.",
   "Excel.Error.NameRequired": "Firma adı boş olamaz.",
-  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_DTOs_TenantListItemExcelDto_Code" :  "Kod"
+  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_DTOs_TenantListItemExcelDto_Code": "Kod"
 
 
 }

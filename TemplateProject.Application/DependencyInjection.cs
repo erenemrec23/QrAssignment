@@ -1,15 +1,18 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using QrAssignment.Application.Behaviors;
+using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
+using QrAssignment.Application.Interfaces;
 using System.Reflection;
 namespace QrAssignment.Application
 {
     public static class DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-        { 
+        {
             //services.AddScoped<IExcelRowBusinessValidator<TenantExcelRowDto>, TenantNameUniquenessValidator>();
             //services.AddTransient(typeof(IRequestHandler<,>), typeof(ValidateExcelQueryHandlerBase<>));
+            services.AddScoped<IExcelRowBusinessValidator<CreateTenantInputDto>, TenantNameUniquenessValidator>();
             services.AddAutoMapper(cfg => { }, typeof(DependencyInjection));
 
             services.AddMediatR(cfg =>
