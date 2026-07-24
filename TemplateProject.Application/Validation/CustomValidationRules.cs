@@ -9,8 +9,8 @@ public static class CustomValidationRules
         IStringLocalizer localizer)
     {
         return ruleBuilder
-            .NotNull().WithMessage(localizer["Messages.KeyRequired"])
-            .NotEqual(Guid.Empty).WithMessage(localizer["InvalidKeyParameter"]);
+            .NotNull().WithMessage(localizer["Error.KeyRequired"])
+            .NotEqual(Guid.Empty).WithMessage(localizer["Error.InvalidKeyParameter"]);
     }
 
     // Guid için (nullable olmayan alanlar da varsa)
@@ -19,6 +19,6 @@ public static class CustomValidationRules
         IStringLocalizer localizer)
     {
         return ruleBuilder
-            .NotEmpty().WithMessage(localizer["Messages.ValueRequired"]);
+            .NotEmpty().WithMessage(localizer["Error.ValueRequired"]);
     }
 }

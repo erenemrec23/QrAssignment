@@ -85,7 +85,7 @@
   "ExcelImport.DownloadTemplate": "Mevcut Sistem Verisini Excel Olarak İndir",
   "ExcelImport.SelectFile": "Bilgisayardan Excel Dosyası Seçin",
   "ExcelImport.Analyzing": "Backend verileri doğrulanıyor, lütfen bekleyin...",
-  "ExcelImport.AnalysisResult": "Excel Analiz Sonucu ({count} Satır)",
+  "ExcelImport.AnalysisResult": "Excel Analiz Sonucu",
   "ExcelImport.Status": "Durum",
   "ExcelImport.RowNumber": "Satır No",
   "ExcelImport.Description": "Açıklama / Hata Nedeni",
@@ -213,8 +213,13 @@
   "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_DTOs_TenantListItemExcelDto_Name": "Firma Adı",
   "ExcelImport.DownloadSampleTemplate": "Örnek Excel İndirmek İçin Tıklayınız (Şablon)",
   "Error.DuplicateRecord": "Veritabanı mükerrer kayıt hatası",
-  "Errors.InternalServerError": "InternalServerError"
-
+  "Error.InternalServerError": "Beklenmeyen bir hata oluştu.",
+  "Error.WorkRegimeEstablished": "Bir iş kuralı ihlali oluştu.",
+  "Error.InvalidRequest": "Geçersiz istek",
+  "Error.SystemErrorOccurred": "Sistemsel bir hata oluştu.",
+  "Error.KeyRequired": "Anahtar Parametresi Alanı Zorunludur.",
+  "Error.ValueRequired": "Değer Parametresi Alanı Zorunludur.",
+  "Error.InvalidKeyParameter": "Geçersiz Anahtar Parametresi"
 
 
 }
