@@ -7,8 +7,8 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Excel.Dtos
     public class ExcelTenantRowResultDto
     {
         public int RowNumber { get; set; }
-        public string? Name { get; set; }
-        public string? Title { get; set; }
+        public long? Code { get; set; }
+        public string? Name { get; set; } 
         public bool IsValid { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
     }

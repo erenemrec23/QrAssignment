@@ -66,8 +66,8 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
 
         return GetFilteredListWithoutPaginationAsync(
             query,
-            request, // ExportTenantsQuery artık PageRequestBaseDto'dan miras almalı
-            t => new TenantListItemExcelDto { Name = t.Name },
+            request,  
+            t => new TenantListItemExcelDto { Name = t.Name, Code = t.RevNum.ToString() },
             cancellationToken);
     }
     public async Task<TenantItemDto> GetDtoByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -113,6 +113,16 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
             .Select(t => t.Name)
             .ToListAsync(cancellationToken);
 
+    }
+    public async Task<List<Tenant>> GetByRevNumsAsync(List<long> revnums, CancellationToken cancellationToken)
+    {
+        if (revnums == null || !revnums.Any())
+            return new List<Tenant>();
+
+        return await _context.Tenants
+            .Where(u => revnums.Contains(u.RevNum)) 
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
     }
 }
 

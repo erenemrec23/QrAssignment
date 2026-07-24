@@ -23,14 +23,40 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate
             {
                 return Result.Failure<List<Guid>>(new Error("Yüklenecek geçerli bir veri bulunamadı.", "TENANT_BULK_CREATE_NO_DATA"));
             }
+            var resultIdList = new List<Guid>();
+            var codeIsNullList = request.Tenants.Where(w => !w.Code.HasValue);
+            if (codeIsNullList.Any())
+            {
+                var tenantList = _mapper.Map<List<Tenant>>(request.Tenants);
 
-            var tenantList = _mapper.Map<List<Tenant>>(request.Tenants);
+                await _tenantRepository.AddRangeAsync(tenantList, cancellationToken);
+                resultIdList.AddRange(tenantList.Select(t => t.Id).ToList());
+            }
+            var codeIsNotNullList = request.Tenants.Where(w => w.Code.HasValue).Select(s=>s.Code.Value).ToList();
+            var updateList = _tenantRepository.GetByRevNumsAsync(codeIsNotNullList, cancellationToken);
 
-            await _tenantRepository.AddRangeAsync(tenantList, cancellationToken); 
-            var createdIds = tenantList.Select(t => t.Id).ToList();
-             
+            var resultHasNoUpdateData = new List<long>();
+            foreach (var code in codeIsNotNullList)
+            {
+                var dataUpdate = updateList.Result.SingleOrDefault(s => s.RevNum == code);
+                var requestDto = request.Tenants.Single(w => w.Code == code);
+                if (dataUpdate != null)
+                { 
+                    _mapper.Map(request, dataUpdate);
+                    _tenantRepository.Update(dataUpdate);
+                    resultIdList.Add(dataUpdate.Id);
+                }
+                else
+                {
+                    resultHasNoUpdateData.Add(code);
+                } 
+            }
+            if (resultHasNoUpdateData.Any())
+            {
+                Result.Failure(new Error("HasNoUpdateData", string.Format("Girmiş Olduğunuz Kod(lar)a Ship Bir Data Bulunamadı ({0})",string.Join(", ", resultHasNoUpdateData))));
+            }
 
-            return Result.Success(createdIds);
+            return Result.Success(resultIdList);
         }
     }
 }

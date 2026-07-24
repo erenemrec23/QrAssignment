@@ -35,18 +35,18 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Excel.Validate
                         rowCounter++;
 
                         // Kolon isim güvenliği
-                        var name = row.ContainsKey("Name") ? row["Name"]?.ToString()?.Trim() : row.Values.FirstOrDefault()?.ToString()?.Trim();
-                        var title = row.ContainsKey("Title") ? row["Title"]?.ToString()?.Trim() : row.Values.Skip(1).FirstOrDefault()?.ToString()?.Trim();
-
+                        var code = row.ContainsKey("code") ? long.Parse(row["code"]?.ToString()?.Trim()) : long.Parse(row.Values.FirstOrDefault()?.ToString()?.Trim());
+                        var name = row.ContainsKey("name") ? row["name"]?.ToString().Trim() : row.Values.Skip(1)?.ToString()?.Trim();
+                        
                         // Tamamen boş satırları listeye eklemeyelim
-                        if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(title))
+                        if (string.IsNullOrEmpty(name))
                             continue;
 
                         var rowResult = new ExcelTenantRowResultDto
                         {
                             RowNumber = rowCounter,
-                            Name = name,
-                            Title = title,
+                            Code = code,
+                            Name = name, 
                             IsValid = true
                         };
 
@@ -55,7 +55,7 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Excel.Validate
                         if (string.IsNullOrWhiteSpace(name))
                         {
                             rowResult.IsValid = false;
-                            rowResult.ErrorMessage += "Firma adı (Name) boş olamaz. ";
+                            rowResult.ErrorMessage += "Firma adı boş olamaz. ";
                         }
 
                         if (!string.IsNullOrWhiteSpace(name))

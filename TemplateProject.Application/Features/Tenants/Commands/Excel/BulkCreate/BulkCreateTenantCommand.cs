@@ -15,6 +15,7 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate
     // Excel satırlarından map'lenecek hafif bir DTO
     public class CreateTenantInputDto
     {
+        public long? Code { get; set; }
         public string Name { get; set; } 
     }
 }
