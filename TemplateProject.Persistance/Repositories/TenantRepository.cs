@@ -124,5 +124,15 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
+    public async Task<List<Tenant>> GetByNamesAsync(List<string> names, CancellationToken cancellationToken)
+    {
+        if (names == null || !names.Any())
+            return new List<Tenant>();
+
+        return await _context.Tenants
+            .Where(u => names.Contains(u.Name))
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 }
 

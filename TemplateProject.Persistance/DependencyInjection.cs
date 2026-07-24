@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QrAssignment.Application.Abstractions;
 using QrAssignment.Application.Interfaces;
-using QrAssignment.Application.Repositories;
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Entity.Audit;
@@ -16,8 +15,6 @@ using QrAssignment.Persistance.Exceptions;
 using QrAssignment.Persistance.Interceptors;
 using QrAssignment.Persistance.Repositories;
 using QrAssignment.Persistance.Services;
-using System.Data.Entity;
-using System.Security.Claims;
 using System.Security.Claims;
 using System.Text.Json;
 

@@ -30,6 +30,8 @@ namespace QrAssignment.Application.Security
             { typeof(Features.Tenants.Queries.GetPassivedList.GetPassivedListTenantQuery), (AppPages.Tenants, PagePermissions.ViewPassive) },
             { typeof(Features.Tenants.Queries.GetListExportExcel.GetTenantListExportExcelQuery), (AppPages.Tenants, PagePermissions.ExportExcel) },
             { typeof(Features.Tenants.Commands.Excel.Validate.ValidateTenantExcelQuery), (AppPages.Tenants, PagePermissions.ImportExcel) },
+            { typeof(Common.Excel.ValidateExcelQuery<Features.Tenants.Commands.Excel.BulkCreate.CreateTenantInputDto>),
+  (AppPages.Tenants, PagePermissions.ImportExcel) },
             
             // Role İşlemleri
             { typeof(Features.Roles.Commands.Create.CreateRoleCommand), (AppPages.Roles, PagePermissions.Insert) },
@@ -63,7 +65,8 @@ namespace QrAssignment.Application.Security
         // 2. SERBEST KOMUTLAR: Herkese açık işlemler (Login, Register vb.)
         public static readonly HashSet<Type> UnsecuredCommands = new()
         {
-             { typeof(Features.AuthFeatures.Commands.Login.LoginCommand) }
+             { typeof(Features.AuthFeatures.Commands.Login.LoginCommand) }, 
+            
         };
     }
 }

@@ -1,6 +1,4 @@
-﻿using MediatR;
-using QrAssignment.Application.Abstractions;
-using QrAssignment.Application.Interfaces;
+﻿using QrAssignment.Application.Abstractions;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate
@@ -10,12 +8,5 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate
     {
 
         public List<CreateTenantInputDto> Tenants { get; set; } = new();
-    }
-
-    // Excel satırlarından map'lenecek hafif bir DTO
-    public class CreateTenantInputDto
-    {
-        public long? Code { get; set; }
-        public string Name { get; set; } 
     }
 }

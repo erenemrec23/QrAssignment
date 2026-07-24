@@ -27,24 +27,25 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate
             var codeIsNullList = request.Tenants.Where(w => !w.Code.HasValue);
             if (codeIsNullList.Any())
             {
-                var tenantList = _mapper.Map<List<Tenant>>(request.Tenants);
+                var tenantList = _mapper.Map<List<Tenant>>(codeIsNullList);
 
                 await _tenantRepository.AddRangeAsync(tenantList, cancellationToken);
                 resultIdList.AddRange(tenantList.Select(t => t.Id).ToList());
             }
             var codeIsNotNullList = request.Tenants.Where(w => w.Code.HasValue).Select(s=>s.Code.Value).ToList();
-            var updateList = _tenantRepository.GetByRevNumsAsync(codeIsNotNullList, cancellationToken);
+
+            var dataListForUpdate = _tenantRepository.GetByRevNumsAsync(codeIsNotNullList, cancellationToken);
 
             var resultHasNoUpdateData = new List<long>();
             foreach (var code in codeIsNotNullList)
             {
-                var dataUpdate = updateList.Result.SingleOrDefault(s => s.RevNum == code);
+                var dataForUpdate = dataListForUpdate.Result.SingleOrDefault(s => s.RevNum == code);
                 var requestDto = request.Tenants.Single(w => w.Code == code);
-                if (dataUpdate != null)
+                if (dataForUpdate != null)
                 { 
-                    _mapper.Map(request, dataUpdate);
-                    _tenantRepository.Update(dataUpdate);
-                    resultIdList.Add(dataUpdate.Id);
+                    var result = _mapper.Map(requestDto, dataForUpdate);
+                    _tenantRepository.Update(result);
+                    resultIdList.Add(result.Id);
                 }
                 else
                 {

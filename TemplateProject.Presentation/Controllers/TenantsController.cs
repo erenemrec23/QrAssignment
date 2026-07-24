@@ -1,22 +1,17 @@
-﻿using ExcelDataReader;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QrAssignment.Application.Common.Excel;
 using QrAssignment.Application.Features.Tenants.Commands.BulkDelete;
 using QrAssignment.Application.Features.Tenants.Commands.Create;
 using QrAssignment.Application.Features.Tenants.Commands.Delete;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
-using QrAssignment.Application.Features.Tenants.Commands.Excel.Validate;
 using QrAssignment.Application.Features.Tenants.Commands.Update;
-using QrAssignment.Application.Features.Tenants.DTOs;
 using QrAssignment.Application.Features.Tenants.Queries.GetById;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
 using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 using QrAssignment.Application.Features.Tenants.Queries.GetPassiveById;
 using QrAssignment.Application.Features.Tenants.Queries.GetPassivedList;
-using QrAssignment.Application.Repositories;
-using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -84,8 +79,7 @@ namespace QrAssignment.Presentation.Controllers
             }
 
             var fileDto = result.Value;
-
-            // Dosyayı Blob formatında istemciye fırlat
+             
             return File(fileDto.Data, fileDto.ContentType, fileDto.FileName);
         }
 
@@ -99,7 +93,8 @@ namespace QrAssignment.Presentation.Controllers
             using var memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream, cancellationToken);
 
-            var query = new ValidateTenantExcelQuery
+
+            var query = new ValidateExcelQuery<CreateTenantInputDto>
             {
                 FileBytes = memoryStream.ToArray()
             };
@@ -115,6 +110,7 @@ namespace QrAssignment.Presentation.Controllers
         [HttpPost("bulk-create")]
         public async Task<IActionResult> BulkCreate([FromBody] BulkCreateTenantCommand command, CancellationToken cancellationToken)
         {
+            //var result = await _mediator.Send(new ValidateExcelQuery<TenantExcelRowDto> { FileBytes = fileBytes });
             var response = await _mediator.Send(command, cancellationToken);
             if (response.IsSuccess) return Ok(response);
             return BadRequest(response);

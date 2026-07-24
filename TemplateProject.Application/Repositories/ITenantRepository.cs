@@ -17,5 +17,6 @@ namespace QrAssignment.Application.Repositories
         Task<Paginate<TenantListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken);
         Task<List<string>> GetDublicateDataList(List<CreateTenantInputDto> datas, CancellationToken cancellationToken);
         Task<List<Tenant>> GetByRevNumsAsync(List<long> revnums, CancellationToken cancellationToken);
+        Task<List<Tenant>> GetByNamesAsync(List<string> names, CancellationToken cancellationToken);
     }
 }
