@@ -51,7 +51,7 @@ namespace QrAssignment.Presentation.Controllers
             using var memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream, cancellationToken);
 
-            var query = new ValidateExcelQuery<CreateTenantInputDto> { FileBytes = memoryStream.ToArray() };
+            var query = new ValidateExcelQuery<BulkCreateTenantInputDto> { FileBytes = memoryStream.ToArray() };
             return HandleResult(await Mediator.Send(query, cancellationToken));
         }
 

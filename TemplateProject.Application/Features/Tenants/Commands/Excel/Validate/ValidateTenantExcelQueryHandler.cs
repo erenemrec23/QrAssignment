@@ -5,10 +5,10 @@ using QrAssignment.Application.Interfaces;
 namespace QrAssignment.Application.Features.Tenants.Commands.Excel.Validate
 {
     public sealed class ValidateTenantExcelQueryHandler
-    : ValidateExcelQueryHandlerBase<CreateTenantInputDto>
+    : ValidateExcelQueryHandlerBase<BulkCreateTenantInputDto>
     {
         public ValidateTenantExcelQueryHandler(
-            IEnumerable<IExcelRowBusinessValidator<CreateTenantInputDto>> validators,
+            IEnumerable<IExcelRowBusinessValidator<BulkCreateTenantInputDto>> validators,
             ILocalizationService localizationService)
             : base(validators, localizationService) { }
     }

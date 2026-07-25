@@ -2,7 +2,7 @@
 
 namespace QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate
 {
-    public class CreateTenantInputDto
+    public class BulkCreateTenantInputDto
     {
         [ExcelColumn("Excel.Title.Code")]
         // [ExcelRequired(ErrorMessageKey = "Excel.Error.CodeRequired")]

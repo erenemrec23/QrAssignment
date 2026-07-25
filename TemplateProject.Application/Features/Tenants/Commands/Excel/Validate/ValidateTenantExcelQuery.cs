@@ -7,7 +7,7 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Commands.Excel.Validate
 {
-    public class ValidateTenantExcelQuery : ICommand<Result<ExcelValidationResponseDto<CreateTenantInputDto>>>
+    public class ValidateTenantExcelQuery : ICommand<Result<ExcelValidationResponseDto<BulkCreateTenantInputDto>>>
     { 
         public byte[] FileBytes { get; set; } = Array.Empty<byte>();
     }

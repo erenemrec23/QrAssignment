@@ -8,7 +8,7 @@ namespace QrAssignment.Application.Mapping
     {
         public TenantBulkCreateMappingProfile()
         {
-            CreateMap<CreateTenantInputDto, Tenant>();
+            CreateMap<BulkCreateTenantInputDto, Tenant>();
         }
     }
 

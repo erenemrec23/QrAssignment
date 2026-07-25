@@ -30,7 +30,7 @@ namespace QrAssignment.Application.Security
             { typeof(Features.Tenants.Queries.GetPassivedList.GetPassivedListTenantQuery), (AppPages.Tenants, PagePermissions.ViewPassive) },
             { typeof(Features.Tenants.Queries.GetListExportExcel.GetTenantListExportExcelQuery), (AppPages.Tenants, PagePermissions.ExportExcel) },
             { typeof(Features.Tenants.Commands.Excel.Validate.ValidateTenantExcelQuery), (AppPages.Tenants, PagePermissions.ImportExcel) },
-            { typeof(Common.Excel.ValidateExcelQuery<Features.Tenants.Commands.Excel.BulkCreate.CreateTenantInputDto>),
+            { typeof(Common.Excel.ValidateExcelQuery<Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantInputDto>),
   (AppPages.Tenants, PagePermissions.ImportExcel) },
             
             // Role İşlemleri

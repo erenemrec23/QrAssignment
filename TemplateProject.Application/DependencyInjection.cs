@@ -9,10 +9,8 @@ namespace QrAssignment.Application
     public static class DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-        {
-            //services.AddScoped<IExcelRowBusinessValidator<TenantExcelRowDto>, TenantNameUniquenessValidator>();
-            //services.AddTransient(typeof(IRequestHandler<,>), typeof(ValidateExcelQueryHandlerBase<>));
-            services.AddScoped<IExcelRowBusinessValidator<CreateTenantInputDto>, TenantNameUniquenessValidator>();
+        {  
+            services.AddScoped<IExcelRowBusinessValidator<BulkCreateTenantInputDto>, BulkCreateTenantNameUniquenessValidator>();
             services.AddAutoMapper(cfg => { }, typeof(DependencyInjection));
 
             services.AddMediatR(cfg =>

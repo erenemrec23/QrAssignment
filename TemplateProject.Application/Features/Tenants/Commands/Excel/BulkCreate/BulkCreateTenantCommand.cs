@@ -7,6 +7,6 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate
     public class BulkCreateTenantCommand : ICommand<Result<List<Guid>>>
     {
 
-        public List<CreateTenantInputDto> Tenants { get; set; } = new();
+        public List<BulkCreateTenantInputDto> Tenants { get; set; } = new();
     }
 }

@@ -2,15 +2,15 @@
 using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
-public class TenantNameUniquenessValidator : IExcelRowBusinessValidator<CreateTenantInputDto>
+public class BulkCreateTenantNameUniquenessValidator : IExcelRowBusinessValidator<BulkCreateTenantInputDto>
 {
     private readonly ITenantRepository _tenantRepository;
 
-    public TenantNameUniquenessValidator(ITenantRepository tenantRepository)
+    public BulkCreateTenantNameUniquenessValidator(ITenantRepository tenantRepository)
         => _tenantRepository = tenantRepository;
 
     public async Task ValidateAsync(
-        IReadOnlyList<ExcelRowResultDto<CreateTenantInputDto>> rows,
+        IReadOnlyList<ExcelRowResultDto<BulkCreateTenantInputDto>> rows,
         CancellationToken cancellationToken)
     {
         // Sadece hâlâ geçerli ve adı dolu olan satırları sorgula
