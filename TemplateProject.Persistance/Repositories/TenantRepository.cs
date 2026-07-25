@@ -6,7 +6,7 @@ using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Persistance.Context;
-using QrAssignment.Persistance.Repositories;
+using QrAssignment.Persistance.Repositories.Base;
 
 internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepository
 {

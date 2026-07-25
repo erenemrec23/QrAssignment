@@ -6,6 +6,7 @@ using QrAssignment.Application.Features.QrLocations.Queries.GetList;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity; 
 using QrAssignment.Persistance.Context;
+using QrAssignment.Persistance.Repositories.Base;
 
 namespace QrAssignment.Persistance.Repositories;
 

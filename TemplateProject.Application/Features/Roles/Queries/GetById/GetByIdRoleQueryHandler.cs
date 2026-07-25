@@ -16,7 +16,7 @@ namespace QrAssignment.Application.Features.Roles.Queries.GetById
 
         public async Task<Result<RoleListItemDto>> Handle(GetByIdRoleQuery request, CancellationToken cancellationToken)
         {
-            var result = await _appRoleRepository.GetByIdAsync(request.Id.Value, cancellationToken);
+            var result = await _appRoleRepository.GetDtoByIdAsync(request.Id.Value, cancellationToken);
 
             return Result.Success(result);
         }

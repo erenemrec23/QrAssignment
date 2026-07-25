@@ -1,7 +1,7 @@
 ﻿using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Persistance.Context;
-using QrAssignment.Persistance.Repositories;
+using QrAssignment.Persistance.Repositories.Base;
 
 internal sealed class UserRepository : GenericRepository<AppUser>, IUserRepository
 {

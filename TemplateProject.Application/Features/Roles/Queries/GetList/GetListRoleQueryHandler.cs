@@ -19,7 +19,7 @@ namespace QrAssignment.Application.Features.Roles.Queries.GetList
 
         public async Task<Result<Paginate<RoleListItemDto>>> Handle(GetListRoleQuery request, CancellationToken cancellationToken)
         {
-            var result = await _appRoleRepository.GetListAsync(request, cancellationToken);
+            var result = await _appRoleRepository.GetDtoListAsync(request, cancellationToken);
              
             return Result.Success(result);
         }
