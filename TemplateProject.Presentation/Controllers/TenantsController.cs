@@ -32,7 +32,7 @@ namespace QrAssignment.Presentation.Controllers
             => HandleResult(await Mediator.Send(new DeleteTenantCommand { Id = id }, cancellationToken));
 
         [HttpPost("export")]
-        public async Task<IActionResult> ExportExcel([FromBody] GetTenantListExportExcelQuery query, CancellationToken cancellationToken)
+        public async Task<IActionResult> ExportExcel([FromBody] GetListTenantExportExcelQuery query, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(query, cancellationToken);
             if (!result.IsSuccess || result.Value is null)

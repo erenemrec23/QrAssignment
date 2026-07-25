@@ -6,7 +6,7 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel
 {
-    public class GetListTenantExportExcelQueryHandler : IRequestHandler<GetTenantListExportExcelQuery, Result<FileExportDto>>
+    public class GetListTenantExportExcelQueryHandler : IRequestHandler<GetListTenantExportExcelQuery, Result<FileExportDto>>
     {
         private readonly ITenantRepository _tenantRepository;
         private readonly IStringLocalizer<GetListTenantExportExcelQueryHandler> _localizer;
@@ -19,7 +19,7 @@ namespace QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel
             _localizer = localizer;
         }
 
-        public async Task<Result<FileExportDto>> Handle(GetTenantListExportExcelQuery request, CancellationToken cancellationToken)
+        public async Task<Result<FileExportDto>> Handle(GetListTenantExportExcelQuery request, CancellationToken cancellationToken)
         {
 
             var dataList = await _tenantRepository.GetExportListAsync(request, cancellationToken);

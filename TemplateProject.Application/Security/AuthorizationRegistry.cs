@@ -28,7 +28,7 @@ namespace QrAssignment.Application.Security
             { typeof(Features.Tenants.Queries.GetList.GetListTenantQuery), (AppPages.Tenants, PagePermissions.View) },
             { typeof(Features.Tenants.Queries.GetPassiveById.GetPassivedByIdTenantQuery), (AppPages.Tenants, PagePermissions.ViewPassive) },
             { typeof(Features.Tenants.Queries.GetPassivedList.GetPassivedListTenantQuery), (AppPages.Tenants, PagePermissions.ViewPassive) },
-            { typeof(Features.Tenants.Queries.GetListExportExcel.GetTenantListExportExcelQuery), (AppPages.Tenants, PagePermissions.ExportExcel) },
+            { typeof(Features.Tenants.Queries.GetListExportExcel.GetListTenantExportExcelQuery), (AppPages.Tenants, PagePermissions.ExportExcel) },
             { typeof(Features.Tenants.Commands.Excel.Validate.ValidateTenantExcelQuery), (AppPages.Tenants, PagePermissions.ImportExcel) },
             { typeof(Common.Excel.ValidateExcelQuery<Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantInputDto>),
   (AppPages.Tenants, PagePermissions.ImportExcel) },
