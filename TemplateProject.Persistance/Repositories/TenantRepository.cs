@@ -55,7 +55,7 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
     }
 
 
-    public Task<List<TenantListItemExcelDto>> GetExportListAsync(GetTenantListExportExcelQuery request, CancellationToken cancellationToken)
+    public Task<List<TenantListItemExcelDto>> GetExportListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
     {
         return GetFilteredListWithoutPaginationAsync(
             TenantsNoTracking,
