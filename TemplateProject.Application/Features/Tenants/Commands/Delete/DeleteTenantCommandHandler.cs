@@ -6,7 +6,7 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Commands.Delete
 {
-    public class DeleteTenantCommandHandler : IRequestHandler<DeleteTenantCommand, Result<DeleteTenantResponse>>
+    public class DeleteTenantCommandHandler : IRequestHandler<DeleteTenantCommand, Result>
     {
         private readonly ITenantRepository _tenantRepository; 
         private readonly IAppLocalizer _localizer;

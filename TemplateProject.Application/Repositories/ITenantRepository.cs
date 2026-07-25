@@ -1,7 +1,6 @@
-﻿using QrAssignment.Application.DTOs.List;
-using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
-using QrAssignment.Application.Features.Tenants.DTOs; 
-using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
+﻿using QrAssignment.Application.DTOs.List; 
+using QrAssignment.Application.Features.Tenants.DTOs;
+using QrAssignment.Application.Features.Tenants.Queries.DTOs;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Entity.App;
 

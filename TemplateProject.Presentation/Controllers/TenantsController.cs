@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Common.Excel;
 using QrAssignment.Application.Features.Tenants.Commands.BulkDelete;

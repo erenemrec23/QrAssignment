@@ -1,4 +1,4 @@
-﻿namespace QrAssignment.Application.Features.Tenants.DTOs
+﻿namespace QrAssignment.Application.Features.Tenants.Queries.DTOs
 {
     public class TenantListItemDto : BaseListItemDto
     {
