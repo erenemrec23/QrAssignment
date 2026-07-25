@@ -17,7 +17,7 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Delete
             _localizer = localizer;
         }
 
-        public async Task<Result<DeleteTenantResponse>> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
         { 
             if (!request.Id.HasValue)
                 throw new Exception(_localizer["Messages.IdIsNull"]);
@@ -27,15 +27,8 @@ namespace QrAssignment.Application.Features.Tenants.Commands.Delete
             if (tenant == null)
                 throw new Exception(_localizer["Messages.TenantNotFound"]);
              
-            _tenantRepository.Delete(tenant);
-             
-            var response = new DeleteTenantResponse
-            {
-                Id = tenant.Id
-            };
-             
-
-            return Result.Success(response);
+            _tenantRepository.Delete(tenant); 
+            return Result.Success();
         }
     }
 }

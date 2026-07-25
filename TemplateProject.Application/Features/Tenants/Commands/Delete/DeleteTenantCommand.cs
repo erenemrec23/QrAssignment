@@ -7,7 +7,7 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Commands.Delete
 {
-    public class DeleteTenantCommand : ICommand<Result<DeleteTenantResponse>>, IdValidationBase
+    public class DeleteTenantCommand : ICommand<Result>, IdValidationBase
     {
 
         public Guid? Id { get; set; }
