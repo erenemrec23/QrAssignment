@@ -14,6 +14,7 @@ namespace QrAssignment.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<IExcelDataExportGenerator, ExcelDataExportGenerator>();
             services.AddScoped<IExcelSampleTemplateGenerator, ExcelSampleTemplateGenerator>();
             services.AddHttpContextAccessor();
             services.AddScoped<ITenantService, TenantService>();

@@ -1,15 +1,14 @@
 ﻿using QrAssignment.Application.Attributes;
+using QrAssignment.Application.Common.Excel;
 
 namespace QrAssignment.Application.Features.Tenants.DTOs
 {
     public class TenantListItemExcelDto
     {
-        [ColumnDisplay(1)]
+        [ExcelColumn("Tenant.Code", Order = 1)]
         public string Code { get; set; }
-        [ColumnDisplay(2)]
+
+        [ExcelColumn("Tenant.Name", Order = 2)]
         public string Name { get; set; }
-         
-         
     }
 }
-

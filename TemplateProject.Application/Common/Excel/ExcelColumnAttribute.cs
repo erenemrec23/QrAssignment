@@ -4,6 +4,7 @@
     public sealed class ExcelColumnAttribute : Attribute
     {
         public bool IncludeInSample { get; set; } = true;
+        public int Order { get; set; }
         public string LocalizationKey { get; }
         public ExcelColumnAttribute(string localizationKey) => LocalizationKey = localizationKey;
     }

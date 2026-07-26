@@ -1,43 +1,42 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Localization;
 using QrAssignment.Application.Common.Excel;
-using QrAssignment.Application.Helpers;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel
 {
-    public class GetListTenantExportExcelQueryHandler : IRequestHandler<GetListTenantExportExcelQuery, Result<ExcelFileDto>>
+    public class GetListTenantExportExcelQueryHandler
+        : IRequestHandler<GetListTenantExportExcelQuery, Result<ExcelFileDto>>
     {
+        private const string XlsxContentType =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
         private readonly ITenantRepository _tenantRepository;
-        private readonly IStringLocalizer<GetListTenantExportExcelQueryHandler> _localizer;
+        private readonly IExcelDataExportGenerator _excelGenerator;
 
         public GetListTenantExportExcelQueryHandler(
             ITenantRepository tenantRepository,
-            IStringLocalizer<GetListTenantExportExcelQueryHandler> localizer)
+            IExcelDataExportGenerator excelGenerator)
         {
             _tenantRepository = tenantRepository;
-            _localizer = localizer;
+            _excelGenerator = excelGenerator;
         }
 
-        public async Task<Result<ExcelFileDto>> Handle(GetListTenantExportExcelQuery request, CancellationToken cancellationToken)
+        public async Task<Result<ExcelFileDto>> Handle(
+            GetListTenantExportExcelQuery request, CancellationToken cancellationToken)
         {
-
             var dataList = await _tenantRepository.GetExportListAsync(request, cancellationToken);
 
-            // 2. Helper her şeyi reflection ve çeviri servisi ile kendisi hallediyor
-            byte[] excelBytes = ExcelExportHelper.GenerateExcel(dataList, "Firmalar", _localizer);
+            byte[] excelBytes = _excelGenerator.Generate(dataList);
 
-            // 3. Dosyayı dön
             var resultDto = new ExcelFileDto
             {
                 Data = excelBytes,
                 FileName = $"Firmalar_Listesi_{DateTime.Now:yyyyMMdd_HHmm}.xlsx",
-                ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                ContentType = XlsxContentType
             };
 
             return Result.Success(resultDto);
         }
-        
     }
 }
