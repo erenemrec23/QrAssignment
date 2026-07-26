@@ -1,4 +1,5 @@
 ﻿
+using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Domain.Shared; // PagePermissions enum'ının olduğu yer
 
 namespace QrAssignment.Application.Security
@@ -31,6 +32,8 @@ namespace QrAssignment.Application.Security
             { typeof(Features.Tenants.Queries.GetListExportExcel.GetListTenantExportExcelQuery), (AppPages.Tenants, PagePermissions.ExportExcel) },
             { typeof(Features.Tenants.Commands.Excel.Validate.ValidateTenantExcelQuery), (AppPages.Tenants, PagePermissions.ImportExcel) },
             { typeof(Common.Excel.ValidateExcelQuery<Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantInputDto>),
+  (AppPages.Tenants, PagePermissions.ImportExcel) },
+            { typeof(Common.Excel.GetSampleExcelTemplateQuery<BulkCreateTenantInputDto>),
   (AppPages.Tenants, PagePermissions.ImportExcel) },
             
             // Role İşlemleri

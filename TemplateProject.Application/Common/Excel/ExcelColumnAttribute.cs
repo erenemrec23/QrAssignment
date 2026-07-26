@@ -3,16 +3,15 @@
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class ExcelColumnAttribute : Attribute
     {
-        // Artık literal kolon adı değil, localization key
+        public bool IncludeInSample { get; set; } = true;
         public string LocalizationKey { get; }
         public ExcelColumnAttribute(string localizationKey) => LocalizationKey = localizationKey;
     }
-
-    // Ortak taban: her validasyon attribute'u ister literal ister key ile mesaj verebilsin
+     
     public abstract class ExcelValidationAttributeBase : Attribute
     {
-        public string? ErrorMessageKey { get; set; }  // örn: "Excel.Error.CodeRequired"
-        public string? ErrorMessage { get; set; }     // literal fallback (opsiyonel, key yoksa kullanılır)
+        public string? ErrorMessageKey { get; set; } 
+        public string? ErrorMessage { get; set; }    
     }
 
     public sealed class ExcelRequiredAttribute : ExcelValidationAttributeBase { }

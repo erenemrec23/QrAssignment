@@ -41,6 +41,25 @@ namespace QrAssignment.Presentation.Controllers
             return File(file.Data, file.ContentType, file.FileName);
         }
 
+        [HttpGet("sample-export")]
+        public async Task<IActionResult> ExportSampleExcel(CancellationToken cancellationToken)
+        {
+            var query = new GetSampleExcelTemplateQuery<BulkCreateTenantInputDto>
+            {
+                FileName = "tenant-sample-template.xlsx",
+                SampleRowCount = 3
+            };
+
+            var result = await Mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess || result.Value is null)
+                return BadRequest(result);
+
+            var file = result.Value;
+            return File(file.Data, file.ContentType, file.FileName);
+        }
+
+
         [HttpPost("validate-excel")]
         public async Task<IActionResult> ValidateExcel(IFormFile file, CancellationToken cancellationToken)
         {

@@ -212,7 +212,6 @@
   "Label.IsNotEmpty": "Boş Olmayanlar",
   "Label.PassivedDateTime": "Pasif Yapılan Tarih",
   "Label.PassivedUserFullName": "Pasif Yapan Kişi",
-  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_DTOs_TenantListItemExcelDto_Name": "Firma Adı",
   "ExcelImport.DownloadSampleTemplate": "Örnek Excel İndirmek İçin Tıklayınız (Şablon)",
   "Error.DuplicateRecord": "Veritabanı mükerrer kayıt hatası",
   "Error.InternalServerError": "Beklenmeyen bir hata oluştu.",
@@ -222,13 +221,16 @@
   "Error.KeyRequired": "Anahtar Parametresi Alanı Zorunludur.",
   "Error.ValueRequired": "Değer Parametresi Alanı Zorunludur.",
   "Error.InvalidKeyParameter": "Geçersiz Anahtar Parametresi",
-  "Excel.Title.Code": "Kod",
-  "Excel.Title.Name": "Firma Adı",
   "Excel.Error.CodeRequired": "Kod alanı boş olamaz.",
   "Excel.Error.CodeDuplicate": "Bu kod dosya içinde birden fazla kez geçiyor.",
   "Excel.Error.TenantNameDuplicate": "Bu firma adı dosya içinde birden fazla kez geçiyor.",
   "Excel.Error.NameRequired": "Firma adı boş olamaz.",
-  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_DTOs_TenantListItemExcelDto_Code": "Kod"
+  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_DTOs_TenantListItemExcelDto_Code": "Kod",
+  "ExcelColumnTitle_QrAssignment_Application_Features_Tenants_DTOs_TenantListItemExcelDto_Name": "Firma Adı",
+  "QrAssignment_Application_Features_Tenants_Commands_Excel_BulkCreate_BulkCreateTenantInputDto_Code": "Kod",
+  "QrAssignment_Application_Features_Tenants_Commands_Excel_BulkCreate_BulkCreateTenantInputDto_Name": "Firma Adı",
+  "Excel.Title.Code": "Kod",
+  "Excel.Title.Name": "Firma Adı"
 
 
 }

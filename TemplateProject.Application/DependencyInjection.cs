@@ -1,31 +1,42 @@
 ﻿using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using QrAssignment.Application.Behaviors;
+using QrAssignment.Application.Common.Excel;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Interfaces;
-using System.Reflection;
+using QrAssignment.Domain.Shared;
+using System.Reflection; 
+
 namespace QrAssignment.Application
 {
     public static class DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-        {  
-            services.AddScoped<IExcelRowBusinessValidator<BulkCreateTenantInputDto>, BulkCreateTenantNameUniquenessValidator>();
+        {
             services.AddAutoMapper(cfg => { }, typeof(DependencyInjection));
 
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-                 
-                cfg.AddOpenBehavior(typeof(AuthorizationBehavior<,>));     
-                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));        
-                cfg.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));        
+
+                cfg.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                cfg.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
             });
 
+            // Açık generic handler'lar MediatR taramasıyla bulunamaz → kapalı tiple elle kaydet.
+            services.AddSampleTemplateHandler<BulkCreateTenantInputDto>();
+
+            services.AddScoped<IExcelRowBusinessValidator<BulkCreateTenantInputDto>, BulkCreateTenantNameUniquenessValidator>();
             services.AddValidatorsFromAssembly(typeof(SharedResource).Assembly);
             services.AddTransient(typeof(IValidator<>), typeof(GetByIdQueryValidator<>));
 
             return services;
         }
+
+        private static IServiceCollection AddSampleTemplateHandler<TDto>(this IServiceCollection services)
+    where TDto : class
+    => services.AddTransient<IRequestHandler<GetSampleExcelTemplateQuery<TDto>, Result<ExcelFileDto>>, GetSampleExcelTemplateQueryHandler<TDto>>();
     }
 }
