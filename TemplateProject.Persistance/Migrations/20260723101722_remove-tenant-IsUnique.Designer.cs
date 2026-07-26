@@ -345,7 +345,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasIndex("ModifiedByUserId");
 
-                    b.ToTable("Tenants", (string)null);
+                    b.ToTable("Items", (string)null);
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.Audit.SystemAuditLog", b =>

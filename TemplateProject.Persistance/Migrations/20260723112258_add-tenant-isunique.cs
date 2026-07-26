@@ -12,7 +12,7 @@ namespace TemplateProject.Persistance.Migrations
         {
             migrationBuilder.CreateIndex(
                 name: "IX_Tenants_Name",
-                table: "Tenants",
+                table: "Items",
                 column: "Name",
                 unique: true);
         }
@@ -22,7 +22,7 @@ namespace TemplateProject.Persistance.Migrations
         {
             migrationBuilder.DropIndex(
                 name: "IX_Tenants_Name",
-                table: "Tenants");
+                table: "Items");
         }
     }
 }

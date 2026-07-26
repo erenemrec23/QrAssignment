@@ -12,7 +12,7 @@ namespace TemplateProject.Persistance.Migrations
         {
             migrationBuilder.RenameColumn(
                 name: "IsDeleted",
-                table: "Tenants",
+                table: "Items",
                 newName: "IsPassived");
 
             migrationBuilder.RenameColumn(
@@ -51,7 +51,7 @@ namespace TemplateProject.Persistance.Migrations
         {
             migrationBuilder.RenameColumn(
                 name: "IsPassived",
-                table: "Tenants",
+                table: "Items",
                 newName: "IsDeleted");
 
             migrationBuilder.RenameColumn(

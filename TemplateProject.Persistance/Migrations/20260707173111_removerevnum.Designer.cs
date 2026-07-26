@@ -315,7 +315,7 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tenants");
+                    b.ToTable("Items");
                 });
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.Audit.SystemAuditLog", b =>

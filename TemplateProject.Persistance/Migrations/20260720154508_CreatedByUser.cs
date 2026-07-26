@@ -13,24 +13,24 @@ namespace TemplateProject.Persistance.Migrations
         {
             migrationBuilder.AddColumn<Guid>(
                 name: "CreatedByUserId1",
-                table: "Tenants",
+                table: "Items",
                 type: "uniqueidentifier",
                 nullable: true);
 
             migrationBuilder.AddColumn<Guid>(
                 name: "ModifiedByUserId1",
-                table: "Tenants",
+                table: "Items",
                 type: "uniqueidentifier",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tenants_CreatedByUserId1",
-                table: "Tenants",
+                table: "Items",
                 column: "CreatedByUserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tenants_ModifiedByUserId1",
-                table: "Tenants",
+                table: "Items",
                 column: "ModifiedByUserId1");
 
             migrationBuilder.CreateIndex(
@@ -107,14 +107,14 @@ namespace TemplateProject.Persistance.Migrations
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Tenants_AppUsers_CreatedByUserId1",
-                table: "Tenants",
+                table: "Items",
                 column: "CreatedByUserId1",
                 principalTable: "AppUsers",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Tenants_AppUsers_ModifiedByUserId1",
-                table: "Tenants",
+                table: "Items",
                 column: "ModifiedByUserId1",
                 principalTable: "AppUsers",
                 principalColumn: "Id");
@@ -149,19 +149,19 @@ namespace TemplateProject.Persistance.Migrations
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Tenants_AppUsers_CreatedByUserId1",
-                table: "Tenants");
+                table: "Items");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Tenants_AppUsers_ModifiedByUserId1",
-                table: "Tenants");
+                table: "Items");
 
             migrationBuilder.DropIndex(
                 name: "IX_Tenants_CreatedByUserId1",
-                table: "Tenants");
+                table: "Items");
 
             migrationBuilder.DropIndex(
                 name: "IX_Tenants_ModifiedByUserId1",
-                table: "Tenants");
+                table: "Items");
 
             migrationBuilder.DropIndex(
                 name: "IX_SystemRegions_CreatedByUserId",
@@ -189,11 +189,11 @@ namespace TemplateProject.Persistance.Migrations
 
             migrationBuilder.DropColumn(
                 name: "CreatedByUserId1",
-                table: "Tenants");
+                table: "Items");
 
             migrationBuilder.DropColumn(
                 name: "ModifiedByUserId1",
-                table: "Tenants");
+                table: "Items");
         }
     }
 }

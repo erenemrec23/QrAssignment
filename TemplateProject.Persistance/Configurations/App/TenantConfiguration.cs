@@ -11,7 +11,7 @@ namespace QrAssignment.Persistance.Configurations.App
         {
             base.Configure(builder);
 
-            builder.ToTable("Tenants");
+            builder.ToTable("Items");
 
             builder.Property(x => x.Name)
                    .IsRequired()

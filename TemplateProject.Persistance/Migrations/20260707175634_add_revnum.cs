@@ -12,7 +12,7 @@ namespace TemplateProject.Persistance.Migrations
         {
             migrationBuilder.AddColumn<long>(
                 name: "RevNum",
-                table: "Tenants",
+                table: "Items",
                 type: "bigint",
                 nullable: false,
                 defaultValue: 0L)
@@ -48,7 +48,7 @@ namespace TemplateProject.Persistance.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "RevNum",
-                table: "Tenants");
+                table: "Items");
 
             migrationBuilder.DropColumn(
                 name: "RevNum",
