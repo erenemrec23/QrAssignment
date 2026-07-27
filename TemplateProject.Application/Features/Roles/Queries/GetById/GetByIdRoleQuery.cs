@@ -1,17 +1,13 @@
 ﻿using MediatR;
 using QrAssignment.Application.Abstractions;
-using QrAssignment.Application.Features.AppRole.Queries.GetList;
+using QrAssignment.Application.Features.Roles.DTOs;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Roles.Queries.GetById
 {
-    public sealed class GetByIdRoleQuery : IRequest<Result<RoleListItemDto>> , IdValidationBase
+    public class GetByIdRoleQuery : IRequest<Result<RoleItemDto>>, IdValidationBase
     {
-        public GetByIdRoleQuery(Guid? id)
-        {
-            Id = id;
-        }
-
         public Guid? Id { get; set; }
+        public GetByIdRoleQuery(Guid? id) => Id = id;
     }
 }

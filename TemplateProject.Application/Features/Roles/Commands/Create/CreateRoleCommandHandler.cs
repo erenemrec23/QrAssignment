@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using QrAssignment.Application.Features.Roles.Commands.Create;
+using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Roles.Commands.Create
@@ -9,10 +10,13 @@ namespace QrAssignment.Application.Features.Roles.Commands.Create
     public sealed class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, Result>
     {
         private readonly RoleManager<QrAssignment.Domain.Entity.App.AppRole> _roleManager;
+        private readonly IAppLocalizer _localizer;
 
-        public CreateRoleCommandHandler(RoleManager<QrAssignment.Domain.Entity.App.AppRole> roleManager)
+        public CreateRoleCommandHandler(RoleManager<QrAssignment.Domain.Entity.App.AppRole> roleManager,
+            IAppLocalizer localizer)
         {
             _roleManager = roleManager;
+            _localizer = localizer;
         }
 
         public async Task<Result> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
@@ -20,7 +24,7 @@ namespace QrAssignment.Application.Features.Roles.Commands.Create
             var roleExists = await _roleManager.RoleExistsAsync(request.Name);
             if (roleExists)
             {
-                return Result.Failure(new Error("Bu isimde bir rol zaten mevcut.", ""));
+                return Result.Failure(new Error("Error.RoleHasInserted", string.Format(_localizer["Error.RoleHasInserted"], request.Name)));
             }
 
             var appRole = new QrAssignment.Domain.Entity.App.AppRole
@@ -33,10 +37,10 @@ namespace QrAssignment.Application.Features.Roles.Commands.Create
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                return Result.Failure(new Error($"Rol oluşturulamadı: {errors}", ""));
+                return Result.Failure(new Error(string.Format(_localizer["Error.CreateRole"],errors), ""));
             }
 
-            return Result.Success("Rol başarıyla oluşturuldu.");
+            return Result.Success();
         }
     }
 }

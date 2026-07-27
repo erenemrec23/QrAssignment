@@ -9,13 +9,16 @@ namespace QrAssignment.Application.Features.Tenants.DTOs
         public TenantItemDto(){ }
 
 
-        public TenantItemDto(Guid? id, string name, long revNum, string modifiedUserFullName, byte[] rowVersion)
+        public TenantItemDto(Guid? id, string name, long revNum, string modifiedUserFullName, string createdUserFullName,DateTimeOffset createdDateTime, DateTimeOffset modifiedDateTime, byte[] rowVersion)
         {
 
             Id = id;
             Name = name;
             RevNum = revNum;
+            CreatedUserFullName = createdUserFullName;
             ModifiedUserFullName = modifiedUserFullName;
+            CreatedDateTime = createdDateTime;
+            ModifiedDateTime = modifiedDateTime;
             RowVersion = rowVersion;
         }
 

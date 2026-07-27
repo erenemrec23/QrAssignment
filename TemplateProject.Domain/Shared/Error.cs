@@ -1,6 +1,6 @@
 ﻿namespace QrAssignment.Domain.Shared
 {
-    public sealed record Error(string Code, string Message)
+    public sealed record Error(string Code = "", string Message ="")
     {
         // Hiçbir hata olmayan (Başarılı) durumlar için varsayılan boş bir Error tanımı.
         public static readonly Error None = new(string.Empty, string.Empty);

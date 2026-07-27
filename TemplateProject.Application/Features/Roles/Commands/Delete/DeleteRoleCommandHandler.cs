@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
+using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Shared; 
 namespace QrAssignment.Application.Features.Roles.Commands.Delete
 {
@@ -8,10 +9,13 @@ namespace QrAssignment.Application.Features.Roles.Commands.Delete
     {
         private readonly RoleManager<
  QrAssignment.Domain.Entity.App.AppRole> _roleManager;
+        private readonly IAppLocalizer _localizer;
 
-        public DeleteRoleCommandHandler(RoleManager<QrAssignment.Domain.Entity.App.AppRole> roleManager)
+        public DeleteRoleCommandHandler(RoleManager<QrAssignment.Domain.Entity.App.AppRole> roleManager,
+             IAppLocalizer localizer)
         {
             _roleManager = roleManager;
+            _localizer = localizer;
         }
 
         public async Task<Result> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
@@ -19,18 +23,18 @@ namespace QrAssignment.Application.Features.Roles.Commands.Delete
             var role = await _roleManager.FindByIdAsync(request.Id);
             if (role == null)
             {
-                return Result.Failure(new Error("Silinecek rol bulunamadı.",""));
+                return Result.Failure(new Error(_localizer["Label.NoRecords"],""));
             }
 
             var result = await _roleManager.DeleteAsync(role);
 
             if (!result.Succeeded)
             {
-                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                return Result.Failure(new Error($"Rol silinirken hata oluştu: {errors}",""));
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description)); 
+                return Result.Failure(new Error("Error.RoleNotFound", _localizer["Error.RoleNotFound"]));
             }
 
-            return Result.Success("Rol başarıyla silindi.");
+            return Result.Success();
         }
     }
 }
