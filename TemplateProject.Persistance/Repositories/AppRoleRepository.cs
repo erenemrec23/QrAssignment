@@ -13,18 +13,28 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
     public AppRoleRepository(AppDbContext context) : base(context) { }
 
     private static Expression<Func<AppRole, RoleListItemDto>> ProjectionList =>
-        r => new RoleListItemDto(r.Id, r.Name!);
+        r => new RoleListItemDto(r.Id, 
+            r.Name!,
+            r.RevNum, 
+            r.ModifiedByUser!= null ? r.ModifiedByUser.FullName : "",
+            r.CreatedByUser != null ? r.CreatedByUser.FullName : "",
+            r.ModifiedDate,
+            r.CreatedDate );
     private static Expression<Func<AppRole, RoleItemDto>> ProjectionItem =>
-        r => new RoleItemDto(r.Id, r.Name!);
+        r => new RoleItemDto(r.Id, r.Name!, r.RowVersion);
+    private static Expression<Func<AppRole, RoleListItemExcelDto>> ProjectionExcelItem =>
+        r => new RoleListItemExcelDto(r.Name!);
+
     
+
     public Task<Paginate<RoleListItemDto>> GetDtoListAsync(PageRequestBaseDto request, CancellationToken ct = default)
         => PaginateAsync(ProjectionList, request, ct);
 
     public Task<Paginate<RoleListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken ct = default)
         => PaginatePassivedAsync(ProjectionList, request, ct);
 
-    public Task<List<RoleListItemDto>> GetExportListAsync(PageRequestBaseDto request, CancellationToken ct = default)
-        => ListAsync(ProjectionList, request, ct);
+    public Task<List<RoleListItemExcelDto>> GetExportListAsync(PageRequestBaseDto request, CancellationToken ct = default)
+        => ListAsync(ProjectionExcelItem, request, ct);
 
     public Task<RoleItemDto?> GetDtoByIdAsync(Guid id, CancellationToken ct = default)
         => SingleDtoByIdAsync(id, ProjectionItem, ct);

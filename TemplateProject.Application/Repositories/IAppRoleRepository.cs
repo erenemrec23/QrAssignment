@@ -9,7 +9,7 @@ namespace QrAssignment.Application.Repositories
     {
         Task<Paginate<RoleListItemDto>> GetDtoListAsync(PageRequestBaseDto request, CancellationToken ct = default);
         Task<Paginate<RoleListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken ct = default);
-        Task<List<RoleListItemDto>> GetExportListAsync(PageRequestBaseDto request, CancellationToken ct = default);
+        Task<List<RoleListItemExcelDto>> GetExportListAsync(PageRequestBaseDto request, CancellationToken ct = default);
         Task<RoleItemDto?> GetDtoByIdAsync(Guid id, CancellationToken ct = default);
         Task<RoleItemDto?> GetPassivedDtoByIdAsync(Guid id, CancellationToken ct = default);
         Task BulkDelete(List<Guid> ids, CancellationToken ct); 

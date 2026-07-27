@@ -42,10 +42,10 @@ namespace QrAssignment.Domain.Abstractions
         public long RevNum { get; set; }
 
         public Guid? CreatedByUserId { get; set; }
-        public AppUser? CreatedByUser { get; set; } // Navigation property
+        public AppUser? CreatedByUser { get; set; } 
 
         public Guid? ModifiedByUserId { get; set; }
-        public AppUser? ModifiedByUser { get; set; } // Navigation property
+        public AppUser? ModifiedByUser { get; set; } 
     }
 
 

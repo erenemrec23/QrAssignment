@@ -1,5 +1,7 @@
 ﻿
+using QrAssignment.Application.Common.Excel;
 using QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate;
+using QrAssignment.Application.Features.Roles.DTOs;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Domain.Shared; // PagePermissions enum'ının olduğu yer
 
@@ -71,7 +73,7 @@ namespace QrAssignment.Application.Security
 { typeof(Common.Excel.ValidateExcelQuery<BulkCreateAppRoleInputDto>),
     (AppPages.Roles, PagePermissions.ImportExcel) },
 { typeof(Common.Excel.GetSampleExcelTemplateQuery<BulkCreateAppRoleInputDto>),
-    (AppPages.Roles, PagePermissions.ImportExcel) },
+    (AppPages.Roles, PagePermissions.ImportExcel) }, 
 
 
         };

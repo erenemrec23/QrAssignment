@@ -233,7 +233,13 @@
   "Excel.Title.Name": "Firma Adı",
   "Error.TenantHasInserted": "{0} isimli firma zaten kayıtlı.",
   "Error.CreateRole": "Rol oluşturulamadı: {0}",
-  "Error.RoleHasInserted": "{0} isimli rol zaten kayıtlı."
+  "Error.RoleHasInserted": "{0} isimli rol zaten kayıtlı.",
+  "Excel.Title.RoleName": "Rol Adı",
+  "PageTitle.Role.List": "Rol Listesi",
+  "Label.RoleName": "Rol Adı",
+  "Role.Form.Title.Edit": "Rol Düzenle",
+  "Role.Form.Title.New": "Yeni Rol",
+  "Placeholder.RoleName": "Rol Adını Giriniz..."
 
 
 }

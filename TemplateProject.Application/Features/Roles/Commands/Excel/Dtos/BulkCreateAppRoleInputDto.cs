@@ -6,7 +6,7 @@ namespace QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate
     {
         [ExcelColumn("Excel.Title.RoleName")]
         [ExcelRequired(ErrorMessageKey = "Excel.Error.RoleNameRequired")]
-        [ExcelMaxLength(256)]                                   // IdentityRole.Name sınırı
+        [ExcelMaxLength(256)]                                  
         [ExcelUniqueInFile(ErrorMessageKey = "Excel.Error.RoleNameDuplicate")]
         public string Name { get; set; } = string.Empty;
     }

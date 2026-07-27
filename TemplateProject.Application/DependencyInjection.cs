@@ -25,7 +25,7 @@ namespace QrAssignment.Application
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
                 cfg.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
             });
-
+            services.AddSampleTemplateHandler<BulkCreateAppRoleInputDto>();
             // Açık generic handler'lar MediatR taramasıyla bulunamaz → kapalı tiple elle kaydet.
             services.AddSampleTemplateHandler<BulkCreateTenantInputDto>();
             services.AddScoped<IExcelRowBusinessValidator<BulkCreateAppRoleInputDto>, BulkCreateAppRoleNameUniquenessValidator>();

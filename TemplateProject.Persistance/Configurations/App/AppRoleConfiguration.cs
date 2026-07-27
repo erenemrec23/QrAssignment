@@ -12,6 +12,17 @@ namespace QrAssignment.Persistance.Configurations.App
              
             builder.Property<byte[]>("RowVersion")
                    .IsRowVersion();
+
+
+            builder.HasOne(x => x.CreatedByUser)
+                   .WithMany()
+                   .HasForeignKey(x => x.CreatedByUserId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.ModifiedByUser)
+                   .WithMany()
+                   .HasForeignKey(x => x.ModifiedByUserId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

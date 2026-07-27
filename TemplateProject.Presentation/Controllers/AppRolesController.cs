@@ -6,6 +6,7 @@ using QrAssignment.Application.Features.Roles.Commands.Create;
 using QrAssignment.Application.Features.Roles.Commands.Delete;
 using QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Roles.Commands.Update;
+using QrAssignment.Application.Features.Roles.DTOs;
 using QrAssignment.Application.Features.Roles.Queries.GetById;
 using QrAssignment.Application.Features.Roles.Queries.GetList;
 using QrAssignment.Application.Features.Roles.Queries.GetListExportExcel;
@@ -46,7 +47,7 @@ namespace QrAssignment.Presentation.Controllers
         {
             var query = new GetSampleExcelTemplateQuery<BulkCreateAppRoleInputDto>
             {
-                FileName = "role-sample-template.xlsx",
+                FileName = "tenant-sample-template.xlsx",
                 SampleRowCount = 3
             };
 

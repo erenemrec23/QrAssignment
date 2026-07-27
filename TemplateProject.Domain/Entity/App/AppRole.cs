@@ -18,8 +18,6 @@ namespace QrAssignment.Domain.Entity.App
         public virtual DateTimeOffset? ModifiedDate { get; set; }
 
         public virtual bool IsPassived { get; set; } = false;
-        public Guid? CreatedByUserId { get; set; }
-        public Guid? ModifiedByUserId { get; set; }
         [Filterable]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long RevNum { get; set; }
@@ -34,6 +32,13 @@ namespace QrAssignment.Domain.Entity.App
                 Name = name
             };
         }
+
+
+        public Guid? CreatedByUserId { get; set; }
+        public AppUser? CreatedByUser { get; set; }
+
+        public Guid? ModifiedByUserId { get; set; }
+        public AppUser? ModifiedByUser { get; set; }
     }
 }
 
