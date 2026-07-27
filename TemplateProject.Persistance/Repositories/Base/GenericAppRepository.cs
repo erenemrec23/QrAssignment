@@ -17,8 +17,7 @@ internal abstract class GenericAppRepository<TEntity> where TEntity : class, IBa
         _context = context;
         _set = context.Set<TEntity>();
     }
-
-    // Okuma kaynağı. RoleManager.Roles kullanmak istersen türeyen sınıfta override et.
+     
     protected virtual IQueryable<TEntity> Query => _set.AsNoTracking();
 
     protected Task<Paginate<TDto>> PaginateAsync<TDto>(
@@ -44,10 +43,20 @@ internal abstract class GenericAppRepository<TEntity> where TEntity : class, IBa
         => Query.IgnoreQueryFilters(["SoftDeleteFilter"])
                 .Where(e => e.Id == id).Select(projection).SingleOrDefaultAsync(ct);
 
+
+
     protected async Task RemoveByIdsAsync(List<Guid> ids, CancellationToken ct)
     {
         var entities = await _set.Where(e => ids.Contains(e.Id)).ToListAsync(ct);
         if (entities.Count > 0)
-            _set.RemoveRange(entities); // Soft-delete interceptor + UnitOfWork pipeline commit eder
+            _set.RemoveRange(entities);
     }
+
+   
+    protected Task<List<TEntity>> GetByValuesAsync<TValue>(
+        Expression<Func<TEntity, TValue>> selector,
+        IReadOnlyCollection<TValue> values,
+        CancellationToken ct)
+        => Query.ToListByValuesAsync(selector, values, ct);
 }
+

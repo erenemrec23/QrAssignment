@@ -40,7 +40,6 @@ namespace QrAssignment.Persistance.Repositories.Base
         {
             var entry = _dbSet.Update(entity);
 
-            // Optimistic concurrency: OriginalValue'yu gelen RowVersion'a sabitliyoruz
             if (entity.RowVersion is not null)
                 entry.Property(nameof(IBaseEntity.RowVersion)).OriginalValue = entity.RowVersion;
         }
@@ -74,17 +73,28 @@ namespace QrAssignment.Persistance.Repositories.Base
             Expression<Func<T, TDto>> projection,
             CancellationToken cancellationToken = default)
             => query.ToPaginateAsync(request, projection, cancellationToken);
+         
 
+        // --- Türeyen sınıflara okuma kaynağı ---
         protected Task<List<TDto>> GetFilteredListWithoutPaginationAsync<TDto>(
-            IQueryable<T> query,
-            PageRequestBaseDto request,
-            Expression<Func<T, TDto>> projection,
-            CancellationToken cancellationToken = default)
-            => query.ToFilteredListAsync(request, projection, cancellationToken);
+           IQueryable<T> query,
+           PageRequestBaseDto request,
+           Expression<Func<T, TDto>> projection,
+           CancellationToken cancellationToken = default)
+           => query.ToFilteredListAsync(request, projection, cancellationToken);
+
+        // YENİ: values.Contains(selector(e)) → SQL IN (...). Null/boş listede DB'ye gitmez.
+        protected Task<List<T>> GetByValuesAsync<TValue>(
+        Expression<Func<T, TValue>> selector,
+        IReadOnlyCollection<TValue> values,
+        bool tracking = false,
+        CancellationToken cancellationToken = default)
+        => Query(tracking).ToListByValuesAsync(selector, values, cancellationToken);
 
         // --- Türeyen sınıflara okuma kaynağı ---
 
         private IQueryable<T> Query(bool tracking)
             => tracking ? _dbSet : _dbSet.AsNoTracking();
+         
     }
 }

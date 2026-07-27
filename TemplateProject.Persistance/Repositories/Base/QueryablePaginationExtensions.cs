@@ -63,4 +63,26 @@ internal static class QueryablePaginationExtensions
 
         return await query.Select(projection).ToListAsync(cancellationToken);
     }
+
+    // values.Contains(selector(e)) → SQL IN (...). Null/boş listede DB'ye gitmez.
+    public static Task<List<T>> ToListByValuesAsync<T, TValue>(
+        this IQueryable<T> query,
+        Expression<Func<T, TValue>> selector,
+        IReadOnlyCollection<TValue>? values,
+        CancellationToken cancellationToken = default)
+    {
+        if (values is null || values.Count == 0)
+            return Task.FromResult(new List<T>());
+
+        var contains = Expression.Call(
+            typeof(Enumerable),
+            nameof(Enumerable.Contains),
+            new[] { typeof(TValue) },
+            Expression.Constant(values, typeof(IEnumerable<TValue>)),
+            selector.Body);
+
+        var predicate = Expression.Lambda<Func<T, bool>>(contains, selector.Parameters);
+
+        return query.Where(predicate).ToListAsync(cancellationToken);
+    }
 }

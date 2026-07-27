@@ -5,10 +5,16 @@ namespace QrAssignment.Application.Features.Tenants.DTOs
 {
     public class TenantListItemExcelDto
     {
-        [ExcelColumn("Tenant.Code", Order = 1)]
+        public TenantListItemExcelDto() { }
+        public TenantListItemExcelDto(string code, string name)
+        {
+            Code = code;
+            Name = name;
+        }
+        [ExcelColumn("Excel.Title.Code", Order = 1)]
         public string Code { get; set; }
 
-        [ExcelColumn("Tenant.Name", Order = 2)]
+        [ExcelColumn("Excel.Title.Name", Order = 2)]
         public string Name { get; set; }
     }
 }
