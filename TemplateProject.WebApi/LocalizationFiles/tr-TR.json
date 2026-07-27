@@ -230,7 +230,8 @@
   "QrAssignment_Application_Features_Tenants_Commands_Excel_BulkCreate_BulkCreateTenantInputDto_Code": "Kod",
   "QrAssignment_Application_Features_Tenants_Commands_Excel_BulkCreate_BulkCreateTenantInputDto_Name": "Firma Adı",
   "Excel.Title.Code": "Kod",
-  "Excel.Title.Name": "Firma Adı"
+  "Excel.Title.Name": "Firma Adı",
+  "Error.TenantHasInserted" :"{0} isimli firma zaten kayıtlı."
 
 
 }

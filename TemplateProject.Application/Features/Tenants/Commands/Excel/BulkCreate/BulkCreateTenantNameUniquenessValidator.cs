@@ -6,14 +6,17 @@ public class BulkCreateTenantNameUniquenessValidator : IExcelRowBusinessValidato
 {
     private readonly ITenantRepository _tenantRepository;
 
-    public BulkCreateTenantNameUniquenessValidator(ITenantRepository tenantRepository)
-        => _tenantRepository = tenantRepository;
+    private readonly IAppLocalizer _localizer;
+    public BulkCreateTenantNameUniquenessValidator(ITenantRepository tenantRepository, IAppLocalizer localizer)
+    {
+        _tenantRepository = tenantRepository;
+        _localizer = localizer;
+    }
 
     public async Task ValidateAsync(
         IReadOnlyList<ExcelRowResultDto<BulkCreateTenantInputDto>> rows,
         CancellationToken cancellationToken)
-    {
-        // Sadece hâlâ geçerli ve adı dolu olan satırları sorgula
+    { 
         var candidates = rows
             .Where(r => r.IsValid && r.Data != null && !string.IsNullOrWhiteSpace(r.Data.Name))
             .ToList();
@@ -38,7 +41,7 @@ public class BulkCreateTenantNameUniquenessValidator : IExcelRowBusinessValidato
             if (existingNames.Contains(row.Data!.Name!))
             {
                 row.IsValid = false;
-                row.Errors.Add($"'{row.Data.Name}' isimli firma zaten kayıtlı.");
+                row.Errors.Add(string.Format(_localizer["Error.TenantHasInserted"], row.Data.Name));
             }
         }
     }
