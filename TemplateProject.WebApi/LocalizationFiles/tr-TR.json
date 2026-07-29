@@ -249,7 +249,8 @@
   "Placeholder.SearchPersonnel": "Arama İçin Personel Adını Giriniz...",
   "Label.Form": "Form",
   "Label.PageRolePermissions": "Sayfa / Rol Yetkilendirme",
-  "Label.SelectRolePersonnel": "Kullanıcı / Rol Atama"
+  "Label.SelectRolePersonnel": "Kullanıcı / Rol Atama",
+  "Label.ActionAuthorize":  "Yetkilendirme"
 
 
 

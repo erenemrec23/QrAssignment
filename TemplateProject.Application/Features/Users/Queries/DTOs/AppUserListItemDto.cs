@@ -1,17 +1,39 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using QrAssignment.Application.Common.DTOs;
 
 namespace QrAssignment.Application.Features.Users.Queries.DTOs
 {
-    public class AppUserListItemDto
+    // Liste DTO'su. AppRole tarafindaki RoleListItemDto : BaseListItemDto ile ayni desen
+    // (RevNum + audit kullanici adlari + tarihler base'den geliyor).
+    public class AppUserListItemDto : BaseListItemDto
     {
-        public Guid? Id { get; set; }
-        public string FirstName { get; set; } 
-        public string LastName { get; set; }
+        public AppUserListItemDto(
+            Guid id,
+            string firstName,
+            string lastName,
+            string fullName,
+            string email,
+            long revNum,
+            string modifiedUserFullName,
+            string createdUserFullName,
+            DateTimeOffset? modifiedDateTime,
+            DateTimeOffset createdDateTime)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            FullName = fullName;
+            Email = email;
+            RevNum = revNum;
+            ModifiedUserFullName = modifiedUserFullName;
+            CreatedUserFullName = createdUserFullName;
+            ModifiedDateTime = modifiedDateTime;
+            CreatedDateTime = createdDateTime;
+        }
 
-        public string FullName { get { return $"{FirstName} {LastName}";  } }
+        public Guid Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string FullName { get; set; }
         public string Email { get; set; }
     }
 }

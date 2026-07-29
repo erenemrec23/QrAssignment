@@ -1,39 +1,40 @@
-﻿using MediatR;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
 using QrAssignment.Application.Interfaces;
-using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Entity.App;   // AppUser
 using QrAssignment.Domain.Shared;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QrAssignment.Application.Features.Users.Commands.Update
 {
-    internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateAppUserCommand, Result<Unit>>
+    internal sealed class UpdateAppUserCommandHandler : IRequestHandler<UpdateAppUserCommand, Result>
     {
-        private readonly IAppUserRepository _appUserRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IAppLocalizer _localizer;
-        public UpdateUserCommandHandler(IAppUserRepository appUserRepository, IUserRepository userRepository, IAppLocalizer localizer)
+
+        public UpdateAppUserCommandHandler(UserManager<AppUser> userManager, IAppLocalizer localizer)
         {
-            _appUserRepository = appUserRepository;
-            _userRepository = userRepository;
+            _userManager = userManager;
             _localizer = localizer;
         }
 
-        public async Task<Result<Unit>> Handle(UpdateAppUserCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(UpdateAppUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _appUserRepository.GetByIdWithRefreshTokenAsync(request.Id, cancellationToken);
-
+            var user = await _userManager.FindByIdAsync(request.Id.ToString());
             if (user is null)
-                throw new Exception(_localizer["Messages.UserNotFound"]);
+                return Result.Failure(new Error("Error.UserNotFound", _localizer["Error.UserNotFound"]));
 
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
 
-            // Sadece update metodunu çağırıyoruz, gerisini Pipeline Behavior halledecek.
-            _userRepository.Update(user);
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+                return Result.Failure(new Error(
+                    "Error.UserCanNotUpdated",
+                    string.Format(
+                        _localizer["Error.UserCanNotUpdated"],
+                        string.Join(", ", updateResult.Errors.Select(e => e.Description)))));
 
-            return Result<Unit>.Success(Unit.Value);
+            return Result.Success();
         }
     }
 }

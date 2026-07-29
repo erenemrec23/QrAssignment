@@ -21,6 +21,8 @@ namespace QrAssignment.Application.Repositories
 
         Task<List<PermissionUserPageItemDto>> GetAssignedPermissionListDtoAsync(
     Guid roleId, CancellationToken cancellationToken);
+        Task BulkSetActiveAsync(List<Guid> ids, CancellationToken ct);
+        Task SetActiveAsync(Guid id, CancellationToken ct);
     }
 }
  

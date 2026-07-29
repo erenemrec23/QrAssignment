@@ -5,7 +5,7 @@ using QrAssignment.Domain.Shared;
 namespace QrAssignment.Application.Features.Roles.Commands.Delete
 {
     // Handler
-    public sealed class DeleteAppRoleCommandHandler : IRequestHandler<DeleteRoleCommand, Result>
+    public sealed class DeleteAppRoleCommandHandler : IRequestHandler<DeleteAppRoleCommand, Result>
     {
         private readonly RoleManager<
  QrAssignment.Domain.Entity.App.AppRole> _roleManager;
@@ -18,7 +18,7 @@ namespace QrAssignment.Application.Features.Roles.Commands.Delete
             _localizer = localizer;
         }
 
-        public async Task<Result> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(DeleteAppRoleCommand request, CancellationToken cancellationToken)
         {
             var role = await _roleManager.FindByIdAsync(request.Id);
             if (role == null)

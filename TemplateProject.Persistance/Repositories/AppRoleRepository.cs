@@ -46,7 +46,7 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
         => SinglePassivedDtoByIdAsync(id, ProjectionItem, ct);
 
     public Task BulkDelete(List<Guid> ids, CancellationToken ct)
-        => RemoveByIdsAsync(ids, ct);
+        => BulkDeleteByIdsAsync(ids, ct);
 
     public Task<List<AppRole>> GetByNamesAsync(List<string> names, CancellationToken ct)
     => GetByValuesAsync(r => r.Name!, names, ct);
@@ -118,4 +118,12 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
             })
             .ToList();
     }
+
+
+    public Task BulkSetActiveAsync(List<Guid> ids, CancellationToken ct)
+        => BulkSetActiveAsync(ids, ct);
+
+
+    public Task SetActiveAsync(Guid id, CancellationToken ct)
+        => SetActiveByIdAsync(id, ct);
 }

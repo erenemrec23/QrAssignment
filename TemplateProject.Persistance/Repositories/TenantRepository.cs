@@ -83,4 +83,10 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
 
     public Task<List<Tenant>> GetByNamesAsync(List<string> names, CancellationToken cancellationToken)
         => GetByValuesAsync(t => t.Name, names, cancellationToken: cancellationToken);
+
+
+    public Task BulkActiveByIds(List<Guid> ids, CancellationToken cancellationToken)
+        => BulkSetActiveByIdsAsync( ids, cancellationToken: cancellationToken);
+    public Task SetActiveById(Guid id, CancellationToken cancellationToken)
+        => SetActiveAsync(id, cancellationToken: cancellationToken);
 }

@@ -45,7 +45,7 @@ internal abstract class GenericAppRepository<TEntity> where TEntity : class, IBa
 
 
 
-    protected async Task RemoveByIdsAsync(List<Guid> ids, CancellationToken ct)
+    protected async Task BulkDeleteByIdsAsync(List<Guid> ids, CancellationToken ct)
     {
         var entities = await _set.Where(e => ids.Contains(e.Id)).ToListAsync(ct);
         if (entities.Count > 0)
@@ -58,5 +58,29 @@ internal abstract class GenericAppRepository<TEntity> where TEntity : class, IBa
         IReadOnlyCollection<TValue> values,
         CancellationToken ct)
         => Query.ToListByValuesAsync(selector, values, ct);
+
+    protected async Task SetActiveByIdAsync(Guid id, CancellationToken ct)
+    {
+        var entity = await _set
+            .IgnoreQueryFilters(["SoftDeleteFilter"])
+            .FirstOrDefaultAsync(e => e.Id == id, ct);
+
+        if (entity is not null)
+            entity.IsPassived = false;
+    }
+
+    protected async Task BulkSetActiveByIdsAsync(List<Guid> ids, CancellationToken ct)
+    {
+        if (ids.Count == 0)
+            return;
+
+        var entities = await _set
+            .IgnoreQueryFilters(["SoftDeleteFilter"])
+            .Where(e => ids.Contains(e.Id))
+            .ToListAsync(ct);
+
+        foreach (var entity in entities)
+            entity.IsPassived = false;
+    }
 }
 

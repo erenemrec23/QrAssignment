@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Common.Excel;
 using QrAssignment.Application.Features.Roles.Commands.BulkDelete;
+using QrAssignment.Application.Features.Roles.Commands.BulkSetActive;
+using QrAssignment.Application.Features.Roles.Commands.BulkSetPassive;
 using QrAssignment.Application.Features.Roles.Commands.Create;
 using QrAssignment.Application.Features.Roles.Commands.Delete;
 using QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate;
+using QrAssignment.Application.Features.Roles.Commands.SetActive;
 using QrAssignment.Application.Features.Roles.Commands.Update;
-using QrAssignment.Application.Features.Roles.Queries.FormBase.GetById; 
+using QrAssignment.Application.Features.Roles.Queries.FormBase.GetById;
 using QrAssignment.Application.Features.Roles.Queries.FormBase.GetPassivedById;
 using QrAssignment.Application.Features.Roles.Queries.GetAssignedPermissionList;
 using QrAssignment.Application.Features.Roles.Queries.ListBase.GetList;
@@ -28,9 +31,7 @@ namespace QrAssignment.Presentation.Controllers
         public async Task<IActionResult> Update([FromBody] UpdateAppRoleCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
-        [HttpDelete("{roleId}")]
-        public async Task<IActionResult> Delete([FromRoute] string id, CancellationToken cancellationToken)
-            => HandleResult(await Mediator.Send(new DeleteRoleCommand(id), cancellationToken));
+        
 
         [HttpPost("export")]
         public async Task<IActionResult> ExportExcel([FromBody] GetListAppRoleExportExcelQuery query, CancellationToken cancellationToken)
@@ -76,10 +77,7 @@ namespace QrAssignment.Presentation.Controllers
         [HttpPost("bulk-create")]
         public async Task<IActionResult> BulkCreate([FromBody] BulkCreateAppRoleCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
-
-        [HttpDelete("Bulk-Delete")]
-        public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteRoleCommand command, CancellationToken cancellationToken)
-            => HandleResult(await Mediator.Send(command, cancellationToken));
+         
 
         [HttpGet("Passived/{roleId}")]
         public async Task<IActionResult> GetPassivedById(Guid? id, CancellationToken cancellationToken)
@@ -97,10 +95,7 @@ namespace QrAssignment.Presentation.Controllers
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(new GetByIdRoleQuery(id), cancellationToken));
 
-
-         
-
-
+          
         [HttpGet("[action]")]
         public async Task<IActionResult> GetAssignedUserList(
     [FromQuery] Guid? roleId, CancellationToken cancellationToken)
@@ -110,6 +105,36 @@ namespace QrAssignment.Presentation.Controllers
         public async Task<IActionResult> GetAssignedPermissionList(
     [FromQuery] Guid? roleId, CancellationToken cancellationToken)
     => HandleResult(await Mediator.Send(new GetAssignedPermissionListQuery(roleId), cancellationToken));
+
+
+        [HttpPut("SetPassive/{id:guid}")]
+        public async Task<IActionResult> SetPassive([FromRoute] Guid id, CancellationToken cancellationToken)
+    => HandleResult(await Mediator.Send(new SetPassiveAppRoleCommand(id), cancellationToken));
+
+
+        [HttpPut("SetActive/{id:guid}")]
+        public async Task<IActionResult> SetActive([FromRoute] Guid id, CancellationToken cancellationToken)
+    => HandleResult(await Mediator.Send(new SetActiveAppRoleCommand(id), cancellationToken));
+
+
+        [HttpDelete("Bulk-Delete")]
+        public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteAppRoleCommand command, CancellationToken cancellationToken)
+            => HandleResult(await Mediator.Send(command, cancellationToken));
+
+
+        [HttpDelete("Bulk-SetPassive")]
+        public async Task<IActionResult> BulkSetPassive([FromBody] BulkSetPassiveAppRoleCommand command, CancellationToken cancellationToken)
+            => HandleResult(await Mediator.Send(command, cancellationToken));
+
+
+        [HttpDelete("Bulk-SetActive")]
+        public async Task<IActionResult> BulkSetActive([FromBody] BulkSetActiveAppRoleCommand command, CancellationToken cancellationToken)
+            => HandleResult(await Mediator.Send(command, cancellationToken));
+
+
+        [HttpDelete("{roleId}")]
+        public async Task<IActionResult> Delete([FromRoute] string id, CancellationToken cancellationToken)
+              => HandleResult(await Mediator.Send(new DeleteAppRoleCommand(id), cancellationToken));
 
 
     }

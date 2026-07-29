@@ -24,4 +24,8 @@
     <Folder Include="Features\QrApplicants\Queries\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Features\Tenants\Commands\BulkSetActive\BulkSetActiveTenantCommand.cs" />
+  </ItemGroup>
+
 </Project>

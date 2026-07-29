@@ -95,6 +95,35 @@ namespace QrAssignment.Persistance.Repositories.Base
 
         private IQueryable<T> Query(bool tracking)
             => tracking ? _dbSet : _dbSet.AsNoTracking();
-         
+        private static readonly string[] SoftDeleteFilterOnly = { "SoftDeleteFilter" };
+
+        public async Task SetActiveAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var entity = await _dbSet
+                .IgnoreQueryFilters(SoftDeleteFilterOnly)
+                .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+
+            if (entity is ISoftDelete softDeleteEntity)
+                softDeleteEntity.IsPassived = false;
+        }
+
+        public async Task BulkSetActiveByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+        {
+            var idList = ids as ICollection<Guid> ?? ids.ToList();
+            if (idList.Count == 0)
+                return;
+
+            var entities = await _dbSet
+                .IgnoreQueryFilters(SoftDeleteFilterOnly)
+                .Where(e => idList.Contains(e.Id))
+                .ToListAsync(cancellationToken);
+
+            foreach (var entity in entities)
+            {
+                if (entity is ISoftDelete softDeleteEntity)
+                    softDeleteEntity.IsPassived = false;
+            }
+        }
+
     }
 }
