@@ -2,7 +2,7 @@ using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 using MediatR;
 
-namespace QrAssignment.Application.Features.Users.Commands.BulkDelete
+namespace QrAssignment.Application.Features.Users.Commands.BulkSetActive
 {
     public class BulkSetActiveAppUserCommandHandler : IRequestHandler<BulkSetActiveAppUserCommand, Result>
     {

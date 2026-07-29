@@ -1,7 +1,7 @@
 using QrAssignment.Application.Abstractions;
 using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Features.Users.Commands.BulkDelete
+namespace QrAssignment.Application.Features.Users.Commands.BulkSetActive
 {
     public class BulkSetActiveAppUserCommand : IdListValidationBase, ICommand<Result>
     {

@@ -1,9 +1,13 @@
-﻿ 
+﻿using QrAssignment.Application.Common.Excel;
 using QrAssignment.Domain.Shared;
+
+// Alias tanımlamaları ile tip isimleri ve okunabilirlik sadeleştirildi
+using TenantsBulkExcelDto = QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantInputDto;
+using UsersBulkExcelDto = QrAssignment.Application.Features.Users.Commands.Excel.BulkCreate.BulkCreateAppUserInputDto;
+using RolesBulkExcelDto = QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleInputDto;
 
 namespace QrAssignment.Application.Security
 {
-    // Sihirli metinleri önlemek için sabitler
     public static class AppPages
     {
         public const string Tenants = "Page_Tenants";
@@ -15,90 +19,172 @@ namespace QrAssignment.Application.Security
 
     public static class AuthorizationRegistry
     {
-        // 1. GÜVENLİ KOMUTLAR: Çalışması için yetki gerekenler
-        public static readonly Dictionary<Type, (string PageName, PagePermissions Permission)> SecuredCommands = new()
+        public static readonly Dictionary<Type, (string PageName, PagePermissions Permission)> SecuredCommands;
+        public static readonly HashSet<Type> UnsecuredCommands;
+
+        static AuthorizationRegistry()
         {
-            // Tenant İşlemleri
-            { typeof(Features.Tenants.Commands.Create.CreateTenantCommand), (AppPages.Tenants, PagePermissions.Insert) },
-            { typeof(Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantCommand), (AppPages.Tenants, PagePermissions.ImportExcel) },
-            { typeof(Features.Tenants.Commands.Update.UpdateTenantCommand), (AppPages.Tenants, PagePermissions.Update) },
-            { typeof(Features.Tenants.Commands.Delete.DeleteTenantCommand), (AppPages.Tenants, PagePermissions.Delete) },
-            { typeof(Features.Tenants.Commands.BulkDelete.BulkDeleteTenantCommand), (AppPages.Tenants, PagePermissions.Delete) },
-            { typeof(Features.Tenants.Queries.GetById.GetByIdTenantQuery), (AppPages.Tenants, PagePermissions.View) },
-            { typeof(Features.Tenants.Queries.GetList.GetListTenantQuery), (AppPages.Tenants, PagePermissions.View) },
-            { typeof(Features.Tenants.Queries.GetPassiveById.GetPassivedByIdTenantQuery), (AppPages.Tenants, PagePermissions.ViewPassive) },
-            { typeof(Features.Tenants.Queries.GetPassivedList.GetPassivedListTenantQuery), (AppPages.Tenants, PagePermissions.ViewPassive) },
-            { typeof(Features.Tenants.Queries.GetListExportExcel.GetListTenantExportExcelQuery), (AppPages.Tenants, PagePermissions.ExportExcel) },
-            { typeof(Features.Tenants.Commands.Excel.Validate.ValidateTenantExcelQuery), (AppPages.Tenants, PagePermissions.ImportExcel) },
-            { typeof(Common.Excel.ValidateExcelQuery<Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantInputDto>),
-  (AppPages.Tenants, PagePermissions.ImportExcel) },
-            { typeof(Common.Excel.GetSampleExcelTemplateQuery<Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantInputDto>),
-  (AppPages.Tenants, PagePermissions.ImportExcel) },
-            { typeof(Features.Tenants.Commands.SetActive.SetActiveTenantCommand),
-  (AppPages.Tenants, PagePermissions.SetActive) },
+            var registry = new Dictionary<Type, (string PageName, PagePermissions Permission)>();
 
-            
+            // =========================================================================
+            // TENANTS (Page_Tenants)
+            // =========================================================================
+            Register(registry, AppPages.Tenants, PagePermissions.Insert,
+                typeof(Features.Tenants.Commands.Create.CreateTenantCommand));
 
+            Register(registry, AppPages.Tenants, PagePermissions.Update,
+                typeof(Features.Tenants.Commands.Update.UpdateTenantCommand),
+                typeof(Features.Tenants.Commands.SetActive.SetActiveTenantCommand));
 
+            Register(registry, AppPages.Tenants, PagePermissions.Delete,
+                typeof(Features.Tenants.Commands.Delete.DeleteTenantCommand),
+                typeof(Features.Tenants.Commands.BulkDelete.BulkDeleteTenantCommand));
 
-            { typeof(Features.Users.Commands.Create.CreateAppUserCommand), (AppPages.Users, PagePermissions.Insert) },
-{ typeof(Features.Users.Commands.Excel.BulkCreate.BulkCreateAppUserCommand), (AppPages.Users, PagePermissions.ImportExcel) },
-{ typeof(Features.Users.Commands.Update.UpdateAppUserCommand), (AppPages.Users, PagePermissions.Update) },
-{ typeof(Features.Users.Commands.Delete.DeleteAppUserCommand), (AppPages.Users, PagePermissions.Delete) },
-{ typeof(Features.Users.Commands.BulkDelete.BulkDeleteAppUserCommand), (AppPages.Users, PagePermissions.Delete) },
-{ typeof(Features.Users.Queries.FormBase.GetById.GetByIdAppUserQuery), (AppPages.Users, PagePermissions.View) },
-{ typeof(Features.Users.Queries.ListBase.GetList.GetListAppUserQuery), (AppPages.Users, PagePermissions.View) },
-{ typeof(Features.Users.Queries.FormBase.GetPassivedById.GetPassivedByIdAppUserQuery), (AppPages.Users, PagePermissions.ViewPassive) },
-{ typeof(Features.Users.Queries.ListBase.GetPassivedList.GetPassivedListAppUserQuery), (AppPages.Users, PagePermissions.ViewPassive) },
-            { typeof(Features.Users.Queries.ListBase.GetListExportExcel.GetListAppUserExportExcelQuery), (AppPages.Users, PagePermissions.ExportExcel) },
-{ typeof(Features.Users.Commands.Excel.Validate.ValidateAppUserExcelQuery), (AppPages.Users, PagePermissions.ImportExcel) },
-{ typeof(Common.Excel.ValidateExcelQuery<Features.Users.Commands.Excel.BulkCreate.BulkCreateAppUserInputDto>),
-    (AppPages.Users, PagePermissions.ImportExcel) },
-{ typeof(Common.Excel.GetSampleExcelTemplateQuery<Features.Users.Commands.Excel.BulkCreate.BulkCreateAppUserInputDto>),
-    (AppPages.Users, PagePermissions.ImportExcel) },
-{ typeof(Features.Users.Commands.SetActive.SetActiveAppUserCommand),
-    (AppPages.Users, PagePermissions.SetActive) },
+            Register(registry, AppPages.Tenants, PagePermissions.View,
+                typeof(Features.Tenants.Queries.GetById.GetByIdTenantQuery),
+                typeof(Features.Tenants.Queries.GetList.GetListTenantQuery));
 
+            Register(registry, AppPages.Tenants, PagePermissions.SetPassive,
+                typeof(Features.Tenants.Commands.SetPassive.SetPassiveTenantCommand),
+                typeof(Features.Tenants.Commands.BulkSetPassive.BulkSetPassiveTenantCommand));
 
-            { typeof(Features.Permission.Queries.GetByUserId.GetUserPermissionByUserIdQuery), (AppPages.Users, PagePermissions.View) },
-            { typeof(Features.Permission.Commands.Update.UpdateUserPermissionCommand), (AppPages.Users, PagePermissions.Update) },  
+            Register(registry, AppPages.Tenants, PagePermissions.SetActive,
+                typeof(Features.Tenants.Commands.SetActive.SetActiveTenantCommand),
+                typeof(Features.Tenants.Commands.BulkSetActive.BulkSetActiveTenantCommand));
+
+            Register(registry, AppPages.Tenants, PagePermissions.ViewPassive,
+                typeof(Features.Tenants.Queries.GetPassiveById.GetPassivedByIdTenantQuery),
+                typeof(Features.Tenants.Queries.GetPassivedList.GetPassivedListTenantQuery));
+
+            Register(registry, AppPages.Tenants, PagePermissions.ExportExcel,
+                typeof(Features.Tenants.Queries.GetListExportExcel.GetListTenantExportExcelQuery));
+
+            Register(registry, AppPages.Tenants, PagePermissions.ImportExcel,
+                typeof(Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantCommand),
+                typeof(Features.Tenants.Commands.Excel.Validate.ValidateTenantExcelQuery),
+                typeof(ValidateExcelQuery<TenantsBulkExcelDto>),
+                typeof(GetSampleExcelTemplateQuery<TenantsBulkExcelDto>));
 
 
-            { typeof(Features.QrLocations.Commands.Create.CreateQrLocationCommand), (AppPages.QrLocations, PagePermissions.Insert) },
-            { typeof(Features.QrLocations.Commands.Update.UpdateQrLocationCommand), (AppPages.QrLocations, PagePermissions.Update) },
-            { typeof(Features.QrLocations.Queries.GetList.GetQrLocationListQuery), (AppPages.QrLocations, PagePermissions.View) },
-            { typeof(Features.QrLocations.Queries.GetById.GetQrLocationByIdQuery), (AppPages.QrLocations, PagePermissions.View) },
-            //{ typeof(Features.QrLocations.Commands.Delete.DeleteQrLocationCommand), (AppPages.QrLocations, PagePermissions.Delete) },
+            // =========================================================================
+            // USERS (Page_Users)
+            // =========================================================================
+            Register(registry, AppPages.Users, PagePermissions.Insert,
+                typeof(Features.Users.Commands.Create.CreateAppUserCommand));
 
-                   
-            { typeof(Features.Roles.Commands.Create.CreateAppRoleCommand), (AppPages.Roles, PagePermissions.Insert) },
-{ typeof(Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleCommand), (AppPages.Roles, PagePermissions.ImportExcel) },
-{ typeof(Features.Roles.Commands.Update.UpdateAppRoleCommand), (AppPages.Roles, PagePermissions.Update) },
-{ typeof(Features.Roles.Commands.Delete.DeleteAppRoleCommand), (AppPages.Roles, PagePermissions.Delete) },
-{ typeof(Features.Roles.Commands.BulkDelete.BulkDeleteAppRoleCommand), (AppPages.Roles, PagePermissions.Delete) },
-{ typeof(Features.Roles.Queries.FormBase.GetById.GetByIdRoleQuery), (AppPages.Roles, PagePermissions.View) },
-{ typeof(Features.Roles.Queries.ListBase.GetList.GetListAppRoleQuery), (AppPages.Roles, PagePermissions.View) },
-{ typeof(Features.Roles.Queries.FormBase.GetPassivedById.GetPassivedByIdAppRoleQuery), (AppPages.Roles, PagePermissions.ViewPassive) },
-{ typeof(Features.Roles.Queries.ListBase.GetPassivedList.GetPassivedListAppRoleQuery), (AppPages.Roles, PagePermissions.ViewPassive) },
-{ typeof(Features.Roles.Queries.ListBase.GetListExportExcel.GetListAppRoleExportExcelQuery), (AppPages.Roles, PagePermissions.ExportExcel) },
-{ typeof(Features.Roles.Commands.Excel.Validate.ValidateAppRoleExcelQuery), (AppPages.Roles, PagePermissions.ImportExcel) },
-{ typeof(Common.Excel.ValidateExcelQuery<Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleInputDto>),
-    (AppPages.Roles, PagePermissions.ImportExcel) },
-{ typeof(Common.Excel.GetSampleExcelTemplateQuery<Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleInputDto>),
-    (AppPages.Roles, PagePermissions.ImportExcel) },
-            { typeof(Features.Users.Queries.LookUp.GetLookupList.GetLookUpListAppUserQuery), (AppPages.Roles, PagePermissions.View) },
-            { typeof(Features.Roles.Queries.LookUp.GetAssignedUserList.GetRoleAssignedUserListQuery), (AppPages.Roles, PagePermissions.View) },
-            { typeof(Features.Roles.Queries.GetAssignedPermissionList.GetAssignedPermissionListQuery), (AppPages.Roles, PagePermissions.View) },
-            { typeof(Features.Roles.Commands.SetActive.SetActiveAppRoleCommand), (AppPages.Roles, PagePermissions.SetActive) },
-            
+            Register(registry, AppPages.Users, PagePermissions.Update,
+                typeof(Features.Users.Commands.Update.UpdateAppUserCommand),
+                typeof(Features.Users.Commands.SetActive.SetActiveAppUserCommand),
+                typeof(Features.Permission.Commands.Update.UpdateUserPermissionCommand));
 
-        };
+            Register(registry, AppPages.Users, PagePermissions.Delete,
+                typeof(Features.Users.Commands.Delete.DeleteAppUserCommand),
+                typeof(Features.Users.Commands.BulkDelete.BulkDeleteAppUserCommand));
 
-        // 2. SERBEST KOMUTLAR: Herkese açık işlemler (Login, Register vb.)
-        public static readonly HashSet<Type> UnsecuredCommands = new()
+            Register(registry, AppPages.Users, PagePermissions.View,
+                typeof(Features.Users.Queries.FormBase.GetById.GetByIdAppUserQuery),
+                typeof(Features.Users.Queries.ListBase.GetList.GetListAppUserQuery),
+                typeof(Features.Users.Queries.LookUp.GetLookupList.GetLookUpListAppUserQuery),
+                typeof(Features.Permission.Queries.GetByUserId.GetUserPermissionByUserIdQuery));
+
+            Register(registry, AppPages.Users, PagePermissions.SetPassive,
+                typeof(Features.Users.Commands.SetPassive.SetPassiveAppUserCommand),
+                typeof(Features.Users.Commands.BulkSetPassive.BulkSetPassiveAppUserCommand));
+
+            Register(registry, AppPages.Users, PagePermissions.SetActive,
+                typeof(Features.Users.Commands.SetActive.SetActiveAppUserCommand),
+                typeof(Features.Users.Commands.BulkSetActive.BulkSetActiveAppUserCommand));
+
+            Register(registry, AppPages.Users, PagePermissions.ViewPassive,
+                typeof(Features.Users.Queries.FormBase.GetPassivedById.GetPassivedByIdAppUserQuery),
+                typeof(Features.Users.Queries.ListBase.GetPassivedList.GetPassivedListAppUserQuery));
+
+            Register(registry, AppPages.Users, PagePermissions.ExportExcel,
+                typeof(Features.Users.Queries.ListBase.GetListExportExcel.GetListAppUserExportExcelQuery));
+
+            Register(registry, AppPages.Users, PagePermissions.ImportExcel,
+                typeof(Features.Users.Commands.Excel.BulkCreate.BulkCreateAppUserCommand),
+                typeof(Features.Users.Commands.Excel.Validate.ValidateAppUserExcelQuery),
+                typeof(ValidateExcelQuery<UsersBulkExcelDto>),
+                typeof(GetSampleExcelTemplateQuery<UsersBulkExcelDto>));
+
+
+            // =========================================================================
+            // ROLES (Page_Roles)
+            // =========================================================================
+            Register(registry, AppPages.Roles, PagePermissions.Insert,
+                typeof(Features.Roles.Commands.Create.CreateAppRoleCommand));
+
+            Register(registry, AppPages.Roles, PagePermissions.Update,
+                typeof(Features.Roles.Commands.Update.UpdateAppRoleCommand),
+                typeof(Features.Roles.Commands.BulkSetActive.BulkSetActiveAppRoleCommand));
+
+            Register(registry, AppPages.Roles, PagePermissions.Delete,
+                typeof(Features.Roles.Commands.Delete.DeleteAppRoleCommand),
+                typeof(Features.Roles.Commands.BulkDelete.BulkDeleteAppRoleCommand));
+
+            Register(registry, AppPages.Roles, PagePermissions.View,
+                typeof(Features.Roles.Queries.FormBase.GetById.GetByIdRoleQuery),
+                typeof(Features.Roles.Queries.ListBase.GetList.GetListAppRoleQuery),
+                typeof(Features.Roles.Queries.LookUp.GetAssignedUserList.GetRoleAssignedUserListQuery),
+                typeof(Features.Roles.Queries.GetAssignedPermissionList.GetAssignedPermissionListQuery));
+
+            Register(registry, AppPages.Roles, PagePermissions.SetPassive,
+                typeof(Features.Roles.Commands.SetPassive.SetPassiveAppRoleCommand),
+                typeof(Features.Roles.Commands.BulkSetPassive.BulkSetPassiveAppRoleCommand));
+
+            Register(registry, AppPages.Roles, PagePermissions.SetActive,
+                typeof(Features.Roles.Commands.SetActive.SetActiveAppRoleCommand),
+                typeof(Features.Roles.Commands.BulkSetActive.BulkSetActiveAppRoleCommand));
+
+            Register(registry, AppPages.Roles, PagePermissions.ViewPassive,
+                typeof(Features.Roles.Queries.FormBase.GetPassivedById.GetPassivedByIdAppRoleQuery),
+                typeof(Features.Roles.Queries.ListBase.GetPassivedList.GetPassivedListAppRoleQuery));
+
+            Register(registry, AppPages.Roles, PagePermissions.ExportExcel,
+                typeof(Features.Roles.Queries.ListBase.GetListExportExcel.GetListAppRoleExportExcelQuery));
+
+            Register(registry, AppPages.Roles, PagePermissions.ImportExcel,
+                typeof(Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleCommand),
+                typeof(Features.Roles.Commands.Excel.Validate.ValidateAppRoleExcelQuery),
+                typeof(ValidateExcelQuery<RolesBulkExcelDto>),
+                typeof(GetSampleExcelTemplateQuery<RolesBulkExcelDto>));
+
+
+            // =========================================================================
+            // QR LOCATIONS (Page_QrLocations)
+            // =========================================================================
+            Register(registry, AppPages.QrLocations, PagePermissions.Insert,
+                typeof(Features.QrLocations.Commands.Create.CreateQrLocationCommand));
+
+            Register(registry, AppPages.QrLocations, PagePermissions.Update,
+                typeof(Features.QrLocations.Commands.Update.UpdateQrLocationCommand));
+
+            Register(registry, AppPages.QrLocations, PagePermissions.View,
+                typeof(Features.QrLocations.Queries.GetList.GetQrLocationListQuery),
+                typeof(Features.QrLocations.Queries.GetById.GetQrLocationByIdQuery));
+
+            SecuredCommands = registry;
+
+            // =========================================================================
+            // UNSECURED COMMANDS
+            // =========================================================================
+            UnsecuredCommands = new HashSet<Type>
+            {
+                typeof(Features.AuthFeatures.Commands.Login.LoginCommand)
+            };
+        }
+
+        private static void Register(
+            Dictionary<Type, (string PageName, PagePermissions Permission)> registry,
+            string pageName,
+            PagePermissions permission,
+            params Type[] commandTypes)
         {
-             { typeof(Features.AuthFeatures.Commands.Login.LoginCommand) }, 
-            
-        };
+            foreach (var type in commandTypes)
+            {
+                registry[type] = (pageName, permission);
+            }
+        }
     }
 }

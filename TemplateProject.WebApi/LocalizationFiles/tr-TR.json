@@ -250,7 +250,9 @@
   "Label.Form": "Form",
   "Label.PageRolePermissions": "Sayfa / Rol Yetkilendirme",
   "Label.SelectRolePersonnel": "Kullanıcı / Rol Atama",
-  "Label.ActionAuthorize":  "Yetkilendirme"
+  "Label.ActionAuthorize": "Yetkilendirme",
+  "Messages.SetActiveSuccess": "Aktif Etme Başarılı Bir Şekilde Tamamlanmıştır",
+  "Messages.PassiveSuccess": "Pasif Etme Başarılı Bir Şekilde Tamamlanmıştır"
 
 
 

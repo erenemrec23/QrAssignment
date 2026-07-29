@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Common.Excel;
 using QrAssignment.Application.Features.Users.Commands.BulkDelete;
+using QrAssignment.Application.Features.Users.Commands.BulkSetActive;
 using QrAssignment.Application.Features.Users.Commands.BulkSetPassive;
 using QrAssignment.Application.Features.Users.Commands.Create;
 using QrAssignment.Application.Features.Users.Commands.Delete;

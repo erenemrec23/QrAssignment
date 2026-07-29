@@ -8,6 +8,7 @@ using QrAssignment.Application.Features.Roles.Commands.Create;
 using QrAssignment.Application.Features.Roles.Commands.Delete;
 using QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Roles.Commands.SetActive;
+using QrAssignment.Application.Features.Roles.Commands.SetPassive;
 using QrAssignment.Application.Features.Roles.Commands.Update;
 using QrAssignment.Application.Features.Roles.Queries.FormBase.GetById;
 using QrAssignment.Application.Features.Roles.Queries.FormBase.GetPassivedById;

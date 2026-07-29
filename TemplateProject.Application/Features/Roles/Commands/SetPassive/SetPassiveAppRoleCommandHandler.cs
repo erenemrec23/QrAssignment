@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using QrAssignment.Application.Features.Roles.Commands.SetActive;
-using QrAssignment.Application.Features.Roles.Commands.SetPassive;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared;
