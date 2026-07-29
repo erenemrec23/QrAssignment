@@ -8,7 +8,7 @@ using System.Text;
 
 namespace QrAssignment.Application.Features.Users.Commands.Update
 {
-    internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Result<Unit>>
+    internal sealed class UpdateUserCommandHandler : IRequestHandler<UpdateAppUserCommand, Result<Unit>>
     {
         private readonly IAppUserRepository _appUserRepository;
         private readonly IUserRepository _userRepository;
@@ -20,7 +20,7 @@ namespace QrAssignment.Application.Features.Users.Commands.Update
             _localizer = localizer;
         }
 
-        public async Task<Result<Unit>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(UpdateAppUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _appUserRepository.GetByIdWithRefreshTokenAsync(request.Id, cancellationToken);
 

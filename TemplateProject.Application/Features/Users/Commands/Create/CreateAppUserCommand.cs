@@ -5,7 +5,7 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Users.Commands.Create
 {
-    public sealed record CreateUserCommand(
+    public sealed record CreateAppUserCommand(
     string FirstName,
     string LastName,
     string Email,

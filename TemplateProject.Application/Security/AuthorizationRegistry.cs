@@ -45,11 +45,11 @@ namespace QrAssignment.Application.Security
             
             // Role İşlemleri
 
-            { typeof(Features.Users.Commands.Create.CreateUserCommand), (AppPages.Users, PagePermissions.Insert) },
-            { typeof(Features.Users.Commands.Update.UpdateUserCommand), (AppPages.Users, PagePermissions.Update) },
+            { typeof(Features.Users.Commands.Create.CreateAppUserCommand), (AppPages.Users, PagePermissions.Insert) },
+            { typeof(Features.Users.Commands.Update.UpdateAppUserCommand), (AppPages.Users, PagePermissions.Update) },
             //{ typeof(Features.Users.Commands.Delete.DeleteUserCommand), (AppPages.Users, PagePermissions.Delete) }
-            { typeof(Features.Users.Queries.GetList.GetUserListQuery), (AppPages.Users, PagePermissions.View) },
-            { typeof(Features.Users.Queries.GetById.GetUserByIdQuery), (AppPages.Users, PagePermissions.View) },
+            { typeof(Features.Users.Queries.GetList.GetAppUserListQuery), (AppPages.Users, PagePermissions.View) },
+            { typeof(Features.Users.Queries.GetById.GetAppUserByIdQuery), (AppPages.Users, PagePermissions.View) },
 
 
             { typeof(Features.Permission.Queries.GetByUserId.GetUserPermissionByUserIdQuery), (AppPages.Users, PagePermissions.View) },
@@ -78,7 +78,7 @@ namespace QrAssignment.Application.Security
     (AppPages.Roles, PagePermissions.ImportExcel) },
 { typeof(Common.Excel.GetSampleExcelTemplateQuery<BulkCreateAppRoleInputDto>),
     (AppPages.Roles, PagePermissions.ImportExcel) },
-            { typeof(Features.Users.Queries.GetLookupList.GetUserLookUpListQuery), (AppPages.Roles, PagePermissions.View) },
+            { typeof(Features.Users.Queries.GetLookupList.GetAppUserLookUpListQuery), (AppPages.Roles, PagePermissions.View) },
             { typeof(GetRoleAssignedUserListQuery), (AppPages.Roles, PagePermissions.View) },
             { typeof(GetAssignedPermissionListQuery), (AppPages.Roles, PagePermissions.View) },
 

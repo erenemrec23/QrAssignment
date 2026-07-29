@@ -4,5 +4,5 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Users.Queries.GetLookupList
 {
-    public class GetUserLookUpListQuery : IRequest<Result<List<AppUserLookUpListItemDto>>>;
+    public class GetAppUserLookUpListQuery : IRequest<Result<List<AppUserLookUpListItemDto>>>;
 }

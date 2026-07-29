@@ -9,16 +9,16 @@ using System.Text;
 
 namespace QrAssignment.Application.Features.Users.Queries.GetList
 {
-    public class GetUserListQueryHandler  : IRequestHandler<GetUserListQuery, Result<List<AppUserListItemDto>>>
+    public class GetAppUserListQueryHandler  : IRequestHandler<GetAppUserListQuery, Result<List<AppUserListItemDto>>>
     {
         private readonly IAppUserRepository _appUserRepository;
 
-        public GetUserListQueryHandler(IAppUserRepository appUserRepository)
+        public GetAppUserListQueryHandler(IAppUserRepository appUserRepository)
         {
             _appUserRepository = appUserRepository;
         }
 
-        public async Task<Result<List<AppUserListItemDto>>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<AppUserListItemDto>>> Handle(GetAppUserListQuery request, CancellationToken cancellationToken)
         {
             var result = await _appUserRepository.GetList(cancellationToken);
 

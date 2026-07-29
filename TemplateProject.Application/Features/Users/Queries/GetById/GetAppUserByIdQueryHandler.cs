@@ -6,17 +6,17 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Users.Queries.GetById
 {
-    public class GetByIdAppUserQueryHandler : IRequestHandler<GetUserByIdQuery, Result<AppUserItemDto>>
+    public class GetAppUserByIdQueryHandler : IRequestHandler<GetAppUserByIdQuery, Result<AppUserItemDto>>
     {
         private readonly IAppUserRepository _appUserRepository;
     
 
-        public GetByIdAppUserQueryHandler(IAppUserRepository appUserRepository)
+        public GetAppUserByIdQueryHandler(IAppUserRepository appUserRepository)
         {
             _appUserRepository = appUserRepository;
         }
 
-        public async Task<Result<AppUserItemDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<AppUserItemDto>> Handle(GetAppUserByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _appUserRepository.GetById(request.Id, cancellationToken);
 

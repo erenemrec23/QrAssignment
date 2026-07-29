@@ -5,10 +5,10 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Users.Queries.GetById
 {
-    public class GetUserByIdQuery : IRequest<Result<AppUserItemDto>>
+    public class GetAppUserByIdQuery : IRequest<Result<AppUserItemDto>>
     {
 
-        public GetUserByIdQuery(Guid? id)
+        public GetAppUserByIdQuery(Guid? id)
         {
             Id = id;
         }

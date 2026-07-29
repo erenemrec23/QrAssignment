@@ -9,5 +9,5 @@ using System.Text;
 
 namespace QrAssignment.Application.Features.Users.Queries.GetList
 {
-    public class GetUserListQuery : IRequest<Result<List<AppUserListItemDto>>>;
+    public class GetAppUserListQuery : IRequest<Result<List<AppUserListItemDto>>>;
 }

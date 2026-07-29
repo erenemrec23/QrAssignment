@@ -6,16 +6,16 @@ using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Users.Queries.GetLookupList
 {
-    public class GetUserLookUpListQueryHandler : IRequestHandler<GetUserLookUpListQuery, Result<List<AppUserLookUpListItemDto>>>
+    public class GetAppUserLookUpListQueryHandler : IRequestHandler<GetAppUserLookUpListQuery, Result<List<AppUserLookUpListItemDto>>>
     {
         private readonly IAppUserRepository _appUserRepository;
 
-        public GetUserLookUpListQueryHandler(IAppUserRepository appUserRepository)
+        public GetAppUserLookUpListQueryHandler(IAppUserRepository appUserRepository)
         {
             _appUserRepository = appUserRepository;
         }
 
-        public async Task<Result<List<AppUserLookUpListItemDto>>> Handle(GetUserLookUpListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<AppUserLookUpListItemDto>>> Handle(GetAppUserLookUpListQuery request, CancellationToken cancellationToken)
         {
             var result = await _appUserRepository.GetLookUpList(cancellationToken);
 
