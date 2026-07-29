@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using QrAssignment.Application.Common;
 using QrAssignment.Application.Features.AuthFeatures.Commands.Login;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Exceptions;
+using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Persistance.Services
 {
@@ -13,18 +17,24 @@ namespace QrAssignment.Persistance.Services
         private readonly IAppUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtProvider _jwtProvider;
-        private readonly IAppLocalizer _localizer; 
+        private readonly IAppLocalizer _localizer;
+        private readonly IEmailService _emailService;
+        private readonly IOptions<MailSettings> _mailSettings;
 
         public AuthService(IAppUserRepository userRepository,
             UserManager<AppUser> userManager,
             IJwtProvider jwtProvider,
             IAppLocalizer localizer, 
-            ITenantService tenantService)
+            ITenantService tenantService,
+            IEmailService emailService,
+            IOptions<MailSettings> mailSettings)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _jwtProvider = jwtProvider; 
-            _localizer = localizer; 
+            _localizer = localizer;
+            _emailService = emailService;
+            _mailSettings = mailSettings;
         }
 
         public async Task<LoginCommandResponse> LoginAsync(string email, string password, CancellationToken cancellationToken)
@@ -71,6 +81,48 @@ namespace QrAssignment.Persistance.Services
                 var error = string.Join(", ", result.Errors.Select(e => e.Description));
                 throw new BusinessException(error);
             }
+        }
+
+        public async Task<Result> ForgotPasswordAsync(string email, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            // Kullanici enumeration'ini engellemek icin: kullanici bulunamasa bile basarili donuyoruz.
+            if (user is null)
+                return Result.Success();
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // Token URL query'sinde tasinacagi icin encode ediyoruz (+ / = karakterleri bozulmasin).
+            var resetLink =
+                $"{_mailSettings.Value.ClientUrl}/reset-password" +
+                $"?email={Uri.EscapeDataString(email)}" +
+                $"&token={Uri.EscapeDataString(token)}";
+
+            const string subject = "Şifre Sıfırlama Talebi";
+            var body = $@"
+        <p>Merhaba,</p>
+        <p>Hesabınız için şifre sıfırlama talebinde bulunuldu. Aşağıdaki bağlantıya tıklayarak yeni şifrenizi belirleyebilirsiniz:</p>
+        <p><a href=""{resetLink}"">Şifremi Sıfırla</a></p>
+        <p>Bu talebi siz yapmadıysanız bu e-postayı yok sayabilirsiniz.</p>";
+
+            await _emailService.SendEmailAsync(email, subject, body, cancellationToken);
+
+            return Result.Success();
+        }
+        public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+                return Result.Failure(new Error("RESET_PASSWORD_INVALID", "Şifre sıfırlama işlemi geçersiz."));
+
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            if (!result.Succeeded)
+                return Result.Failure(new Error(
+                    "RESET_PASSWORD_FAILED",
+                    string.Join(" | ", result.Errors.Select(e => e.Description))));
+
+            return Result.Success();
         }
     }
 }

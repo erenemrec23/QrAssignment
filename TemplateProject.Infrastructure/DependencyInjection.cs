@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using QrAssignment.Application.Common;
 using QrAssignment.Application.Common.Excel;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Services;
@@ -14,6 +15,10 @@ namespace QrAssignment.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+
+            // Email servis kaydı
+            services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IExcelDataExportGenerator, ExcelDataExportGenerator>();
             services.AddScoped<IExcelSampleTemplateGenerator, ExcelSampleTemplateGenerator>();
             services.AddHttpContextAccessor();
