@@ -1,9 +1,13 @@
-﻿
-using QrAssignment.Application.Common.Excel;
-using QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate;
-using QrAssignment.Application.Features.Roles.DTOs;
+﻿using QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate;
+using QrAssignment.Application.Features.Roles.Queries.FormBase.GetById;
+using QrAssignment.Application.Features.Roles.Queries.FormBase.GetPassivedById;
+using QrAssignment.Application.Features.Roles.Queries.GetAssignedPermissionList;
+using QrAssignment.Application.Features.Roles.Queries.ListBase.GetList;
+using QrAssignment.Application.Features.Roles.Queries.ListBase.GetListExportExcel;
+using QrAssignment.Application.Features.Roles.Queries.ListBase.GetPassivedList;
+using QrAssignment.Application.Features.Roles.Queries.LookUp.GetAssignedUserList;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
-using QrAssignment.Domain.Shared; // PagePermissions enum'ının olduğu yer
+using QrAssignment.Domain.Shared; 
 
 namespace QrAssignment.Application.Security
 {
@@ -59,23 +63,26 @@ namespace QrAssignment.Application.Security
             //{ typeof(Features.QrLocations.Commands.Delete.DeleteQrLocationCommand), (AppPages.QrLocations, PagePermissions.Delete) },
 
                    
-            { typeof(Features.Roles.Commands.Create.CreateRoleCommand), (AppPages.Roles, PagePermissions.Insert) },
+            { typeof(Features.Roles.Commands.Create.CreateAppRoleCommand), (AppPages.Roles, PagePermissions.Insert) },
 { typeof(Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleCommand), (AppPages.Roles, PagePermissions.ImportExcel) },
-{ typeof(Features.Roles.Commands.Update.UpdateRoleCommand), (AppPages.Roles, PagePermissions.Update) },
+{ typeof(Features.Roles.Commands.Update.UpdateAppRoleCommand), (AppPages.Roles, PagePermissions.Update) },
 { typeof(Features.Roles.Commands.Delete.DeleteRoleCommand), (AppPages.Roles, PagePermissions.Delete) },
-{ typeof(Features.Roles.Commands.BulkDelete.BulkDeleteAppRoleCommand), (AppPages.Roles, PagePermissions.Delete) },
-{ typeof(Features.Roles.Queries.GetById.GetByIdRoleQuery), (AppPages.Roles, PagePermissions.View) },
-{ typeof(Features.Roles.Queries.GetList.GetListAppRoleQuery), (AppPages.Roles, PagePermissions.View) },
-{ typeof(Features.Roles.Queries.GetPassivedById.GetPassivedByIdAppRoleQuery), (AppPages.Roles, PagePermissions.ViewPassive) },
-{ typeof(Features.Roles.Queries.GetPassivedList.GetPassivedListAppRoleQuery), (AppPages.Roles, PagePermissions.ViewPassive) },
-{ typeof(Features.Roles.Queries.GetListExportExcel.GetListAppRoleExportExcelQuery), (AppPages.Roles, PagePermissions.ExportExcel) },
+{ typeof(Features.Roles.Commands.BulkDelete.BulkDeleteRoleCommand), (AppPages.Roles, PagePermissions.Delete) },
+{ typeof(GetByIdRoleQuery), (AppPages.Roles, PagePermissions.View) },
+{ typeof(GetListAppRoleQuery), (AppPages.Roles, PagePermissions.View) },
+{ typeof(GetPassivedByIdAppRoleQuery), (AppPages.Roles, PagePermissions.ViewPassive) },
+{ typeof(GetPassivedListAppRoleQuery), (AppPages.Roles, PagePermissions.ViewPassive) },
+{ typeof(GetListAppRoleExportExcelQuery), (AppPages.Roles, PagePermissions.ExportExcel) },
 { typeof(Features.Roles.Commands.Excel.Validate.ValidateAppRoleExcelQuery), (AppPages.Roles, PagePermissions.ImportExcel) },
 { typeof(Common.Excel.ValidateExcelQuery<BulkCreateAppRoleInputDto>),
     (AppPages.Roles, PagePermissions.ImportExcel) },
 { typeof(Common.Excel.GetSampleExcelTemplateQuery<BulkCreateAppRoleInputDto>),
-    (AppPages.Roles, PagePermissions.ImportExcel) }, 
+    (AppPages.Roles, PagePermissions.ImportExcel) },
+            { typeof(Features.Users.Queries.GetLookupList.GetUserLookUpListQuery), (AppPages.Roles, PagePermissions.View) },
+            { typeof(GetRoleAssignedUserListQuery), (AppPages.Roles, PagePermissions.View) },
+            { typeof(GetAssignedPermissionListQuery), (AppPages.Roles, PagePermissions.View) },
 
-
+            
         };
 
         // 2. SERBEST KOMUTLAR: Herkese açık işlemler (Login, Register vb.)

@@ -1,6 +1,7 @@
 ﻿using Audit.Core;
 using Audit.EntityFramework;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +25,13 @@ namespace QrAssignment.Persistance
     {
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddIdentityCore<AppUser>()
+        .AddRoles<AppRole>()
+        .AddEntityFrameworkStores<AppDbContext>();
 
+            // EF store'larını AutoSaveChanges=false olanlarla değiştir (sonra gelmeli ki kazansın)
+            services.AddScoped<IRoleStore<AppRole>, AppRoleStore>();
+            services.AddScoped<IUserStore<AppUser>, AppUserStore>();
             services.AddScoped<AuditInterceptor>();
 
             services.AddDbContext<AppDbContext>((sp, options) =>
@@ -37,7 +44,7 @@ namespace QrAssignment.Persistance
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddSingleton<IDbExceptionTranslator, SqlServerExceptionTranslator>();  
+            services.AddSingleton<IDbExceptionTranslator, SqlServerExceptionTranslator>();
 
             services.AddIdentity<AppUser, AppRole>(options =>
             {

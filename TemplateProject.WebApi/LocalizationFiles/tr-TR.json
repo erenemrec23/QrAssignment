@@ -239,8 +239,20 @@
   "Label.RoleName": "Rol Adı",
   "Role.Form.Title.Edit": "Rol Düzenle",
   "Role.Form.Title.New": "Yeni Rol",
-  "Placeholder.RoleName": "Rol Adını Giriniz..."
+  "Placeholder.RoleName": "Rol Adını Giriniz...",
+  "Error.RoleUCanNotUpdated": "Rol güncellenemedi: {0}",
+  "Error.RoleDublicated": "Bu isimde başka bir rol zaten mevcut.",
+  "Error.RoleNotFound": "Rol Bulunamadı.",
+  "Error.ForeignKeyViolation": "Bu kayıt başka kayıtlarla ilişkili olduğu için işlem tamamlanamadı.",
+  "Error.DuplicateEntity": "'{0}' değeri zaten kayıtlı. ({1})",
+  "Field.Tenant.Name": "Firma Adı",
+  "Placeholder.SearchPersonnel": "Arama İçin Personel Adını Giriniz...",
+  "Label.Form": "Form",
+  "Label.PageRolePermissions": "Sayfa / Rol Yetkilendirme",
+  "Label.SelectRolePersonnel": "Kullanıcı / Rol Atama"
 
 
-}
+
+
+} 
  

@@ -8,12 +8,15 @@
         public int PermissionValue { get; init; }
     }
 
-    public class PermissionUserItemDto
+    public class PermissionUserItemDto : PermissionBaseItemDto
     {
-        public Guid? UserId { get; set; }
-        public List<PermissionUserPageItemDto> PagePermissionList { get; set; } = new List<PermissionUserPageItemDto>();
+        public Guid? UserId { get; set; } 
     }
 
 
+    public class PermissionBaseItemDto
+    { 
+        public List<PermissionUserPageItemDto> PagePermissionList { get; set; } = new List<PermissionUserPageItemDto>();
+    }
 
 }

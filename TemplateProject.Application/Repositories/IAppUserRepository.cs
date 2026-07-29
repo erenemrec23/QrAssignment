@@ -1,5 +1,4 @@
-﻿using QrAssignment.Application.Features.Users.Queries.GetById;
-using QrAssignment.Application.Features.Users.Queries.GetList;
+﻿using QrAssignment.Application.Features.Users.Queries.DTOs;
 using QrAssignment.Domain.Entity.App;
 
 namespace QrAssignment.Application.Repositories
@@ -12,5 +11,6 @@ namespace QrAssignment.Application.Repositories
 
         Task<List<AppUserListItemDto>> GetList(CancellationToken cancellationToken);
         Task<AppUserItemDto> GetById(Guid? id, CancellationToken cancellationToken);
+        Task<List<AppUserLookUpListItemDto>> GetLookUpList(CancellationToken cancellationToken);
     }
     }

@@ -39,6 +39,9 @@ namespace QrAssignment.Domain.Entity.App
 
         public Guid? ModifiedByUserId { get; set; }
         public AppUser? ModifiedByUser { get; set; }
+
+
+        public virtual ICollection<IdentityRoleClaim<Guid>> Claims { get; set; }
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using QrAssignment.Application.DTOs.List;
-using QrAssignment.Application.Features.Roles.DTOs;
+using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
+using QrAssignment.Application.Features.Roles.DTOs; 
 using QrAssignment.Application.Features.Roles.Queries.GetList;
 using QrAssignment.Domain.Entity.App;
 
@@ -14,6 +15,12 @@ namespace QrAssignment.Application.Repositories
         Task<RoleItemDto?> GetPassivedDtoByIdAsync(Guid id, CancellationToken ct = default);
         Task BulkDelete(List<Guid> ids, CancellationToken ct); 
         Task<List<AppRole>> GetByNamesAsync(List<string> names, CancellationToken ct);
+
+        Task<List<Guid>> GetAssignedUserListDtoAsync(Guid roleId, CancellationToken ct = default);
+        Task SyncAssignedUsersAsync(Guid roleId, IEnumerable<Guid> userIds, CancellationToken ct);
+
+        Task<List<PermissionUserPageItemDto>> GetAssignedPermissionListDtoAsync(
+    Guid roleId, CancellationToken cancellationToken);
     }
 }
  

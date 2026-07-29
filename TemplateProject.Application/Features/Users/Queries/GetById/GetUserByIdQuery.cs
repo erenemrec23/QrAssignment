@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using QrAssignment.Application.Features.Users.Queries.DTOs;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Shared;
 

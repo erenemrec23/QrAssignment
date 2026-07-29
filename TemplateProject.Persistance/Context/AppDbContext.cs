@@ -46,8 +46,7 @@ public class AppDbContext : AuditDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Ignore<IdentityUserLogin<string>>();
-        modelBuilder.Ignore<IdentityUserRole<string>>();
+        modelBuilder.Ignore<IdentityUserLogin<string>>(); 
         modelBuilder.Ignore<IdentityUserToken<string>>();
         modelBuilder.Ignore<IdentityRole<string>>();
          

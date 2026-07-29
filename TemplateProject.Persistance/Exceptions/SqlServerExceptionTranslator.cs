@@ -13,12 +13,17 @@ internal sealed partial class SqlServerExceptionTranslator : IDbExceptionTransla
     private const int UniqueConstraintViolation = 2627;
     private const int ForeignKeyViolation = 547;
 
-    // Index/constraint adı → kullanıcıya gösterilecek alan adı
-    private static readonly Dictionary<string, string> FieldNames =
+    // Index/constraint adı → alan adı için localization key
+    private static readonly Dictionary<string, string> FieldNameKeys =
         new(StringComparer.OrdinalIgnoreCase)
         {
-            ["IX_Tenants_Name"] = "Firma Adı",
+            ["IX_Tenants_Name"] = "Field.Tenant.Name",
         };
+
+    private readonly IAppLocalizer _localizer;
+
+    public SqlServerExceptionTranslator(IAppLocalizer localizer)
+        => _localizer = localizer;
 
     public bool TryTranslate(Exception exception, out Exception translated)
     {
@@ -36,7 +41,7 @@ internal sealed partial class SqlServerExceptionTranslator : IDbExceptionTransla
 
             case ForeignKeyViolation:
                 translated = new BusinessException(
-                    "Bu kayıt başka kayıtlarla ilişkili olduğu için işlem tamamlanamadı.");
+                    _localizer["Error.ForeignKeyViolation"]);
                 return true;
 
             default:
@@ -44,14 +49,20 @@ internal sealed partial class SqlServerExceptionTranslator : IDbExceptionTransla
         }
     }
 
-    private static DuplicateEntityException BuildDuplicate(SqlException sql, Exception inner)
+    private DuplicateEntityException BuildDuplicate(SqlException sql, Exception inner)
     {
         var name = NameRegex().Match(sql.Message).Groups["name"].Value;
         var value = ValueRegex().Match(sql.Message).Groups["value"].Value;
-        var field = FieldNames.TryGetValue(name, out var f) ? f : name;
 
-        return new DuplicateEntityException(
-            $"'{value}' değeri zaten kayıtlı. ({field})", field, value);
+        // index adı bir key'e maplenmişse localize et; yoksa ham index adını göster
+        var field = FieldNameKeys.TryGetValue(name, out var key)
+            ? _localizer[key]
+            : name;
+
+        var message = string.Format(
+            _localizer["Error.DuplicateEntity"], value, field);
+
+        return new DuplicateEntityException(message, field, value);
     }
 
     [GeneratedRegex(@"(?:index|constraint) '(?<name>[^']+)'")]

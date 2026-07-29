@@ -6,12 +6,13 @@ using QrAssignment.Application.Features.Roles.Commands.Create;
 using QrAssignment.Application.Features.Roles.Commands.Delete;
 using QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Roles.Commands.Update;
-using QrAssignment.Application.Features.Roles.DTOs;
-using QrAssignment.Application.Features.Roles.Queries.GetById;
-using QrAssignment.Application.Features.Roles.Queries.GetList;
-using QrAssignment.Application.Features.Roles.Queries.GetListExportExcel;
-using QrAssignment.Application.Features.Roles.Queries.GetPassivedById;
-using QrAssignment.Application.Features.Roles.Queries.GetPassivedList; 
+using QrAssignment.Application.Features.Roles.Queries.FormBase.GetById; 
+using QrAssignment.Application.Features.Roles.Queries.FormBase.GetPassivedById;
+using QrAssignment.Application.Features.Roles.Queries.GetAssignedPermissionList;
+using QrAssignment.Application.Features.Roles.Queries.ListBase.GetList;
+using QrAssignment.Application.Features.Roles.Queries.ListBase.GetListExportExcel;
+using QrAssignment.Application.Features.Roles.Queries.ListBase.GetPassivedList;
+using QrAssignment.Application.Features.Roles.Queries.LookUp.GetAssignedUserList;
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -20,14 +21,14 @@ namespace QrAssignment.Presentation.Controllers
     public class AppRolesController : ApiControllerBase
     {
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(CreateRoleCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(CreateAppRoleCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
         [HttpPut("[action]")]
-        public async Task<IActionResult> Update([FromBody] UpdateRoleCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update([FromBody] UpdateAppRoleCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{roleId}")]
         public async Task<IActionResult> Delete([FromRoute] string id, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(new DeleteRoleCommand(id), cancellationToken));
 
@@ -77,10 +78,10 @@ namespace QrAssignment.Presentation.Controllers
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
         [HttpDelete("Bulk-Delete")]
-        public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteAppRoleCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteRoleCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
-        [HttpGet("Passived/{id}")]
+        [HttpGet("Passived/{roleId}")]
         public async Task<IActionResult> GetPassivedById(Guid? id, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(new GetPassivedByIdAppRoleQuery(id), cancellationToken));
 
@@ -95,5 +96,21 @@ namespace QrAssignment.Presentation.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(new GetByIdRoleQuery(id), cancellationToken));
+
+
+         
+
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetAssignedUserList(
+    [FromQuery] Guid? roleId, CancellationToken cancellationToken)
+    => HandleResult(await Mediator.Send(new GetRoleAssignedUserListQuery(roleId), cancellationToken));
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetAssignedPermissionList(
+    [FromQuery] Guid? roleId, CancellationToken cancellationToken)
+    => HandleResult(await Mediator.Send(new GetAssignedPermissionListQuery(roleId), cancellationToken));
+
+
     }
 }

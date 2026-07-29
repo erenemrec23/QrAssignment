@@ -4,13 +4,14 @@ using QrAssignment.Application.Features.Users.Commands.Create;
 using QrAssignment.Application.Features.Users.Commands.Update;
 using QrAssignment.Application.Features.Users.Queries.GetById;
 using QrAssignment.Application.Features.Users.Queries.GetList;
+using QrAssignment.Application.Features.Users.Queries.GetLookupList;
 
 
 namespace QrAssignment.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AppUserController : ControllerBase
+    public class AppUserController : ApiControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -44,6 +45,12 @@ namespace QrAssignment.Presentation.Controllers
             return Ok(response);
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetLookUpList([FromQuery] GetUserLookUpListQuery query)
+        {
+            var response = await _mediator.Send(query);
+            return Ok(response);
+        }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid? id, CancellationToken cancellationToken)
