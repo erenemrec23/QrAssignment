@@ -48,6 +48,12 @@ namespace QrAssignment.Infrastructure.Authentication
             var pagePermissions = await _appUserClaimRepository
                 .GetUserWithPermissionsAsync(user.Id);
 
+            var permissions = await _appUserClaimRepository
+    .GetEffectivePagePermissionsAsync(user.Id);
+            if(permissions.Any())
+            pagePermissions.AddRange(permissions);
+             
+
             if (pagePermissions != null && pagePermissions.Any())
             {
                 var allPermissionsJson = JsonSerializer.Serialize(pagePermissions.Select(p => new
@@ -56,9 +62,9 @@ namespace QrAssignment.Infrastructure.Authentication
                     permissionValue = p.PermissionValue
                 }));
                  
-                claims.Add(new Claim("permissions", allPermissionsJson));
-
+                claims.Add(new Claim("permissions", allPermissionsJson)); 
             }
+
             DateTime expires = DateTime.Now.AddHours(1);
 
             JwtSecurityToken jwtSecurityToken = new(
