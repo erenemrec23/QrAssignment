@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using QrAssignment.Application.Abstractions;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
-using QrAssignment.Domain.Entity.App;   // AppRole
+using QrAssignment.Domain.Entity.App;   
 using QrAssignment.Domain.Shared;
 using System.Security.Claims;
 
@@ -38,6 +38,7 @@ namespace QrAssignment.Application.Features.Roles.Commands.Create
             var role = new AppRole { Name = request.Name.Trim() };
 
             var createResult = await _roleManager.CreateAsync(role);
+            
             if (!createResult.Succeeded)
             {
                 var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));

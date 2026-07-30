@@ -78,23 +78,24 @@ namespace QrAssignment.Presentation.Controllers
     => HandleResult(await Mediator.Send(new SetActiveAppUserCommand(id), cancellationToken));
 
 
-        [HttpDelete("Bulk-Delete")]
-        public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteAppUserCommand command, CancellationToken cancellationToken)
-            => HandleResult(await Mediator.Send(command, cancellationToken));
 
 
-        [HttpDelete("Bulk-SetActive")]
+        [HttpPatch("Bulk-SetActive")]
         public async Task<IActionResult> BulkSetActive([FromBody] BulkSetActiveAppUserCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
 
-        [HttpDelete("Bulk-SetPassive")]
+        [HttpPatch("Bulk-SetPassive")]
         public async Task<IActionResult> BulkSetPassive([FromBody] BulkSetPassiveAppUserCommand command, CancellationToken cancellationToken)
-            => HandleResult(await Mediator.Send(command, cancellationToken));
+    => HandleResult(await Mediator.Send(command, cancellationToken));
 
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(new DeleteAppUserCommand(id), cancellationToken));
+
+        [HttpPatch("Bulk-Delete")]
+        public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteAppUserCommand command, CancellationToken cancellationToken)
+            => HandleResult(await Mediator.Send(command, cancellationToken));
     }
 }

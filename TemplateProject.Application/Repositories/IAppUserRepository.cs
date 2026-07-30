@@ -32,7 +32,10 @@ namespace QrAssignment.Application.Repositories
         Task SyncAssignedRolesAsync(Guid userId, IEnumerable<Guid> roleIds, CancellationToken ct = default);
         Task<List<PermissionUserPageItemDto>> GetAssignedPermissionListDtoAsync(Guid userId, CancellationToken ct = default);
 
-        Task BulkSetActiveAsync(List<Guid> ids, CancellationToken ct);
+        Task BulkSetActiveByIds(List<Guid> ids, CancellationToken ct);
         Task SetActiveAsync(Guid id, CancellationToken ct);
+        Task<AppUser?> GetPassivedByIdAsync(Guid id, CancellationToken ct = default);
+
+        Task DeleteById(Guid id, CancellationToken ct);
     }
 }

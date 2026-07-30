@@ -13,7 +13,7 @@ namespace QrAssignment.Application.Features.Users.Commands.BulkSetActive
 
         public async Task<Result> Handle(BulkSetActiveAppUserCommand request, CancellationToken cancellationToken)
         {
-            await _appUserRepository.BulkSetActiveAsync(request.IdList, cancellationToken);
+            await _appUserRepository.BulkSetActiveByIds(request.IdList, cancellationToken);
             return Result.Success();
         }
     }

@@ -20,6 +20,8 @@ namespace QrAssignment.Persistance.Repositories.Base
 
         public Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => _dbSet.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+        public Task<T?> GetPassivedByIdAsync(Guid id, CancellationToken cancellationToken = default)
+            => _dbSet.IgnoreQueryFilters(SoftDeleteFilterOnly).FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
         public Task<T?> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
             => _dbSet.FirstOrDefaultAsync(predicate, cancellationToken);
@@ -43,14 +45,15 @@ namespace QrAssignment.Persistance.Repositories.Base
             if (entity.RowVersion is not null)
                 entry.Property(nameof(IBaseEntity.RowVersion)).OriginalValue = entity.RowVersion;
         }
-
+         
         public void Delete(T entity) => _dbSet.Remove(entity);
+
 
         public void DeleteRange(IEnumerable<T> entities) => _dbSet.RemoveRange(entities);
 
         public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var entity = await GetByIdAsync(id, cancellationToken);
+            var entity = await GetPassivedByIdAsync(id, cancellationToken);
             if (entity is not null)
                 Delete(entity);
         }
@@ -58,6 +61,7 @@ namespace QrAssignment.Persistance.Repositories.Base
         public async Task DeleteRange(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
         {
             var entities = await _dbSet
+                .IgnoreQueryFilters(SoftDeleteFilterOnly)
                 .Where(e => ids.Contains(e.Id))
                 .ToListAsync(cancellationToken);
 
@@ -107,6 +111,15 @@ namespace QrAssignment.Persistance.Repositories.Base
                 softDeleteEntity.IsPassived = false;
         }
 
+        public async Task SetPassiveAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var entity = await _dbSet
+                .IgnoreQueryFilters(SoftDeleteFilterOnly)
+                .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+
+            if (entity is ISoftDelete softDeleteEntity)
+                softDeleteEntity.IsPassived = true;
+        }
         public async Task BulkSetActiveByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
         {
             var idList = ids as ICollection<Guid> ?? ids.ToList();
@@ -122,6 +135,23 @@ namespace QrAssignment.Persistance.Repositories.Base
             {
                 if (entity is ISoftDelete softDeleteEntity)
                     softDeleteEntity.IsPassived = false;
+            }
+        }
+        public async Task BulkSetPassiveByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+        {
+            var idList = ids as ICollection<Guid> ?? ids.ToList();
+            if (idList.Count == 0)
+                return;
+
+            var entities = await _dbSet
+                .IgnoreQueryFilters(SoftDeleteFilterOnly)
+                .Where(e => idList.Contains(e.Id))
+                .ToListAsync(cancellationToken);
+
+            foreach (var entity in entities)
+            {
+                if (entity is ISoftDelete softDeleteEntity)
+                    softDeleteEntity.IsPassived = true;
             }
         }
 

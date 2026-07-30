@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QrAssignment.Application.Abstractions;
 using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Repositories;
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Entity.Audit;
@@ -61,8 +62,7 @@ namespace QrAssignment.Persistance
                 .FromCallingAssembly()
                 .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Repository")))
                 .AsImplementedInterfaces()
-                .WithScopedLifetime());
-
+                .WithScopedLifetime()); 
             Audit.Core.Configuration.Setup()
                 .UseEntityFramework(ef => ef
                     .AuditTypeMapper(t => typeof(SystemAuditLog))

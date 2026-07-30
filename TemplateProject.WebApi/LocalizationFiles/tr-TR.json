@@ -102,7 +102,7 @@
   "Title.Tenant.Name": "Firma Adı",
   "Title.Tenant.Title": "Unvan (Title)",
   "Message.InvalidExcelFormat": "Hatalı dosya formatı! Lütfen sadece .xlsx veya .xls uzantılı dosyaları yükleyin.",
-  "BulkCreate.SuccessMessage": "İşlem Başarılı Bir Şekilde Tamamlandı",
+
   "Message.ExcelExported": "Excel İndiriliyor",
   "Modules.Tenants": "Firmalar Yönetimi",
   "Modules.Users": "Sistem Kullanıcıları",
@@ -252,7 +252,14 @@
   "Label.SelectRolePersonnel": "Kullanıcı / Rol Atama",
   "Label.ActionAuthorize": "Yetkilendirme",
   "Messages.SetActiveSuccess": "Aktif Etme Başarılı Bir Şekilde Tamamlanmıştır",
-  "Messages.PassiveSuccess": "Pasif Etme Başarılı Bir Şekilde Tamamlanmıştır"
+  "Messages.PassiveSuccess": "Pasif Etme Başarılı Bir Şekilde Tamamlanmıştır",
+  "Messages.DeleteSuccess": "Silme İşlemi Başarılı Bir Şekilde Tamamlanmıştır",
+  "Messages.RestoreSuccess": "Geri Alma İşlemi Başarılı Bir Şekilde Tamamlanmıştır",
+  "Messages.DeleteError": "Beklenmeyen bir hata oluştu. Lütfen Daha Sonra Tekrar Deneyiniz.",
+  "Messages.RestoreError": "Beklenmeyen bir hata oluştu. Lütfen Daha Sonra Tekrar Deneyiniz.",
+  "Messages.BulkCreateErrorMessage": "Beklenmeyen bir hata oluştu. Lütfen Daha Sonra Tekrar Deneyiniz.",
+  "Messages.BulkCreateSuccess": "İşlem Başarılı Bir Şekilde Tamamlandı",
+  "Messages.NoViewPermission": "Bu sayfayı görüntüleme yetkiniz bulunmamaktadır"
 
 
 

@@ -8,6 +8,7 @@ using QrAssignment.Application.Features.Tenants.Commands.Create;
 using QrAssignment.Application.Features.Tenants.Commands.Delete;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Tenants.Commands.SetActive;
+using QrAssignment.Application.Features.Tenants.Commands.SetPassive;
 using QrAssignment.Application.Features.Tenants.Commands.Update;
 using QrAssignment.Application.Features.Tenants.Queries.GetById;
 using QrAssignment.Application.Features.Tenants.Queries.GetList;
@@ -29,9 +30,6 @@ namespace QrAssignment.Presentation.Controllers
         public async Task<IActionResult> Update([FromBody] UpdateTenantCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
-            => HandleResult(await Mediator.Send(new DeleteTenantCommand { Id = id }, cancellationToken));
 
         [HttpPost("export")]
         public async Task<IActionResult> ExportExcel([FromBody] GetListTenantExportExcelQuery query, CancellationToken cancellationToken)
@@ -102,19 +100,24 @@ namespace QrAssignment.Presentation.Controllers
 
         [HttpPut("SetPassive/{id:guid}")]
         public async Task<IActionResult> SetPassive([FromRoute] Guid id, CancellationToken cancellationToken)
-    => HandleResult(await Mediator.Send(new SetActiveTenantCommand { Id = id }, cancellationToken));
+    => HandleResult(await Mediator.Send(new SetPassiveTenantCommand { Id = id }, cancellationToken));
 
 
-        [HttpDelete("Bulk-Delete")]
+        [HttpPatch("Bulk-Delete")]
         public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteTenantCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
-        [HttpDelete("Bulk-SetActive")]
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+            => HandleResult(await Mediator.Send(new DeleteTenantCommand { Id = id }, cancellationToken));
+
+        [HttpPatch("Bulk-SetActive")]
         public async Task<IActionResult> BulkSetActive([FromBody] BulkSetActiveTenantCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
 
-        [HttpDelete("Bulk-SetPassive")]
+        [HttpPatch("Bulk-SetPassive")]
         public async Task<IActionResult> BulkSetPassive([FromBody] BulkSetPassiveTenantCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 

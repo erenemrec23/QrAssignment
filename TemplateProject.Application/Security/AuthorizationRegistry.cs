@@ -127,7 +127,7 @@ namespace QrAssignment.Application.Security
                 typeof(Features.Roles.Queries.FormBase.GetById.GetByIdRoleQuery),
                 typeof(Features.Roles.Queries.ListBase.GetList.GetListAppRoleQuery),
                 typeof(Features.Roles.Queries.LookUp.GetAssignedUserList.GetRoleAssignedUserListQuery),
-                typeof(Features.Roles.Queries.GetAssignedPermissionList.GetAssignedPermissionListQuery));
+                typeof(Features.Roles.Queries.GetAssignedPermissionList.GetRoleAssignedPermissionListQuery));
 
             Register(registry, AppPages.Roles, PagePermissions.SetPassive,
                 typeof(Features.Roles.Commands.SetPassive.SetPassiveAppRoleCommand),

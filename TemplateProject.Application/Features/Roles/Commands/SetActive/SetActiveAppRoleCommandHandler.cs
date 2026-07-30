@@ -1,39 +1,51 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Identity; 
+using Microsoft.AspNetCore.Identity;
+using QrAssignment.Application.Abstractions;
 using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Roles.Commands.SetActive
 {
-    internal sealed class SetPassiveAppRoleCommandHandler : IRequestHandler<SetActiveAppRoleCommand, Result>
-    {
+    internal sealed class SetActiveAppRoleCommandHandler : IRequestHandler<SetActiveAppRoleCommand, Result>
+    { 
+        private readonly IAppRoleRepository _appRoleRepository;
         private readonly RoleManager<AppRole> _roleManager;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IAppLocalizer _localizer;
 
-        public SetPassiveAppRoleCommandHandler(RoleManager<AppRole> roleManager, IAppLocalizer localizer)
-        {
+        public SetActiveAppRoleCommandHandler( 
+            IAppRoleRepository appRoleRepository,
+            RoleManager<AppRole> roleManager,
+            IUnitOfWork unitOfWork,
+            IAppLocalizer localizer)
+        { 
+            _appRoleRepository = appRoleRepository;
             _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
             _localizer = localizer;
         }
 
         public async Task<Result> Handle(SetActiveAppRoleCommand request, CancellationToken cancellationToken)
         {
-            var role = await _roleManager.FindByIdAsync(request.Id.ToString()!);
-            if (role is null)
-                return Result.Failure(new Error("Error.RoleNotFound", _localizer["Error.RoleNotFound"]));
+            //var role = await _appRoleRepository.GetPassivedByIdAsync(request.Id.Value, cancellationToken);
 
-            role.IsPassived = false;
+            //if (role is null)
+            //    return Result.Failure(new Error("ROLE_NOT_FOUND", "Rol bulunamadı."));
 
-            var updateResult = await _roleManager.UpdateAsync(role);
-            if (!updateResult.Succeeded)
-                return Result.Failure(new Error(
-                    "Error.RoleCanNotUpdated",
-                    string.Format(
-                        _localizer["Error.RoleCanNotUpdated"],
-                        string.Join(", ", updateResult.Errors.Select(e => e.Description)))));
+            //if (!role.IsPassived)
+            //    return Result.Failure(new Error("ROLE_ALREADY_ACTIVE", "Rol zaten aktif."));
 
-            return Result.Success();
+            //role.IsPassived = false;
+            //var updateResult = await _roleManager.UpdateAsync(role);
+            //if (!updateResult.Succeeded)
+            //    return Result.Failure(new Error(
+            //         string.Format(_localizer["Error.RoleUCanNotUpdated"],
+            //         string.Join(", ", updateResult.Errors.Select(e => e.Description))), "Error.RoleUCanNotUpdated"));
+
+            await _appRoleRepository.SetActiveAsync(request.Id.Value, cancellationToken);
+            return Result.Success("Rol aktifleştirildi.");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;    
 using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
@@ -44,9 +45,22 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
 
     public Task<RoleItemDto?> GetPassivedDtoByIdAsync(Guid id, CancellationToken ct = default)
         => SinglePassivedDtoByIdAsync(id, ProjectionItem, ct);
-
+    public Task<AppRole?> GetPassivedByIdAsync(Guid id, CancellationToken ct = default)
+        => SinglePassivedByIdAsync(id, ct);
+    
     public Task BulkDelete(List<Guid> ids, CancellationToken ct)
         => BulkDeleteByIdsAsync(ids, ct);
+    public Task DeleteById(Guid id, CancellationToken ct)
+        => DeleteByIdAsync(id, ct);
+
+
+    public Task SetPassiveById(Guid id, CancellationToken ct)
+        => SetPassiveByIdAsync(id, ct);
+    public Task BulkSetPassiveByIds(List<Guid> ids, CancellationToken ct)
+        => BulkSetPassiveByIdsAsync(ids, ct);
+
+    public Task Delete(Guid id, CancellationToken ct)
+        => DeleteByIdAsync(id, ct);
 
     public Task<List<AppRole>> GetByNamesAsync(List<string> names, CancellationToken ct)
     => GetByValuesAsync(r => r.Name!, names, ct);
@@ -121,7 +135,7 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
 
 
     public Task BulkSetActiveAsync(List<Guid> ids, CancellationToken ct)
-        => BulkSetActiveAsync(ids, ct);
+        => BulkSetActiveByIdsAsync(ids, ct);
 
 
     public Task SetActiveAsync(Guid id, CancellationToken ct)

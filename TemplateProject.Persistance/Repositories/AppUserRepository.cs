@@ -50,17 +50,21 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
 
     public Task<AppUserItemDto?> GetPassivedDtoByIdAsync(Guid id, CancellationToken ct = default)
         => SinglePassivedDtoByIdAsync(id, ProjectionItem, ct);
+    public Task<AppUser?> GetPassivedByIdAsync(Guid id, CancellationToken ct = default)
+        => SinglePassivedByIdAsync(id, ct);
 
     public Task BulkDeleteAsync(List<Guid> ids, CancellationToken ct)
         => BulkDeleteByIdsAsync(ids, ct);
 
 
-    public Task BulkSetActiveAsync(List<Guid> ids, CancellationToken ct)
-        => BulkSetActiveAsync(ids, ct);
+    public Task BulkSetActiveByIds(List<Guid> ids, CancellationToken ct)
+        => BulkSetActiveByIdsAsync(ids, ct);
 
 
     public Task SetActiveAsync(Guid id, CancellationToken ct)
         => SetActiveByIdAsync(id, ct);
+    public Task DeleteById(Guid id, CancellationToken ct)
+        => DeleteByIdAsync(id, ct);
 
     // --- Excel Bulk Validation Helpers ---
     public async Task<List<string>> GetExistingUserNamesAsync(List<string> userNames, CancellationToken ct = default)

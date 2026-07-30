@@ -13,7 +13,7 @@ namespace QrAssignment.Application.Features.Roles.Commands.BulkSetPassive
 
         public async Task<Result> Handle(BulkSetPassiveAppRoleCommand request, CancellationToken cancellationToken)
         {
-            await _appRoleRepository.BulkDelete(request.IdList, cancellationToken);
+            await _appRoleRepository.BulkSetPassiveByIds(request.IdList, cancellationToken);
             return Result.Success();
         }
     }

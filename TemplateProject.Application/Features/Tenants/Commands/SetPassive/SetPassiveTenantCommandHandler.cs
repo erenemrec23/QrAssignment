@@ -22,14 +22,14 @@ namespace QrAssignment.Application.Features.Tenants.Commands.SetActive
 
         public async Task<Result> Handle(SetPassiveTenantCommand request, CancellationToken cancellationToken)
         {
-            if (!request.Id.HasValue)
-                throw new Exception(_localizer["Messages.IdIsNull"]);
+            //if (!request.Id.HasValue)
+            //    throw new Exception(_localizer["Messages.IdIsNull"]);
 
-            var tenant = await _tenantRepository.GetByIdAsync(request.Id.Value, cancellationToken);
+            //var tenant = await _tenantRepository.GetByIdAsync(request.Id.Value, cancellationToken);
 
-            if (tenant == null)
-                throw new Exception(_localizer["Messages.TenantNotFound"]); 
-            _tenantRepository.Delete(tenant);
+            //if (tenant == null)
+            //    throw new Exception(_localizer["Messages.TenantNotFound"]); 
+            _tenantRepository.SetPassiveById(request.Id.Value,cancellationToken);
              
             return Result.Success();
         }

@@ -11,6 +11,7 @@ namespace QrAssignment.Application.Features.Users.Commands.SetPassive
         private readonly UserManager<AppUser> _userManager;
         private readonly IAppLocalizer _localizer;
 
+
         public SetPassiveAppUserCommandHandler(UserManager<AppUser> userManager, IAppLocalizer localizer)
         {
             _userManager = userManager;

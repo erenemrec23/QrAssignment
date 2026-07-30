@@ -24,7 +24,7 @@ namespace QrAssignment.Application.Features.Tenants.Commands.SetActive
             if (!request.Id.HasValue)
                 throw new Exception(_localizer["Messages.IdIsNull"]);
 
-            var tenant = await _tenantRepository.GetByIdAsync(request.Id.Value, cancellationToken);
+            var tenant = await _tenantRepository.GetPassivedByIdAsync(request.Id.Value, cancellationToken);
 
             if (tenant == null)
                 throw new Exception(_localizer["Messages.TenantNotFound"]);

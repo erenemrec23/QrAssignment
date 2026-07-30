@@ -73,6 +73,12 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
             .Select(ItemProjection)
             .SingleOrDefaultAsync(cancellationToken);
 
+
+    public Task<Tenant?> GetPassivedByIdAsync(Guid id, CancellationToken cancellationToken)
+        => PassivedTenants
+            .Where(t => t.Id == id)
+            .SingleOrDefaultAsync(cancellationToken);
+
     // --- Silme ---
     public Task BulkDelete(List<Guid> ids, CancellationToken cancellationToken)
         => DeleteRange(ids, cancellationToken);
@@ -89,4 +95,12 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
         => BulkSetActiveByIdsAsync( ids, cancellationToken: cancellationToken);
     public Task SetActiveById(Guid id, CancellationToken cancellationToken)
         => SetActiveAsync(id, cancellationToken: cancellationToken);
+
+
+    public Task SetPassiveById(Guid id, CancellationToken cancellationToken)
+        => SetPassiveAsync(id, cancellationToken: cancellationToken);
+
+
+    public Task BulkSetPassiveByIds(List<Guid> ids, CancellationToken cancellationToken)
+        => BulkSetPassiveByIdsAsync(ids, cancellationToken: cancellationToken);
 }

@@ -6,5 +6,5 @@ using System.Windows.Input;
 namespace QrAssignment.Application.Features.Roles.Commands.Delete
 {
     // Command
-    public sealed record DeleteAppRoleCommand(string Id) : ICommand<Result>;
+    public sealed record DeleteAppRoleCommand(Guid? Id) : ICommand<Result>, IdValidationBase;
 }

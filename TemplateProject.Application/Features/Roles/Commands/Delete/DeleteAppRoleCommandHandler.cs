@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared; 
 namespace QrAssignment.Application.Features.Roles.Commands.Delete
 {
@@ -11,29 +12,21 @@ namespace QrAssignment.Application.Features.Roles.Commands.Delete
  QrAssignment.Domain.Entity.App.AppRole> _roleManager;
         private readonly IAppLocalizer _localizer;
 
-        public DeleteAppRoleCommandHandler(RoleManager<QrAssignment.Domain.Entity.App.AppRole> roleManager,
-             IAppLocalizer localizer)
+        private readonly IAppRoleRepository _appRoleRepository;
+        public DeleteAppRoleCommandHandler(
+            RoleManager<QrAssignment.Domain.Entity.App.AppRole> roleManager,
+             IAppLocalizer localizer,
+             IAppRoleRepository appRoleRepository)
         {
             _roleManager = roleManager;
             _localizer = localizer;
+            _appRoleRepository = appRoleRepository;
         }
 
         public async Task<Result> Handle(DeleteAppRoleCommand request, CancellationToken cancellationToken)
-        {
-            var role = await _roleManager.FindByIdAsync(request.Id);
-            if (role == null)
-            {
-                return Result.Failure(new Error(_localizer["Label.NoRecords"],""));
-            }
-
-            var result = await _roleManager.DeleteAsync(role);
-
-            if (!result.Succeeded)
-            {
-                var errors = string.Join(", ", result.Errors.Select(e => e.Description)); 
-                return Result.Failure(new Error("Error.RoleNotFound", _localizer["Error.RoleNotFound"]));
-            }
-
+        { 
+            
+             await _appRoleRepository.DeleteById(request.Id.Value, cancellationToken);
             return Result.Success();
         }
     }

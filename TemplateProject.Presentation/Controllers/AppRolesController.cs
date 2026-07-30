@@ -105,7 +105,7 @@ namespace QrAssignment.Presentation.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetAssignedPermissionList(
     [FromQuery] Guid? roleId, CancellationToken cancellationToken)
-    => HandleResult(await Mediator.Send(new GetAssignedPermissionListQuery(roleId), cancellationToken));
+    => HandleResult(await Mediator.Send(new GetRoleAssignedPermissionListQuery(roleId), cancellationToken));
 
 
         [HttpPut("SetPassive/{id:guid}")]
@@ -114,27 +114,27 @@ namespace QrAssignment.Presentation.Controllers
 
 
         [HttpPut("SetActive/{id:guid}")]
-        public async Task<IActionResult> SetActive([FromRoute] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> SetActive(Guid id, CancellationToken cancellationToken)
     => HandleResult(await Mediator.Send(new SetActiveAppRoleCommand(id), cancellationToken));
 
 
-        [HttpDelete("Bulk-Delete")]
+        [HttpPatch("Bulk-Delete")]
         public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteAppRoleCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
 
-        [HttpDelete("Bulk-SetPassive")]
+        [HttpPatch("Bulk-SetPassive")]
         public async Task<IActionResult> BulkSetPassive([FromBody] BulkSetPassiveAppRoleCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
 
-        [HttpDelete("Bulk-SetActive")]
+        [HttpPatch("Bulk-SetActive")]
         public async Task<IActionResult> BulkSetActive([FromBody] BulkSetActiveAppRoleCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
 
-        [HttpDelete("{roleId}")]
-        public async Task<IActionResult> Delete([FromRoute] string id, CancellationToken cancellationToken)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid? id, CancellationToken cancellationToken)
               => HandleResult(await Mediator.Send(new DeleteAppRoleCommand(id), cancellationToken));
 
 

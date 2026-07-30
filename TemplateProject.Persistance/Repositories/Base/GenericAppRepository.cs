@@ -5,8 +5,7 @@ using QrAssignment.Persistance.Context;
 using System.Linq.Expressions;
 
 namespace QrAssignment.Persistance.Repositories;
-
-// NOT: IsPassived IBaseEntity'de değilse, soft-delete arayüzünü de constraint'e ekle.
+ 
 internal abstract class GenericAppRepository<TEntity> where TEntity : class, IBaseEntity
 {
     protected readonly AppDbContext _context;
@@ -44,15 +43,30 @@ internal abstract class GenericAppRepository<TEntity> where TEntity : class, IBa
                 .Where(e => e.Id == id).Select(projection).SingleOrDefaultAsync(ct);
 
 
+    protected Task<TEntity?> SinglePassivedByIdAsync(
+        Guid id,CancellationToken ct) 
+        => Query.IgnoreQueryFilters(["SoftDeleteFilter"])
+                .Where(e => e.Id == id).SingleOrDefaultAsync(ct);
+
+
 
     protected async Task BulkDeleteByIdsAsync(List<Guid> ids, CancellationToken ct)
     {
-        var entities = await _set.Where(e => ids.Contains(e.Id)).ToListAsync(ct);
+        var entities = await _set
+            .IgnoreQueryFilters(["SoftDeleteFilter"])
+            .Where(e => ids.Contains(e.Id)).ToListAsync(ct);
         if (entities.Count > 0)
             _set.RemoveRange(entities);
     }
+    protected async Task DeleteByIdAsync(Guid id, CancellationToken ct)
+    {
+        var entity = await _set
+            .IgnoreQueryFilters(["SoftDeleteFilter"])
+            .Where(e => e.Id == id).SingleOrDefaultAsync(ct);
+        if (entity != null)
+            _set.Remove(entity);
+    }
 
-   
     protected Task<List<TEntity>> GetByValuesAsync<TValue>(
         Expression<Func<TEntity, TValue>> selector,
         IReadOnlyCollection<TValue> values,
@@ -69,6 +83,14 @@ internal abstract class GenericAppRepository<TEntity> where TEntity : class, IBa
             entity.IsPassived = false;
     }
 
+    protected async Task SetPassiveByIdAsync(Guid id, CancellationToken ct)
+    {
+        var entity = await _set 
+            .FirstOrDefaultAsync(e => e.Id == id, ct);
+
+        if (entity is not null)
+            entity.IsPassived = true;
+    }
     protected async Task BulkSetActiveByIdsAsync(List<Guid> ids, CancellationToken ct)
     {
         if (ids.Count == 0)
@@ -81,6 +103,22 @@ internal abstract class GenericAppRepository<TEntity> where TEntity : class, IBa
 
         foreach (var entity in entities)
             entity.IsPassived = false;
+        //    await _set.AsQueryable().IgnoreQueryFilters(["SoftDeleteFilter"])                       // or _dbSet.Where(...)
+        //.Where(x => ids.Contains(x.Id))
+        //.ExecuteUpdateAsync(s => s.SetProperty(u => u.IsPassived, false), ct);
+    }
+
+    protected async Task BulkSetPassiveByIdsAsync(List<Guid> ids, CancellationToken ct)
+    {
+        if (ids.Count == 0)
+            return;
+
+        var entities = await _set 
+            .Where(e => ids.Contains(e.Id))
+            .ToListAsync(ct);
+
+        foreach (var entity in entities)
+            entity.IsPassived = true;
     }
 }
 

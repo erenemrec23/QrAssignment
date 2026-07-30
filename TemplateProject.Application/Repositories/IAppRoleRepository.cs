@@ -13,7 +13,10 @@ namespace QrAssignment.Application.Repositories
         Task<List<RoleListItemExcelDto>> GetExportListAsync(PageRequestBaseDto request, CancellationToken ct = default);
         Task<RoleItemDto?> GetDtoByIdAsync(Guid id, CancellationToken ct = default);
         Task<RoleItemDto?> GetPassivedDtoByIdAsync(Guid id, CancellationToken ct = default);
-        Task BulkDelete(List<Guid> ids, CancellationToken ct); 
+        Task BulkDelete(List<Guid> ids, CancellationToken ct);
+        Task Delete(Guid id, CancellationToken ct); 
+
+
         Task<List<AppRole>> GetByNamesAsync(List<string> names, CancellationToken ct);
 
         Task<List<Guid>> GetAssignedUserListDtoAsync(Guid roleId, CancellationToken ct = default);
@@ -23,6 +26,13 @@ namespace QrAssignment.Application.Repositories
     Guid roleId, CancellationToken cancellationToken);
         Task BulkSetActiveAsync(List<Guid> ids, CancellationToken ct);
         Task SetActiveAsync(Guid id, CancellationToken ct);
+        Task<AppRole?> GetPassivedByIdAsync(Guid id, CancellationToken ct = default);
+
+        Task DeleteById(Guid id, CancellationToken ct);
+
+        Task SetPassiveById(Guid id, CancellationToken ct);
+        Task BulkSetPassiveByIds(List<Guid> ids, CancellationToken ct);
+
     }
 }
  

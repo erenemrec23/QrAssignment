@@ -5,14 +5,14 @@ using QrAssignment.Domain.Shared;
 namespace QrAssignment.Application.Features.Roles.Queries.GetAssignedPermissionList
 {
     public class GetAssignedPermissionListQueryHandler
-        : IRequestHandler<GetAssignedPermissionListQuery, Result<RolePermissionDto>>
+        : IRequestHandler<GetRoleAssignedPermissionListQuery, Result<RolePermissionDto>>
     {
         private readonly IAppRoleRepository _appRoleRepository;
         public GetAssignedPermissionListQueryHandler(IAppRoleRepository appRoleRepository)
             => _appRoleRepository = appRoleRepository;
 
         public async Task<Result<RolePermissionDto>> Handle(
-            GetAssignedPermissionListQuery request, CancellationToken cancellationToken)
+            GetRoleAssignedPermissionListQuery request, CancellationToken cancellationToken)
         {
             var result = await _appRoleRepository
                 .GetAssignedPermissionListDtoAsync(request.RoleId.Value, cancellationToken);
