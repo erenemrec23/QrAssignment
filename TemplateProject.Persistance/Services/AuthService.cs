@@ -22,14 +22,14 @@ namespace QrAssignment.Persistance.Services
         private readonly IAppLocalizer _localizer;
         private readonly IEmailService _emailService;
         private readonly IOptions<MailSettings> _mailSettings;
-
+        private readonly ITenantService _tenantService;
         public AuthService(IAppUserRepository userRepository,
             UserManager<AppUser> userManager,
             IJwtProvider jwtProvider,
             IAppLocalizer localizer, 
             ITenantService tenantService,
             IEmailService emailService,
-            IOptions<MailSettings> mailSettings)
+            IOptions<MailSettings> mailSettings )
         {
             _userRepository = userRepository;
             _userManager = userManager;
@@ -37,6 +37,7 @@ namespace QrAssignment.Persistance.Services
             _localizer = localizer;
             _emailService = emailService;
             _mailSettings = mailSettings;
+            _tenantService = tenantService;
         }
 
         public async Task<LoginCommandResponse> LoginAsync(string email, string password, CancellationToken cancellationToken)
@@ -115,16 +116,21 @@ namespace QrAssignment.Persistance.Services
             return Result.Success();
         }
         public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken)
-        {
-            var user = await _userRepository.GetByEmailForRememberPasswordAsync(email);
+        { 
+             
+            var info = await _userRepository.GetByEmailForRememberPasswordAsync(email, cancellationToken); // sadece Guid? döner
+            if (info is null)
+                return Result.Failure(new Error("RESET_PASSWORD_INVALID", "Şifre sıfırlama işlemi geçersiz."));
+
+            if (info.TenantId is Guid tid)
+                _tenantService.SetTenantId(tid);
+             
+            var user = await _userManager.FindByEmailAsync(email);
             if (user is null)
                 return Result.Failure(new Error("RESET_PASSWORD_INVALID", "Şifre sıfırlama işlemi geçersiz."));
+
             var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
             var result = await _userManager.ResetPasswordAsync(user, decodedToken, newPassword);
-            if (!result.Succeeded)
-                return Result.Failure(new Error(
-                    "RESET_PASSWORD_FAILED",
-                    string.Join(" | ", result.Errors.Select(e => e.Description))));
 
             return Result.Success();
         }
