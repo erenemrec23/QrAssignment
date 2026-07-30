@@ -29,7 +29,7 @@ namespace QrAssignment.Application.Features.Tenants.Commands.SetActive
 
             //if (tenant == null)
             //    throw new Exception(_localizer["Messages.TenantNotFound"]); 
-            _tenantRepository.SetPassiveById(request.Id.Value,cancellationToken);
+            await _tenantRepository.SetPassiveByIdAsync(request.Id.Value,cancellationToken);
              
             return Result.Success();
         }

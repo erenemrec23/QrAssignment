@@ -17,7 +17,7 @@ namespace QrAssignment.Application.Features.Tenants.Commands.BulkSetActive
 
         public async Task<Result> Handle(BulkSetActiveTenantCommand request, CancellationToken cancellationToken)
         {  
-            await _tenantRepository.BulkActiveByIds(request.IdList, cancellationToken); 
+            await _tenantRepository.BulkSetActiveByIdsAsync(request.IdList, cancellationToken); 
             return Result.Success();
         }
     }

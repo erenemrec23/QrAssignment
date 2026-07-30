@@ -17,7 +17,7 @@ namespace QrAssignment.Application.Features.Tenants.Commands.BulkSetPassive
 
         public async Task<Result> Handle(BulkSetPassiveTenantCommand request, CancellationToken cancellationToken)
         {  
-            await _tenantRepository.BulkSetPassiveByIds(request.IdList, cancellationToken); 
+            await _tenantRepository.BulkSetPassiveByIdsAsync(request.IdList, cancellationToken); 
             return Result.Success();
         }
     }

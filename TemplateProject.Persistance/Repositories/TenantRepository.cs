@@ -17,10 +17,10 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
     }
 
     // --- Okuma kaynakları ---
-    private IQueryable<Tenant> TenantsNoTracking => _context.Tenants.AsNoTracking();
+    private IQueryable<Tenant> ActiveTenants => _context.Tenants.AsNoTracking();
 
     private IQueryable<Tenant> PassivedTenants =>
-        TenantsNoTracking.IgnoreQueryFilters(["SoftDeleteFilter"]).Where(t => t.IsPassived);
+        ActiveTenants.IgnoreQueryFilters(["SoftDeleteFilter"]).Where(t => t.IsPassived);
 
     // --- Projeksiyonlar ---
     private static Expression<Func<Tenant, TenantListItemDto>> ListProjection =>
@@ -52,17 +52,17 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
 
     // --- Liste / export ---
     public Task<Paginate<TenantListItemDto>> GetDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
-        => GetPaginatedListAsync(TenantsNoTracking, request, ListProjection, cancellationToken);
+        => GetPaginatedListAsync(ActiveTenants, request, ListProjection, cancellationToken);
 
     public Task<Paginate<TenantListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
         => GetPaginatedListAsync(PassivedTenants, request, ListProjection, cancellationToken);
 
     public Task<List<TenantListItemExcelDto>> GetExportListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
-        => GetFilteredListWithoutPaginationAsync(TenantsNoTracking, request, ExcelProjection, cancellationToken);
+        => GetFilteredListWithoutPaginationAsync(ActiveTenants, request, ExcelProjection, cancellationToken);
 
-    // --- Tekil ---
+    // --- Tekil (DTO) ---
     public Task<TenantItemDto?> GetDtoByIdAsync(Guid id, CancellationToken cancellationToken)
-        => TenantsNoTracking
+        => ActiveTenants
             .Where(t => t.Id == id)
             .Select(ItemProjection)
             .SingleOrDefaultAsync(cancellationToken);
@@ -72,16 +72,7 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
             .Where(t => t.Id == id)
             .Select(ItemProjection)
             .SingleOrDefaultAsync(cancellationToken);
-
-
-    public Task<Tenant?> GetPassivedByIdAsync(Guid id, CancellationToken cancellationToken)
-        => PassivedTenants
-            .Where(t => t.Id == id)
-            .SingleOrDefaultAsync(cancellationToken);
-
-    // --- Silme ---
-    public Task BulkDelete(List<Guid> ids, CancellationToken cancellationToken)
-        => DeleteRange(ids, cancellationToken);
+     
 
     // --- Değer listesiyle (IN) sorgular ---
     public Task<List<Tenant>> GetByRevNumsAsync(List<long> revnums, CancellationToken cancellationToken)
@@ -90,17 +81,5 @@ internal sealed class TenantRepository : GenericRepository<Tenant>, ITenantRepos
     public Task<List<Tenant>> GetByNamesAsync(List<string> names, CancellationToken cancellationToken)
         => GetByValuesAsync(t => t.Name, names, cancellationToken: cancellationToken);
 
-
-    public Task BulkActiveByIds(List<Guid> ids, CancellationToken cancellationToken)
-        => BulkSetActiveByIdsAsync( ids, cancellationToken: cancellationToken);
-    public Task SetActiveById(Guid id, CancellationToken cancellationToken)
-        => SetActiveAsync(id, cancellationToken: cancellationToken);
-
-
-    public Task SetPassiveById(Guid id, CancellationToken cancellationToken)
-        => SetPassiveAsync(id, cancellationToken: cancellationToken);
-
-
-    public Task BulkSetPassiveByIds(List<Guid> ids, CancellationToken cancellationToken)
-        => BulkSetPassiveByIdsAsync(ids, cancellationToken: cancellationToken);
+ 
 }

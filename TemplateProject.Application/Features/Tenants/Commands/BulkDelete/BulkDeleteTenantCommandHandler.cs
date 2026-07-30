@@ -17,7 +17,7 @@ namespace QrAssignment.Application.Features.Tenants.Commands.BulkDelete
 
         public async Task<Result> Handle(BulkDeleteTenantCommand request, CancellationToken cancellationToken)
         {  
-            await _tenantRepository.BulkDelete(request.IdList, cancellationToken); 
+            await _tenantRepository.DeleteRange(request.IdList, cancellationToken); 
             return Result.Success();
         }
     }
