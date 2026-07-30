@@ -3,7 +3,7 @@ using QrAssignment.Application.Features.Tenants.DTOs;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Features.Tenants.Queries.GetPassiveById
+namespace QrAssignment.Application.Features.Tenants.Queries.FormBase.GetPassivedById
 {
     public class GetPassivedByIdTenantQueryHandler : IRequestHandler<GetPassivedByIdTenantQuery, Result<TenantItemDto>>
     {

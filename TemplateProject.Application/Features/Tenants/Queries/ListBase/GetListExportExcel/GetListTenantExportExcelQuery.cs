@@ -5,7 +5,7 @@ using QrAssignment.Application.Features.Tenants.Queries.GetList;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel
+namespace QrAssignment.Application.Features.Tenants.Queries.ListBase.GetListExportExcel
 {
     public class GetListTenantExportExcelQuery : PageRequestBaseDto, IRequest<Result<ExcelFileDto>>
     {

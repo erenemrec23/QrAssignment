@@ -3,7 +3,7 @@ using QrAssignment.Application.Common.Excel;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel
+namespace QrAssignment.Application.Features.Tenants.Queries.ListBase.GetListExportExcel
 {
     public class GetListTenantExportExcelQueryHandler
         : IRequestHandler<GetListTenantExportExcelQuery, Result<ExcelFileDto>>

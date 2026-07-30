@@ -4,7 +4,7 @@ using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Features.Tenants.Queries.GetById
+namespace QrAssignment.Application.Features.Tenants.Queries.FormBase.GetById
 {
     public class GetByIdTenantQueryHandler : IRequestHandler<GetByIdTenantQuery, Result<TenantItemDto>>
     {

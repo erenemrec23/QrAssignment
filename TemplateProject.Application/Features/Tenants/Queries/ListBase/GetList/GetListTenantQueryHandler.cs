@@ -5,7 +5,7 @@ using QrAssignment.Application.Features.Tenants.Queries.DTOs;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Features.Tenants.Queries.GetList
+namespace QrAssignment.Application.Features.Tenants.Queries.ListBase.GetList
 {
     public class GetListTenantQueryHandler : IRequestHandler<GetListTenantQuery, Result<Paginate<TenantListItemDto>>>
     {

@@ -4,7 +4,7 @@ using QrAssignment.Application.Features.Tenants.Queries.DTOs;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Features.Tenants.Queries.GetPassivedList
+namespace QrAssignment.Application.Features.Tenants.Queries.ListBase.GetPassivedList
 {
     public class GetPassiveListTenantQueryHandler : IRequestHandler<GetPassivedListTenantQuery, Result<Paginate<TenantListItemDto>>>
     {

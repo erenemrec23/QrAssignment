@@ -11,10 +11,10 @@ using QrAssignment.Application.Features.Tenants.Commands.SetActive;
 using QrAssignment.Application.Features.Tenants.Commands.SetPassive;
 using QrAssignment.Application.Features.Tenants.Commands.Update;
 using QrAssignment.Application.Features.Tenants.Queries.GetById;
-using QrAssignment.Application.Features.Tenants.Queries.GetList;
-using QrAssignment.Application.Features.Tenants.Queries.GetListExportExcel;
 using QrAssignment.Application.Features.Tenants.Queries.GetPassiveById;
-using QrAssignment.Application.Features.Tenants.Queries.GetPassivedList;
+using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetList;
+using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetListExportExcel;
+using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetPassivedList;
 
 namespace QrAssignment.Presentation.Controllers
 {

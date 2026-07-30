@@ -5,6 +5,11 @@ using QrAssignment.Domain.Shared;
 using TenantsBulkExcelDto = QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantInputDto;
 using UsersBulkExcelDto = QrAssignment.Application.Features.Users.Commands.Excel.BulkCreate.BulkCreateAppUserInputDto;
 using RolesBulkExcelDto = QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleInputDto;
+using QrAssignment.Application.Features.Tenants.Queries.FormBase.GetById;
+using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetList;
+using QrAssignment.Application.Features.Tenants.Queries.FormBase.GetPassivedById;
+using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetListExportExcel;
+using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetPassivedList;
 
 namespace QrAssignment.Application.Security
 {
@@ -41,8 +46,8 @@ namespace QrAssignment.Application.Security
                 typeof(Features.Tenants.Commands.BulkDelete.BulkDeleteTenantCommand));
 
             Register(registry, AppPages.Tenants, PagePermissions.View,
-                typeof(Features.Tenants.Queries.GetById.GetByIdTenantQuery),
-                typeof(Features.Tenants.Queries.GetList.GetListTenantQuery));
+                typeof(GetByIdTenantQuery),
+                typeof(GetListTenantQuery));
 
             Register(registry, AppPages.Tenants, PagePermissions.SetPassive,
                 typeof(Features.Tenants.Commands.SetPassive.SetPassiveTenantCommand),
@@ -53,11 +58,11 @@ namespace QrAssignment.Application.Security
                 typeof(Features.Tenants.Commands.BulkSetActive.BulkSetActiveTenantCommand));
 
             Register(registry, AppPages.Tenants, PagePermissions.ViewPassive,
-                typeof(Features.Tenants.Queries.GetPassiveById.GetPassivedByIdTenantQuery),
-                typeof(Features.Tenants.Queries.GetPassivedList.GetPassivedListTenantQuery));
+                typeof(GetPassivedByIdTenantQuery),
+                typeof(GetPassivedListTenantQuery));
 
             Register(registry, AppPages.Tenants, PagePermissions.ExportExcel,
-                typeof(Features.Tenants.Queries.GetListExportExcel.GetListTenantExportExcelQuery));
+                typeof(GetListTenantExportExcelQuery));
 
             Register(registry, AppPages.Tenants, PagePermissions.ImportExcel,
                 typeof(Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantCommand),
