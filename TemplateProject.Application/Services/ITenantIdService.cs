@@ -1,6 +1,6 @@
 ﻿namespace QrAssignment.Application.Services
 {
-    public interface ITenantService
+    public interface ITenantIdService
     {
         Guid GetTenantId();
         bool TryGetTenantId(out Guid tenantId);

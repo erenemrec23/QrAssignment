@@ -2,7 +2,7 @@
 using QrAssignment.Application.Features.Tenants.Commands.Update;
 using QrAssignment.Domain.Entity.App;
 
-namespace QrAssignment.Application.Mapping
+namespace QrAssignment.Application.Mapping.Tenants
 {
     public class TenantUpdateResponseMappingProfile : Profile
     {

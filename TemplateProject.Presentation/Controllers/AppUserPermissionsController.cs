@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Features.Permission.Commands.Update;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
-using QrAssignment.Application.Features.Tenants.Queries.GetById;
 
 
 namespace QrAssignment.Presentation.Controllers

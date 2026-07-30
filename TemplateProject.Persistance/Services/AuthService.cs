@@ -22,12 +22,12 @@ namespace QrAssignment.Persistance.Services
         private readonly IAppLocalizer _localizer;
         private readonly IEmailService _emailService;
         private readonly IOptions<MailSettings> _mailSettings;
-        private readonly ITenantService _tenantService;
+        private readonly ITenantIdService _tenantService;
         public AuthService(IAppUserRepository userRepository,
             UserManager<AppUser> userManager,
             IJwtProvider jwtProvider,
             IAppLocalizer localizer, 
-            ITenantService tenantService,
+            ITenantIdService tenantService,
             IEmailService emailService,
             IOptions<MailSettings> mailSettings )
         {

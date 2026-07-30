@@ -16,12 +16,7 @@ namespace QrAssignment.Domain.Entity
 
         [Filterable]
         public string? LocationName { get; set; }
-
-        public Guid? ParentLocationId { get; set; }
-
-        public virtual QrLocation? ParentLocation { get; set; }
-
-        public virtual ICollection<QrLocation> SubLocations { get; set; } = new List<QrLocation>();
+         
     }
 
 }

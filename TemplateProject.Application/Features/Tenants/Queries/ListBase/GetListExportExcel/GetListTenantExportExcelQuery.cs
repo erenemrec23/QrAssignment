@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using QrAssignment.Application.Common.Excel;
 using QrAssignment.Application.DTOs.List;
-using QrAssignment.Application.Features.Tenants.Queries.GetList;
-using QrAssignment.Application.Interfaces;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Tenants.Queries.ListBase.GetListExportExcel

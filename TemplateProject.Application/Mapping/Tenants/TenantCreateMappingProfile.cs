@@ -4,7 +4,7 @@ using QrAssignment.Application.Features.Tenants.Commands.Create;
 using QrAssignment.Domain.Entity;
 using QrAssignment.Domain.Entity.App;
 
-namespace QrAssignment.Application.Mapping
+namespace QrAssignment.Application.Mapping.Tenants
 {
     public class TenantCreateMappingProfile : Profile
     {

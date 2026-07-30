@@ -1,10 +1,6 @@
 ﻿using MediatR;
-using QrAssignment.Application.Features.Tenants.Queries.GetById;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QrAssignment.Application.Features.Permission.Queries.GetByUserId
 {

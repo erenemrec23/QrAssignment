@@ -8,10 +8,10 @@ namespace QrAssignment.Persistance.Interceptors;
 
 public sealed class AuditInterceptor : SaveChangesInterceptor
 {
-    private readonly ITenantService _tenantService;
+    private readonly ITenantIdService _tenantService;
     private readonly IUserContext _userContext;
 
-    public AuditInterceptor(IUserContext userContext, ITenantService tenantService)
+    public AuditInterceptor(IUserContext userContext, ITenantIdService tenantService)
     {
         _userContext = userContext;
         _tenantService = tenantService;

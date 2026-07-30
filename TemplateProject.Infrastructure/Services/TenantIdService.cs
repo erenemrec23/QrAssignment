@@ -3,18 +3,18 @@ using QrAssignment.Application.Services;
 
 namespace QrAssignment.Infrastructure.Services;
 
-public class TenantService : ITenantService
+public class TenantIdService : ITenantIdService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private Guid? _overrideTenantId;
 
-    public TenantService(IHttpContextAccessor httpContextAccessor)
+    public TenantIdService(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }
 
     // Pre-auth akışlar (ör. şifre sıfırlama) için manuel override.
-    // ITenantService scoped olduğu için sadece o request boyunca yaşar.
+    // ITenantIdService scoped olduğu için sadece o request boyunca yaşar.
     public void SetTenantId(Guid tenantId) => _overrideTenantId = tenantId;
 
     public bool TryGetTenantId(out Guid tenantId)

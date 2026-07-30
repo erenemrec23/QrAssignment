@@ -22,7 +22,7 @@ namespace QrAssignment.Infrastructure
             services.AddScoped<IExcelDataExportGenerator, ExcelDataExportGenerator>();
             services.AddScoped<IExcelSampleTemplateGenerator, ExcelSampleTemplateGenerator>();
             services.AddHttpContextAccessor();
-            services.AddScoped<ITenantService, TenantService>();
+            services.AddScoped<ITenantIdService, TenantIdService>();
             services.AddScoped<IUserContext, UserContext>();
             services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
             services.AddScoped<IJwtProvider, JwtProvider>(); 

@@ -14,9 +14,9 @@ namespace QrAssignment.Persistance.Context;
 
 public class AppDbContext : AuditDbContext
 {
-    private readonly ITenantService _tenantService;
+    private readonly ITenantIdService _tenantService;
 
-    public AppDbContext(DbContextOptions<AppDbContext> options, ITenantService tenantService) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options, ITenantIdService tenantService) : base(options)
     {
         _tenantService = tenantService;
     }

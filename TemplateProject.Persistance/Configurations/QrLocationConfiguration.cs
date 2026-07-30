@@ -13,10 +13,10 @@ namespace QrAssignment.Persistance.Configurations
 
             builder.ToTable("QrLocations");
 
-            builder.HasOne(c => c.ParentLocation)
-                   .WithMany(b => b.SubLocations)
-                   .HasForeignKey(c => c.ParentLocationId)
-                   .OnDelete(DeleteBehavior.Restrict);
+            //builder.HasOne(c => c.ParentLocation)
+            //       .WithMany(b => b.SubLocations)
+            //       .HasForeignKey(c => c.ParentLocationId)
+            //       .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(p => p.Name).HasMaxLength(250).IsRequired();
         }

@@ -30,8 +30,8 @@ internal sealed class QrLocationRepository : GenericRepository<QrLocation>, IQrL
                 EndDate = c.EndDate,
                 LocationName = c.LocationName,
                 Name = c.Name,
-                ParentLocationId = c.ParentLocationId,
-                ParentLocationName = c.ParentLocation != null ? c.ParentLocation.LocationName : null,
+                //ParentLocationId = c.ParentLocationId,
+                //ParentLocationName = c.ParentLocation != null ? c.ParentLocation.LocationName : null,
                 StartDate = c.StartDate,
                 RowVersion = c.RowVersion
             });
@@ -47,8 +47,8 @@ internal sealed class QrLocationRepository : GenericRepository<QrLocation>, IQrL
                 EndDate = c.EndDate,
                 LocationName = c.LocationName,
                 Name = c.Name,
-                ParentLocationId = c.ParentLocationId,
-                ParentLocationName = c.ParentLocation != null ? c.ParentLocation.LocationName : null,
+                //ParentLocationId = c.ParentLocationId,
+                //ParentLocationName = c.ParentLocation != null ? c.ParentLocation.LocationName : null,
                 StartDate = c.StartDate,
                 RowVersion = c.RowVersion
             })
