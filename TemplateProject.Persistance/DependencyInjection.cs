@@ -28,7 +28,8 @@ namespace QrAssignment.Persistance
         {
             services.AddIdentityCore<AppUser>()
         .AddRoles<AppRole>()
-        .AddEntityFrameworkStores<AppDbContext>();
+        .AddEntityFrameworkStores<AppDbContext>()
+        .AddDefaultTokenProviders(); 
 
             // EF store'larını AutoSaveChanges=false olanlarla değiştir (sonra gelmeli ki kazansın)
             services.AddScoped<IRoleStore<AppRole>, AppRoleStore>();

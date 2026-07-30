@@ -37,5 +37,7 @@ namespace QrAssignment.Application.Repositories
         Task<AppUser?> GetPassivedByIdAsync(Guid id, CancellationToken ct = default);
 
         Task DeleteById(Guid id, CancellationToken ct);
+
+        Task<AppUser?> GetByEmailForRememberPasswordAsync(string email, CancellationToken ct = default);
     }
 }

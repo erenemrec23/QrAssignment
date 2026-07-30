@@ -171,10 +171,12 @@ namespace QrAssignment.Application.Security
             // =========================================================================
             UnsecuredCommands = new HashSet<Type>
             {
-                typeof(Features.AuthFeatures.Commands.Login.LoginCommand)
+                typeof(Features.AuthFeatures.Commands.Login.LoginCommand),
+                typeof(Features.AuthFeatures.Commands.ForgotPassword.ForgotPasswordCommand),
+                typeof(Features.AuthFeatures.Commands.ResetPassword.ResetPasswordCommand)
             };
         }
-
+        
         private static void Register(
             Dictionary<Type, (string PageName, PagePermissions Permission)> registry,
             string pageName,

@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using QrAssignment.Application.Common;
 using QrAssignment.Application.Features.AuthFeatures.Commands.Login;
@@ -9,6 +10,7 @@ using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Exceptions;
 using QrAssignment.Domain.Shared;
+using System.Text;
 
 namespace QrAssignment.Persistance.Services
 {
@@ -85,7 +87,7 @@ namespace QrAssignment.Persistance.Services
 
         public async Task<Result> ForgotPasswordAsync(string email, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userRepository.GetByEmailForRememberPasswordAsync(email);
 
             // Kullanici enumeration'ini engellemek icin: kullanici bulunamasa bile basarili donuyoruz.
             if (user is null)
@@ -93,10 +95,12 @@ namespace QrAssignment.Persistance.Services
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
             // Token URL query'sinde tasinacagi icin encode ediyoruz (+ / = karakterleri bozulmasin).
             var resetLink =
                 $"{_mailSettings.Value.ClientUrl}/reset-password" +
-                $"?email={Uri.EscapeDataString(email)}" +
+                $"?token={encodedToken}" +
+                $"&email={Uri.EscapeDataString(email)}" +
                 $"&token={Uri.EscapeDataString(token)}";
 
             const string subject = "Şifre Sıfırlama Talebi";
@@ -112,11 +116,11 @@ namespace QrAssignment.Persistance.Services
         }
         public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userRepository.GetByEmailForRememberPasswordAsync(email);
             if (user is null)
                 return Result.Failure(new Error("RESET_PASSWORD_INVALID", "Şifre sıfırlama işlemi geçersiz."));
-
-            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, newPassword);
             if (!result.Succeeded)
                 return Result.Failure(new Error(
                     "RESET_PASSWORD_FAILED",

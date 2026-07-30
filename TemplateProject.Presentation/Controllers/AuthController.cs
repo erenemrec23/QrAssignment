@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QrAssignment.Application.Features.Users.Commands.Create;
+using QrAssignment.Application.Features.AuthFeatures.Commands.ForgotPassword;
 using QrAssignment.Application.Features.AuthFeatures.Commands.Login;
+using QrAssignment.Application.Features.AuthFeatures.Commands.ResetPassword;
+using QrAssignment.Application.Features.Users.Commands.Create;
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -33,5 +35,19 @@ namespace QrAssignment.Presentation.Controllers
             var result = await _mediator.Send(command, cancellationToken);
             return Ok(result);
         }
+        [HttpPost("forgotpassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpPost("resetpassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result);
+        }
+
     }
 }

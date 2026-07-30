@@ -98,6 +98,13 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(u => u.Email == email, ct);
 
+
+    public Task<AppUser?> GetByEmailForRememberPasswordAsync(string email, CancellationToken ct = default)
+        => _context.AppUsers
+            .AsNoTracking()
+            .IgnoreQueryFilters(["TenantFilter"]) 
+            .FirstOrDefaultAsync(u => u.Email == email, ct);
+
     // --- Role Sync & Permission Mappings ---
     public async Task<List<Guid>> GetAssignedRoleListDtoAsync(Guid userId, CancellationToken ct = default)
     {
