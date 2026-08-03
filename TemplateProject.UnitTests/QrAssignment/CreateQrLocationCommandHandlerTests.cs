@@ -38,7 +38,7 @@ namespace TemplateProject.UnitTests.QrAssignment
             {
                 Name = "Test",
                 LocationName = "Kullanıcı", 
-                ParentLocationId = Guid.NewGuid()
+                //ParentLocationId = Guid.NewGuid()
             };
 
             var expectedId = Guid.NewGuid();

@@ -8,6 +8,8 @@ using QrAssignment.Application.Interfaces;
 using QrAssignment.Infrastructure;
 using QrAssignment.Infrastructure.Localization;
 using QrAssignment.Persistance;
+using QrAssignment.Persistance.Context;
+using QrAssignment.Persistance.Seeding;
 using QrAssignment.Presentation;
 using Scalar.AspNetCore;
 using Serilog;
@@ -15,6 +17,7 @@ using Serilog.Sinks.MSSqlServer;
 using Serilog.Ui.Core.Extensions;
 using Serilog.Ui.MsSqlServerProvider.Extensions;
 using Serilog.Ui.Web.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text;
@@ -174,10 +177,17 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
-// ==================== MIDDLEWARE PIPELINE ====================
-// Sıra kritik: Exception -> (dev docs) -> Routing -> CORS -> Localization
-//             -> Authentication -> Authorization -> RateLimiter -> Endpoints
+// ==================== DB MIGRATE + SEED ====================
+// İstek karşılamadan önce şema güncel ve menü kataloğu senkron olmalı.
+using (var scope = app.Services.CreateScope())
+{
+    var sp = scope.ServiceProvider;
+    var db = sp.GetRequiredService<AppDbContext>();   // ← kendi DbContext tipinle değiştir
+    await db.Database.MigrateAsync();
+    await new MenuCatalogSeeder(db).SeedAsync();
+}
 
+// ==================== MIDDLEWARE PIPELINE ====================
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())

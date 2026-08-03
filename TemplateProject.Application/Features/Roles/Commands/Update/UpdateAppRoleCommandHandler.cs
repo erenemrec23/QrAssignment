@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using QrAssignment.Application.Features.Roles.Commands.Update;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
-using QrAssignment.Domain.Entity.App;   // AppRole, AppUser
+using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared;
-using System.Security.Claims;
- 
 
 public sealed class UpdateAppRoleCommandHandler : IRequestHandler<UpdateAppRoleCommand, Result>
 {
@@ -14,7 +12,7 @@ public sealed class UpdateAppRoleCommandHandler : IRequestHandler<UpdateAppRoleC
     private readonly IAppRoleRepository _appRoleRepository;
     private readonly IAppLocalizer _localizer;
 
-    public UpdateAppRoleCommandHandler(RoleManager<AppRole> roleManager, 
+    public UpdateAppRoleCommandHandler(RoleManager<AppRole> roleManager,
         IAppRoleRepository appRoleRepository,
         IAppLocalizer localizer)
     {
@@ -32,16 +30,11 @@ public sealed class UpdateAppRoleCommandHandler : IRequestHandler<UpdateAppRoleC
         if (role.Name != request.Name && await _roleManager.RoleExistsAsync(request.Name))
             return Result.Failure(new Error(_localizer["Error.RoleDublicated"], "Error.RoleDublicated"));
 
-        // 1) Personel — kendi AppUserRole join'in üzerinden (UserManager YOK)
+        // 1) Personel
         await _appRoleRepository.SyncAssignedUsersAsync(role.Id, request.UserIds, ct);
 
-        // 2) Sayfa yetkileri — rol claim'leri
-        var managedPages = request.Permissions.Select(p => p.PageName).ToHashSet();
-        var existingClaims = await _roleManager.GetClaimsAsync(role);
-        foreach (var claim in existingClaims.Where(c => managedPages.Contains(c.Type)))
-            await _roleManager.RemoveClaimAsync(role, claim);
-        foreach (var p in request.Permissions.Where(p => p.PermissionValue > 0))
-            await _roleManager.AddClaimAsync(role, new Claim(p.PageName, p.PermissionValue.ToString()));
+        // 2) Sayfa yetkileri — PagePermission tablosu (tek metod: ekle/güncelle/sil)
+        await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, ct);
 
         // 3) Rol adı
         role.Name = request.Name;

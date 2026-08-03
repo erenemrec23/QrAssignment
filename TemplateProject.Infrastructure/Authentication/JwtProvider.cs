@@ -18,8 +18,9 @@ namespace QrAssignment.Infrastructure.Authentication
         private readonly JwtOptions _jwtOptions;
         private readonly IAppUserRefreshTokenRepository _appUserRefreshTokenRepository;
         private readonly IAppUserClaimRepository _appUserClaimRepository;
-        public JwtProvider(IOptions<JwtOptions> jwtOptions, 
-            UserManager<AppUser> userManager, 
+
+        public JwtProvider(IOptions<JwtOptions> jwtOptions,
+            UserManager<AppUser> userManager,
             IAppUserRefreshTokenRepository appUserRefreshTokenRepository,
             IAppUserClaimRepository appUserClaimRepository)
         {
@@ -32,37 +33,33 @@ namespace QrAssignment.Infrastructure.Authentication
         {
             var claims = new List<Claim>
             {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.Name, user.UserName),
-            new Claim("FullName",user.FullName),
-            new Claim("TenantId",user.TenantId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Name, user.UserName),
+                new Claim("FullName", user.FullName),
+                new Claim("TenantId", user.TenantId.ToString())
             };
+
             if (user.AppUserRoles != null && user.AppUserRoles.Any())
             {
                 foreach (var role in user.AppUserRoles)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, role.Name));
-                }
+                    claims.Add(new Claim(ClaimTypes.Role, role.AppRole.Name));
             }
-            var pagePermissions = await _appUserClaimRepository
-                .GetUserWithPermissionsAsync(user.Id);
 
-            var permissions = await _appUserClaimRepository
-    .GetEffectivePagePermissionsAsync(user.Id);
-            if(permissions.Any())
-            pagePermissions.AddRange(permissions);
-             
+            // Kendi + rol yetkileri tek çağrıda, sayfa bazında OR'lanmış olarak gelir
+            var effectivePermissions = await _appUserClaimRepository
+                .GetEffectivePagePermissionsAsync(user.Id);
 
-            if (pagePermissions != null && pagePermissions.Any())
+            if (effectivePermissions.Any())
             {
-                var allPermissionsJson = JsonSerializer.Serialize(pagePermissions.Select(p => new
-                {
-                    pageName = p.PageName,
-                    permissionValue = p.PermissionValue
-                }));
-                 
-                claims.Add(new Claim("permissions", allPermissionsJson)); 
+                var allPermissionsJson = JsonSerializer.Serialize(
+                    effectivePermissions.Select(p => new
+                    {
+                        pageName = p.PageName,
+                        permissionValue = p.PermissionValue
+                    }));
+
+                claims.Add(new Claim("permissions", allPermissionsJson));
             }
 
             DateTime expires = DateTime.Now.AddHours(1);
@@ -73,17 +70,19 @@ namespace QrAssignment.Infrastructure.Authentication
                 claims: claims,
                 notBefore: DateTime.Now,
                 expires: expires,
-                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)), SecurityAlgorithms.HmacSha256));
+                signingCredentials: new SigningCredentials(
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
+                    SecurityAlgorithms.HmacSha256));
 
             string token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             DateTime refreshTokenExpires = expires.AddMinutes(15);
             string refreshToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+
             if (user.RefreshToken is null)
             {
-                // Kullanıcının daha önceden bir token tablosu yoksa (ilk girişiyse) Insert yapılır.
                 user.RefreshToken = new AppUserRefreshToken
                 {
-                    AppUserId = user.Id, // Foreign Key
+                    AppUserId = user.Id,
                     RefreshToken = refreshToken,
                     RefreshTokenExpires = refreshTokenExpires
                 };
@@ -91,22 +90,16 @@ namespace QrAssignment.Infrastructure.Authentication
             }
             else
             {
-                // Kullanıcının zaten tablosu varsa, sadece değerleri güncellenir (Update).
                 user.RefreshToken.RefreshToken = refreshToken;
                 user.RefreshToken.RefreshTokenExpires = refreshTokenExpires;
-                var refreshTokenUpdated = user.RefreshToken;
-                _appUserRefreshTokenRepository.Update(refreshTokenUpdated);
+                _appUserRefreshTokenRepository.Update(user.RefreshToken);
             }
 
-            LoginCommandResponse response = new(
+            return new LoginCommandResponse(
                 token,
                 refreshToken,
                 refreshTokenExpires,
-                user.Id.ToString()
-
-                );
-
-            return response;
+                user.Id.ToString());
         }
     }
 }

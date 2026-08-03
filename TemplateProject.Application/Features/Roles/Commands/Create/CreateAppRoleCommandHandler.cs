@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using QrAssignment.Application.Abstractions;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
-using QrAssignment.Domain.Entity.App;   
+using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared;
-using System.Security.Claims;
 
 namespace QrAssignment.Application.Features.Roles.Commands.Create
 {
@@ -34,26 +33,25 @@ namespace QrAssignment.Application.Features.Roles.Commands.Create
                 return Result.Failure(new Error(
                     "Error.RoleHasInserted",
                     string.Format(_localizer["Error.RoleHasInserted"], request.Name)));
-             
+
             var role = new AppRole { Name = request.Name.Trim() };
 
             var createResult = await _roleManager.CreateAsync(role);
-            
             if (!createResult.Succeeded)
             {
                 var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
                 return Result.Failure(new Error(
                     string.Format(_localizer["Error.CreateRole"], errors), ""));
             }
-             
-            await _unitOfWork.SaveChangesAsync(ct);
-             
+
+            await _unitOfWork.SaveChangesAsync(ct);   // role.Id üretilsin
+
             if (request.UserIds is { Count: > 0 })
                 await _appRoleRepository.SyncAssignedUsersAsync(role.Id, request.UserIds, ct);
-             
-            foreach (var p in request.Permissions.Where(p => p.PermissionValue > 0))
-                await _roleManager.AddClaimAsync(role, new Claim(p.PageName, p.PermissionValue.ToString()));
-             
+
+            // Sayfa yetkileri artık PagePermission tablosuna (Identity claim değil)
+            await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, ct);
+
             return Result.Success();
         }
     }

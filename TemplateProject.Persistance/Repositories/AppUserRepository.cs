@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.DTOs.List;
+using QrAssignment.Application.Features.Permission.Commands.Update;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
 using QrAssignment.Application.Features.Users.DTOs;
 using QrAssignment.Application.Features.Users.Queries.DTOs;
 using QrAssignment.Application.Features.Users.Queries.LookUp.DTOs;
 using QrAssignment.Application.Repositories;
+using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Shared;
 using QrAssignment.Persistance.Context;
 using System.Linq.Expressions;
 
@@ -14,7 +17,11 @@ namespace QrAssignment.Persistance.Repositories;
 
 internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUserRepository
 {
-    public AppUserRepository(AppDbContext context) : base(context) { }
+    ITenantIdService _tenantIdService;
+    public AppUserRepository(AppDbContext context, ITenantIdService tenantIdService) : base(context)
+    {
+        _tenantIdService = tenantIdService;
+    }
 
     private static Expression<Func<AppUser, AppUserListItemDto>> ProjectionList =>
         u => new AppUserListItemDto(
@@ -94,6 +101,8 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
     public Task<AppUser?> GetByEmailWithRefreshTokenAsync(string email, CancellationToken ct = default)
         => _context.AppUsers
             .Include(u => u.RefreshToken)
+            .Include(u => u.AppUserRoles)
+            .ThenInclude(ur => ur.AppRole)
             .AsNoTracking()
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(u => u.Email == email, ct);
@@ -102,7 +111,7 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
     public Task<AppUser?> GetByEmailForRememberPasswordAsync(string email, CancellationToken ct = default)
         => _context.AppUsers
             .AsNoTracking()
-            .IgnoreQueryFilters(["TenantFilter"]) 
+            .IgnoreQueryFilters(["TenantFilter"])
             .FirstOrDefaultAsync(u => u.Email == email, ct);
 
     // --- Role Sync & Permission Mappings ---
@@ -139,33 +148,74 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
         await _context.AppUserRole.AddRangeAsync(toAdd, ct);
     }
 
-    public async Task<List<PermissionUserPageItemDto>> GetAssignedPermissionListDtoAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<List<PermissionUserPageItemDto>> GetAssignedPermissionListDtoAsync(
+    Guid userId, CancellationToken cancellationToken = default)
     {
-        // Kullanıcının doğrudan sahip olduğu Role ID'lerini çekiyoruz
-        var userRoleIds = await _context.AppUserRole
-            .Where(ur => ur.AppUserId == userId && ur.AppRoleId.HasValue)
-            .Select(ur => ur.AppRoleId!.Value)
-            .ToListAsync(cancellationToken);
+        var roleIds = _context.AppUserRole
+            .Where(ur => ur.AppUserId == userId && ur.AppRoleId != null)
+            .Select(ur => ur.AppRoleId!.Value);
 
-        if (!userRoleIds.Any())
-            return new List<PermissionUserPageItemDto>();
-
-        // Bu rollerin IdentityRoleClaim tablosundaki izinlerini gruplayıp getiriyoruz
-        var claims = await _context.Set<IdentityRoleClaim<Guid>>()
+        var rows = await _context.Set<PagePermission>()
             .AsNoTracking()
-            .Where(rc => userRoleIds.Contains(rc.RoleId))
-            .Select(rc => new { rc.ClaimType, rc.ClaimValue })
+            .Where(pp => pp.RoleId != null && roleIds.Contains(pp.RoleId.Value))
+            .Select(pp => new { pp.Page.PageKey, pp.PermissionValue })
             .ToListAsync(cancellationToken);
 
-        return claims
-            .Where(c => !string.IsNullOrEmpty(c.ClaimType))
-            .GroupBy(c => c.ClaimType!)
+        return rows
+            .GroupBy(r => r.PageKey)
             .Select(g => new PermissionUserPageItemDto
             {
                 PageName = g.Key,
-                // Birden fazla rolden gelen bitmask değerlerini OR (bitwise) işlemi ile birleştiririz
-                PermissionValue = g.Aggregate(0, (acc, c) => acc | (int.TryParse(c.ClaimValue, out var v) ? v : 0))
+                PermissionValue = g.Aggregate(0, (acc, r) => acc | (int)r.PermissionValue)
             })
             .ToList();
+    }
+
+    public async Task SyncUserPermissionsAsync(
+    Guid userId, IEnumerable<PermissionUserUpdateDto> permissions, CancellationToken ct = default)
+    {
+        var incoming = (permissions ?? [])
+            .Where(p => p.PermissionValue > 0)
+            .ToList();
+
+        // PageKey → PageId (string ClaimType yerine gerçek FK)
+        var pageKeys = incoming.Select(p => p.PageName).ToHashSet();
+        var pageMap = await _context.Set<Page>()
+            .Where(pg => pageKeys.Contains(pg.PageKey))
+            .Select(pg => new { pg.Id, pg.PageKey })
+            .ToDictionaryAsync(x => x.PageKey, x => x.Id, ct);
+
+        var current = await _context.Set<PagePermission>()
+            .Where(pp => pp.UserId == userId)
+            .ToListAsync(ct);
+
+        var tenantId = _tenantIdService.GetTenantId();   // kullanıcı tenant-scoped; satır da aynı tenant
+
+        foreach (var p in incoming)
+        {
+            if (!pageMap.TryGetValue(p.PageName, out var pageId))
+                continue;
+
+            var existing = current.FirstOrDefault(x => x.PageId == pageId);
+            if (existing is null)
+            {
+                _context.Set<PagePermission>().Add(
+                    PagePermission.ForUser(userId, pageId, (PagePermissions)p.PermissionValue, tenantId));
+            }
+            else
+            {
+                existing.PermissionValue = (PagePermissions)p.PermissionValue;
+            }
+        }
+
+        var incomingPageIds = incoming
+            .Where(p => pageMap.ContainsKey(p.PageName))
+            .Select(p => pageMap[p.PageName])
+            .ToHashSet();
+
+        var toRemove = current.Where(x => !incomingPageIds.Contains(x.PageId));
+        _context.Set<PagePermission>().RemoveRange(toRemove);
+
+        // SaveChanges YOK — UnitOfWorkBehavior commit eder
     }
 }

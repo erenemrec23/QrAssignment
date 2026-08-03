@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using QrAssignment.Application.DTOs.List;
+using QrAssignment.Application.Features.QrLocations.Queries.DTOs;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 
@@ -16,7 +17,7 @@ namespace QrAssignment.Application.Features.QrLocations.Queries.GetList
 
         public async Task<Result<Paginate<QrLocationListItemDto>>> Handle(GetQrLocationListQuery request, CancellationToken cancellationToken)
         {
-            var result = await _qrLocationRepository.GetList(request,cancellationToken);
+            var result = await _qrLocationRepository.GetDtoListAsync(request,cancellationToken);
 
             return Result.Success(result);
         }

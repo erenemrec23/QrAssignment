@@ -45,7 +45,8 @@ public class AppDbContext : AuditDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        modelBuilder.Ignore<IdentityUserClaim<Guid>>();
+        modelBuilder.Ignore<IdentityRoleClaim<Guid>>();
         modelBuilder.Ignore<IdentityUserLogin<string>>(); 
         modelBuilder.Ignore<IdentityUserToken<string>>();
         modelBuilder.Ignore<IdentityRole<string>>();

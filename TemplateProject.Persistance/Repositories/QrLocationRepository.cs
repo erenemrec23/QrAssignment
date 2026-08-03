@@ -1,59 +1,92 @@
-﻿ 
 using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.DTOs.List;
-using QrAssignment.Application.Features.QrLocations.Queries.GetById;
-using QrAssignment.Application.Features.QrLocations.Queries.GetList;
+using QrAssignment.Application.Features.QrLocations.DTOs;
+using QrAssignment.Application.Features.QrLocations.Queries.DTOs;
 using QrAssignment.Application.Repositories;
-using QrAssignment.Domain.Entity; 
+using QrAssignment.Domain.Entity;
+using QrAssignment.Domain.Entity.App;
 using QrAssignment.Persistance.Context;
 using QrAssignment.Persistance.Repositories.Base;
-
-namespace QrAssignment.Persistance.Repositories;
+using System.Linq.Expressions;
 
 internal sealed class QrLocationRepository : GenericRepository<QrLocation>, IQrLocationRepository
 {
+    private readonly AppDbContext _context;
     public QrLocationRepository(AppDbContext context) : base(context)
     {
         _context = context;
     }
-    private readonly AppDbContext _context;
-     
-    public async Task<Paginate<QrLocationListItemDto>> GetList(PageRequestBaseDto request, CancellationToken cancellationToken)
-    {
 
-        IQueryable<QrLocation> query = _context.QrLocations.AsNoTracking();
-        return await GetPaginatedListAsync(
-            query,
-            request, c => new QrLocationListItemDto
-            { 
-                Id = c.Id,
-                EndDate = c.EndDate,
-                LocationName = c.LocationName,
-                Name = c.Name,
-                //ParentLocationId = c.ParentLocationId,
-                //ParentLocationName = c.ParentLocation != null ? c.ParentLocation.LocationName : null,
-                StartDate = c.StartDate,
-                RowVersion = c.RowVersion
-            });
-    }
-    public async Task<List<QrLocationItemGetByIdDto>> GetById(Guid id, CancellationToken cancellationToken)
-    {
-        return await _context.QrLocations
-            .AsNoTracking()
-            .Where(c => c.Id == id)
-            .Select(c => new QrLocationItemGetByIdDto
-            {
-                Id = c.Id,
-                EndDate = c.EndDate,
-                LocationName = c.LocationName,
-                Name = c.Name,
-                //ParentLocationId = c.ParentLocationId,
-                //ParentLocationName = c.ParentLocation != null ? c.ParentLocation.LocationName : null,
-                StartDate = c.StartDate,
-                RowVersion = c.RowVersion
-            })
-            .ToListAsync(cancellationToken);
-    }
+    // --- Okuma kaynakları ---
+    private IQueryable<QrLocation> ActiveQrLocations => _context.QrLocations.AsNoTracking();
 
+    private IQueryable<QrLocation> PassivedQrLocations =>
+        ActiveQrLocations.IgnoreQueryFilters(["SoftDeleteFilter"]).Where(t => t.IsPassived);
+
+    // --- Projeksiyonlar ---
+    private static Expression<Func<QrLocation, QrLocationListItemDto>> ListProjection =>
+        t => new QrLocationListItemDto
+        {
+            Id = t.Id,
+            Name = t.Name,
+            StartDate = t.StartDate,
+            EndDate = t.EndDate,
+            LocationName = t.LocationName,
+            RevNum = t.RevNum,
+            CreatedUserFullName = t.CreatedByUser != null ? t.CreatedByUser.FullName : "",
+            ModifiedUserFullName = t.ModifiedByUser != null ? t.ModifiedByUser.FullName : "",
+            CreatedDateTime = t.CreatedDate,
+            ModifiedDateTime = t.ModifiedDate
+        };
+
+    private static Expression<Func<QrLocation, QrLocationItemDto>> ItemProjection =>
+        t => new QrLocationItemDto
+        {
+            Id = t.Id,
+            Name = t.Name,
+            StartDate = t.StartDate,
+            EndDate = t.EndDate,
+            LocationName = t.LocationName,
+            RowVersion = t.RowVersion
+        };
+
+    private static Expression<Func<QrLocation, QrLocationListItemExcelDto>> ExcelProjection =>
+        t => new QrLocationListItemExcelDto
+        {
+            Code = t.RevNum.ToString(),
+            Name = t.Name,
+            StartDate = t.StartDate,
+            EndDate = t.EndDate,
+            LocationName = t.LocationName
+        };
+
+    // --- Liste / export ---
+    public Task<Paginate<QrLocationListItemDto>> GetDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
+        => GetPaginatedListAsync(ActiveQrLocations, request, ListProjection, cancellationToken);
+
+    public Task<Paginate<QrLocationListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
+        => GetPaginatedListAsync(PassivedQrLocations, request, ListProjection, cancellationToken);
+
+    public Task<List<QrLocationListItemExcelDto>> GetExportListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
+        => GetFilteredListWithoutPaginationAsync(ActiveQrLocations, request, ExcelProjection, cancellationToken);
+
+    // --- Tekil (DTO) ---
+    public Task<QrLocationItemDto?> GetDtoByIdAsync(Guid id, CancellationToken cancellationToken)
+        => ActiveQrLocations
+            .Where(t => t.Id == id)
+            .Select(ItemProjection)
+            .SingleOrDefaultAsync(cancellationToken);
+
+    public Task<QrLocationItemDto?> GetPassivedDtoByIdAsync(Guid id, CancellationToken cancellationToken)
+        => PassivedQrLocations
+            .Where(t => t.Id == id)
+            .Select(ItemProjection)
+            .SingleOrDefaultAsync(cancellationToken);
+
+    // --- Değer listesiyle (IN) sorgular ---
+    public Task<List<QrLocation>> GetByRevNumsAsync(List<long> revnums, CancellationToken cancellationToken)
+        => GetByValuesAsync(t => t.RevNum, revnums, cancellationToken: cancellationToken);
+
+    public Task<List<QrLocation>> GetByNamesAsync(List<string> names, CancellationToken cancellationToken)
+        => GetByValuesAsync(t => t.Name, names, cancellationToken: cancellationToken);
 }
-

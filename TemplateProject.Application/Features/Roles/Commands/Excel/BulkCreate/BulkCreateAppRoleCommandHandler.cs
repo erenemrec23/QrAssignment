@@ -24,12 +24,9 @@ namespace QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate
             foreach (var item in request.Items)
             {
                 var role = new AppRole { Name = item.Name };
-                var result = await _roleManager.CreateAsync(role);
+                await _roleManager.CreateAsync(role);   // yalnızca rol kaydı — claim yok
 
-                if (result.Succeeded)
-                    createdIds.Add(role.Id);
-                else
-                    failed.Add($"{item.Name}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                createdIds.Add(role.Id);
             }
 
             if (failed.Count > 0)

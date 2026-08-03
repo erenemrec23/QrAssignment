@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using QrAssignment.Application.DTOs.List;
+using QrAssignment.Application.Features.Permission.Commands.Update;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
 using QrAssignment.Application.Features.Users.DTOs;
 using QrAssignment.Application.Features.Users.Queries.DTOs;
@@ -39,5 +40,7 @@ namespace QrAssignment.Application.Repositories
         Task DeleteById(Guid id, CancellationToken ct);
 
         Task<AppUser?> GetByEmailForRememberPasswordAsync(string email, CancellationToken ct = default);
+
+        Task SyncUserPermissionsAsync(Guid userId, IEnumerable<PermissionUserUpdateDto> permissions, CancellationToken ct = default);
     }
 }

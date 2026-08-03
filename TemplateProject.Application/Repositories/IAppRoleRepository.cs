@@ -1,12 +1,13 @@
 ﻿using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
+using QrAssignment.Application.Features.Roles.Commands.Update;
 using QrAssignment.Application.Features.Roles.DTOs; 
 using QrAssignment.Application.Features.Roles.Queries.GetList;
 using QrAssignment.Domain.Entity.App;
 
 namespace QrAssignment.Application.Repositories
 {
-    public interface IAppRoleRepository 
+        public interface IAppRoleRepository 
     {
         Task<Paginate<RoleListItemDto>> GetDtoListAsync(PageRequestBaseDto request, CancellationToken ct = default);
         Task<Paginate<RoleListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken ct = default);
@@ -32,6 +33,8 @@ namespace QrAssignment.Application.Repositories
 
         Task SetPassiveById(Guid id, CancellationToken ct);
         Task BulkSetPassiveByIds(List<Guid> ids, CancellationToken ct);
+
+        Task SyncRolePermissionsAsync(Guid roleId, IEnumerable<RolePagePermissionDto> permissions, CancellationToken ct = default);
 
     }
 }

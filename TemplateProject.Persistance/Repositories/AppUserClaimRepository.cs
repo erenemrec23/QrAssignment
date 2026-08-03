@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
@@ -9,75 +8,67 @@ namespace QrAssignment.Persistance.Repositories;
 
 public sealed class AppUserClaimRepository : IAppUserClaimRepository
 {
-    private readonly UserManager<AppUser> _userManager;
     private readonly AppDbContext _context;
 
-    public AppUserClaimRepository(UserManager<AppUser> userManager, AppDbContext context)
+    public AppUserClaimRepository(AppDbContext context)
     {
-        _userManager = userManager;
         _context = context;
     }
 
-    // Mevcut metod aynı kalıyor — sadece kullanıcının KENDİ claim'leri
+    // Kullanıcının SADECE kendi satırları (PagePermission.UserId)
     public async Task<List<PermissionUserPageItemDto>> GetUserWithPermissionsAsync(
         Guid? userId, CancellationToken cancellationToken = default)
     {
-        var rawClaims = await _userManager.Users
+        var rows = await _context.Set<PagePermission>()
             .AsNoTracking()
-            .IgnoreQueryFilters()
-            .Where(u => u.Id == userId)
-            .SelectMany(u => u.Claims)
-            .Where(c => c.ClaimType.StartsWith("Page_"))
-            .Select(c => new { c.ClaimType, c.ClaimValue })
+            .IgnoreQueryFilters()   // login anında ambient tenant set olmayabilir
+            .Where(pp => pp.UserId == userId)
+            .Select(pp => new { pp.Page.PageKey, pp.PermissionValue })
             .ToListAsync(cancellationToken);
 
-        return rawClaims.Select(c => new PermissionUserPageItemDto
+        return rows.Select(r => new PermissionUserPageItemDto
         {
-            PageName = c.ClaimType,
-            PermissionValue = int.TryParse(c.ClaimValue, out var val) ? val : 0
+            PageName = r.PageKey,
+            PermissionValue = (int)r.PermissionValue
         }).ToList();
     }
 
-    // YENİ — kullanıcı claim'leri + rol claim'leri, sayfa bazında OR ile merge
+    // Kullanıcının KENDİ + ROLLERİNDEN gelen satırları, sayfa bazında bitwise OR
     public async Task<List<PermissionUserPageItemDto>> GetEffectivePagePermissionsAsync(
         Guid? userId, CancellationToken cancellationToken = default)
     {
         if (userId is null)
             return new();
 
-        // 1) Kullanıcının kendi sayfa claim'leri
-        var userClaims = await _userManager.Users
+        var pagePerms = _context.Set<PagePermission>()
             .AsNoTracking()
-            .IgnoreQueryFilters()
-            .Where(u => u.Id == userId)
-            .SelectMany(u => u.Claims)
-            .Where(c => c.ClaimType.StartsWith("Page_"))
-            .Select(c => new { c.ClaimType, c.ClaimValue })
+            .IgnoreQueryFilters();   // sahip zaten tenant'a bağlı; login'de filtreyi bypass
+
+        // 1) Kendi satırları
+        var userPerms = await pagePerms
+            .Where(pp => pp.UserId == userId)
+            .Select(pp => new { pp.Page.PageKey, pp.PermissionValue })
             .ToListAsync(cancellationToken);
 
-        // 2) Kullanıcının atandığı rollerin sayfa claim'leri (AppUserRole join → RoleClaims)
-        var roleClaims = await (
-            from ur in _context.AppUserRole.AsNoTracking()
-            where ur.AppUserId == userId && ur.AppRoleId != null
-            join rc in _context.Set<IdentityRoleClaim<Guid>>().AsNoTracking()
-                on ur.AppRoleId!.Value equals rc.RoleId
-            where rc.ClaimType.StartsWith("Page_")
-            select new { rc.ClaimType, rc.ClaimValue }
-        ).ToListAsync(cancellationToken);
+        // 2) Rollerinin satırları
+        var roleIds = _context.AppUserRole
+            .Where(ur => ur.AppUserId == userId && ur.AppRoleId != null)
+            .Select(ur => ur.AppRoleId!.Value);
 
-        // 3) Merge — aynı sayfa için tüm değerleri bitwise OR ile birleştir
-        var merged = userClaims.Concat(roleClaims)
-            .Where(c => !string.IsNullOrEmpty(c.ClaimType))
-            .GroupBy(c => c.ClaimType)
+        var rolePerms = await pagePerms
+            .Where(pp => pp.RoleId != null && roleIds.Contains(pp.RoleId.Value))
+            .Select(pp => new { pp.Page.PageKey, pp.PermissionValue })
+            .ToListAsync(cancellationToken);
+
+        // 3) Sayfa bazında OR ile merge
+        return userPerms.Concat(rolePerms)
+            .GroupBy(x => x.PageKey)
             .Select(g => new PermissionUserPageItemDto
             {
                 PageName = g.Key,
-                PermissionValue = g.Aggregate(0, (acc, c) =>
-                    acc | (int.TryParse(c.ClaimValue, out var v) ? v : 0))
+                PermissionValue = g.Aggregate(0, (acc, x) => acc | (int)x.PermissionValue)
             })
-            .Where(dto => dto.PermissionValue > 0)   // hiç bit yoksa taşıma
+            .Where(dto => dto.PermissionValue > 0)
             .ToList();
-
-        return merged;
     }
 }

@@ -1,35 +1,42 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;    
+using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
-using QrAssignment.Application.Features.Roles.DTOs; 
+using QrAssignment.Application.Features.Roles.Commands.Update;
+using QrAssignment.Application.Features.Roles.DTOs;
 using QrAssignment.Application.Features.Roles.Queries.GetList;
 using QrAssignment.Application.Repositories;
+using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Shared;
 using QrAssignment.Persistance.Context;
 using System.Linq.Expressions;
 
 namespace QrAssignment.Persistance.Repositories;
-
 internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRoleRepository
 {
-    public AppRoleRepository(AppDbContext context) : base(context) { }
+    private readonly ITenantIdService _tenantIdService;
+    public AppRoleRepository(AppDbContext context,
+         ITenantIdService tenantIdService) : base(context)
+    {
+        _tenantIdService = tenantIdService;
+    }
 
     private static Expression<Func<AppRole, RoleListItemDto>> ProjectionList =>
-        r => new RoleListItemDto(r.Id, 
+        r => new RoleListItemDto(r.Id,
             r.Name!,
-            r.RevNum, 
-            r.ModifiedByUser!= null ? r.ModifiedByUser.FullName : "",
+            r.RevNum,
+            r.ModifiedByUser != null ? r.ModifiedByUser.FullName : "",
             r.CreatedByUser != null ? r.CreatedByUser.FullName : "",
             r.ModifiedDate,
-            r.CreatedDate );
+            r.CreatedDate);
     private static Expression<Func<AppRole, RoleItemDto>> ProjectionItem =>
         r => new RoleItemDto(r.Id, r.Name!, r.RowVersion);
     private static Expression<Func<AppRole, RoleListItemExcelDto>> ProjectionExcelItem =>
         r => new RoleListItemExcelDto(r.Name!);
 
-    
+
 
     public Task<Paginate<RoleListItemDto>> GetDtoListAsync(PageRequestBaseDto request, CancellationToken ct = default)
         => PaginateAsync(ProjectionList, request, ct);
@@ -47,7 +54,7 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
         => SinglePassivedDtoByIdAsync(id, ProjectionItem, ct);
     public Task<AppRole?> GetPassivedByIdAsync(Guid id, CancellationToken ct = default)
         => SinglePassivedByIdAsync(id, ct);
-    
+
     public Task BulkDelete(List<Guid> ids, CancellationToken ct)
         => BulkDeleteByIdsAsync(ids, ct);
     public Task DeleteById(Guid id, CancellationToken ct)
@@ -74,7 +81,7 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
             .Join(_context.AppUsers,
                   ur => ur.AppUserId,
                   u => u.Id,
-                  (ur, u) => u.Id) 
+                  (ur, u) => u.Id)
             .ToListAsync(ct);
 
         return result;
@@ -114,23 +121,17 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
     public async Task<List<PermissionUserPageItemDto>> GetAssignedPermissionListDtoAsync(
     Guid roleId, CancellationToken cancellationToken)
     {
-        // Role izinleri AspNetRoleClaims'te IdentityRoleClaim olarak saklanıyor:
-        // ClaimType = sayfa adı, ClaimValue = permissionValue (bitmask)
-        var claims = await _context.Set<IdentityRoleClaim<Guid>>()
+        var rows = await _context.Set<PagePermission>()
             .AsNoTracking()
-            .Where(rc => rc.RoleId == roleId)
-            .Select(rc => new { rc.ClaimType, rc.ClaimValue })
+            .Where(pp => pp.RoleId == roleId)
+            .Select(pp => new { pp.Page.PageKey, pp.PermissionValue })
             .ToListAsync(cancellationToken);
 
-        // string -> int dönüşümü SQL'e çevrilmesin diye projeksiyon bellekte yapılıyor
-        return claims
-            .Where(c => !string.IsNullOrEmpty(c.ClaimType))
-            .Select(c => new PermissionUserPageItemDto
-            {
-                PageName = c.ClaimType!,
-                PermissionValue = int.TryParse(c.ClaimValue, out var v) ? v : 0
-            })
-            .ToList();
+        return rows.Select(r => new PermissionUserPageItemDto
+        {
+            PageName = r.PageKey,
+            PermissionValue = (int)r.PermissionValue
+        }).ToList();
     }
 
 
@@ -140,4 +141,55 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
 
     public Task SetActiveAsync(Guid id, CancellationToken ct)
         => SetActiveByIdAsync(id, ct);
+
+    public async Task SyncRolePermissionsAsync(
+    Guid roleId, IEnumerable<RolePagePermissionDto> permissions, CancellationToken ct = default)
+    {
+        // Gelen yetkiler: sadece PermissionValue > 0 olanları tut (0 = yetki yok = satır olmasın)
+        var incoming = (permissions ?? [])
+            .Where(p => p.PermissionValue > 0)
+            .ToList();
+
+        // PageKey → PageId çevirisi (string ClaimType yerine artık gerçek FK)
+        var pageKeys = incoming.Select(p => p.PageName).ToHashSet();
+        var pageMap = await _context.Set<Page>()
+            .Where(pg => pageKeys.Contains(pg.PageKey))
+            .Select(pg => new { pg.Id, pg.PageKey })
+            .ToDictionaryAsync(x => x.PageKey, x => x.Id, ct);
+
+        // Rolün mevcut satırları
+        var current = await _context.Set<PagePermission>()
+            .Where(pp => pp.RoleId == roleId)
+            .ToListAsync(ct);
+
+        var tenantId = _tenantIdService.GetTenantId();   // rol tenant-scoped; satır da aynı tenant'ta
+
+        foreach (var p in incoming)
+        {
+            if (!pageMap.TryGetValue(p.PageName, out var pageId))
+                continue;   // bilinmeyen sayfa key'i — sessizce atla (istersen burada hata fırlat)
+
+            var existing = current.FirstOrDefault(x => x.PageId == pageId);
+            if (existing is null)
+            {
+                _context.Set<PagePermission>().Add(
+                    PagePermission.ForRole(roleId, pageId, (PagePermissions)p.PermissionValue, tenantId));
+            }
+            else
+            {
+                existing.PermissionValue = (PagePermissions)p.PermissionValue;   // güncelle
+            }
+        }
+
+        // Gelen listede artık olmayan sayfalar → sil
+        var incomingPageIds = incoming
+            .Where(p => pageMap.ContainsKey(p.PageName))
+            .Select(p => pageMap[p.PageName])
+            .ToHashSet();
+
+        var toRemove = current.Where(x => !incomingPageIds.Contains(x.PageId));
+        _context.Set<PagePermission>().RemoveRange(toRemove);
+
+        // SaveChanges YOK — UnitOfWorkBehavior commit edecek (SyncAssignedUsersAsync ile aynı desen)
+    }
 }

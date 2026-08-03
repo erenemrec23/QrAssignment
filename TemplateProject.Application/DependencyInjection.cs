@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using QrAssignment.Application.Behaviors;
 using QrAssignment.Application.Common.Excel;
+using QrAssignment.Application.Features.QrLocations.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Interfaces;
@@ -28,6 +29,7 @@ namespace QrAssignment.Application
             services.AddSampleTemplateHandler<BulkCreateAppRoleInputDto>();
             // Açık generic handler'lar MediatR taramasıyla bulunamaz → kapalı tiple elle kaydet.
             services.AddSampleTemplateHandler<BulkCreateTenantInputDto>();
+            services.AddSampleTemplateHandler<BulkCreateQrLocationInputDto>();
             services.AddScoped<IExcelRowBusinessValidator<BulkCreateAppRoleInputDto>, BulkCreateAppRoleNameUniquenessValidator>();
             services.AddScoped<IExcelRowBusinessValidator<BulkCreateTenantInputDto>, BulkCreateTenantNameUniquenessValidator>();
             services.AddValidatorsFromAssembly(typeof(SharedResource).Assembly);

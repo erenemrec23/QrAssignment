@@ -77,7 +77,7 @@ namespace QrAssignment.Domain.Entity.App
 
         public List<AppUserRole> AppUserRoles { get; set; } = new List<AppUserRole>();
 
-        public virtual ICollection<IdentityUserClaim<Guid>> Claims { get; set; }
+        //public virtual ICollection<IdentityUserClaim<Guid>> Claims { get; set; }
 
         // AppRole ile parite: liste projeksiyonunda audit kullanicilarin adini cekebilmek icin
         // self-referencing navigation'lar. (EF configuration + migration gerekiyor -> nota bak.)

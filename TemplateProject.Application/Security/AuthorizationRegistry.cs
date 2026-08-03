@@ -1,15 +1,20 @@
 ﻿using QrAssignment.Application.Common.Excel;
+using QrAssignment.Application.Features.QrLocations.Commands.Excel.BulkCreate;
+using QrAssignment.Application.Features.QrLocations.Queries.FormBase.GetById;
+using QrAssignment.Application.Features.QrLocations.Queries.FormBase.GetPassivedById;
+using QrAssignment.Application.Features.QrLocations.Queries.ListBase.GetList;
+using QrAssignment.Application.Features.QrLocations.Queries.ListBase.GetListExportExcel;
+using QrAssignment.Application.Features.QrLocations.Queries.ListBase.GetPassivedList;
+using QrAssignment.Application.Features.Tenants.Queries.FormBase.GetById;
+using QrAssignment.Application.Features.Tenants.Queries.FormBase.GetPassivedById;
+using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetList;
+using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetListExportExcel;
+using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetPassivedList;
 using QrAssignment.Domain.Shared;
-
+using RolesBulkExcelDto = QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleInputDto;
 // Alias tanımlamaları ile tip isimleri ve okunabilirlik sadeleştirildi
 using TenantsBulkExcelDto = QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantInputDto;
 using UsersBulkExcelDto = QrAssignment.Application.Features.Users.Commands.Excel.BulkCreate.BulkCreateAppUserInputDto;
-using RolesBulkExcelDto = QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleInputDto;
-using QrAssignment.Application.Features.Tenants.Queries.FormBase.GetById;
-using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetList;
-using QrAssignment.Application.Features.Tenants.Queries.FormBase.GetPassivedById;
-using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetListExportExcel;
-using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetPassivedList;
 
 namespace QrAssignment.Application.Security
 {
@@ -160,14 +165,40 @@ namespace QrAssignment.Application.Security
             // QR LOCATIONS (Page_QrLocations)
             // =========================================================================
             Register(registry, AppPages.QrLocations, PagePermissions.Insert,
-                typeof(Features.QrLocations.Commands.Create.CreateQrLocationCommand));
+    typeof(Features.QrLocations.Commands.Create.CreateQrLocationCommand));
 
             Register(registry, AppPages.QrLocations, PagePermissions.Update,
-                typeof(Features.QrLocations.Commands.Update.UpdateQrLocationCommand));
+                typeof(Features.QrLocations.Commands.Update.UpdateQrLocationCommand),
+                typeof(Features.QrLocations.Commands.SetActive.SetActiveQrLocationCommand));
+
+            Register(registry, AppPages.QrLocations, PagePermissions.Delete,
+                typeof(Features.QrLocations.Commands.Delete.DeleteQrLocationCommand),
+                typeof(Features.QrLocations.Commands.BulkDelete.BulkDeleteQrLocationCommand));
 
             Register(registry, AppPages.QrLocations, PagePermissions.View,
-                typeof(Features.QrLocations.Queries.GetList.GetQrLocationListQuery),
-                typeof(Features.QrLocations.Queries.GetById.GetQrLocationByIdQuery));
+                typeof(GetByIdQrLocationQuery),
+                typeof(GetListQrLocationQuery));
+
+            Register(registry, AppPages.QrLocations, PagePermissions.SetPassive,
+                typeof(Features.QrLocations.Commands.SetPassive.SetPassiveQrLocationCommand),
+                typeof(Features.QrLocations.Commands.BulkSetPassive.BulkSetPassiveQrLocationCommand));
+
+            Register(registry, AppPages.QrLocations, PagePermissions.SetActive,
+                typeof(Features.QrLocations.Commands.SetActive.SetActiveQrLocationCommand),
+                typeof(Features.QrLocations.Commands.BulkSetActive.BulkSetActiveQrLocationCommand));
+
+            Register(registry, AppPages.QrLocations, PagePermissions.ViewPassive,
+                typeof(GetPassivedByIdQrLocationQuery),
+                typeof(GetPassivedListQrLocationQuery));
+
+            Register(registry, AppPages.QrLocations, PagePermissions.ExportExcel,
+                typeof(GetListQrLocationExportExcelQuery));
+
+            Register(registry, AppPages.QrLocations, PagePermissions.ImportExcel,
+                typeof(Features.QrLocations.Commands.Excel.BulkCreate.BulkCreateQrLocationCommand),
+                typeof(Features.QrLocations.Commands.Excel.Validate.ValidateQrLocationExcelQuery),
+                typeof(ValidateExcelQuery<BulkCreateQrLocationInputDto>),
+                typeof(GetSampleExcelTemplateQuery<BulkCreateQrLocationInputDto>));
 
             SecuredCommands = registry;
 

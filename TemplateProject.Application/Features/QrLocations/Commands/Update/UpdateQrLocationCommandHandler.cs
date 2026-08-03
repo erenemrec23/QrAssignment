@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
@@ -28,8 +28,6 @@ namespace QrAssignment.Application.Features.QrLocations.Commands.Update
                 throw new Exception(_localizer["Messages.QrLocationNotFound"]);
 
             _mapper.Map(request, qrLocation);
-
-            //await _qrLocationRepository.Update(qrLocation, cancellationToken);
 
             _qrLocationRepository.Update(qrLocation);
 

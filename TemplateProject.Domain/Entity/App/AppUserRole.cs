@@ -1,31 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations.Schema;
-
-
-namespace QrAssignment.Domain.Entity.App
+﻿namespace QrAssignment.Domain.Entity.App
 {
-    public class AppUserRole : IdentityRole<Guid>
+    // Kullanıcı-Rol join tablosu. Artık HİÇBİR Identity tipinden türemiyor — düz join entity.
+    // (Önceden yanlışlıkla IdentityRole<Guid>'den türüyordu; bu, tabloya anlamsız
+    //  Id / Name / NormalizedName / ConcurrencyStamp kolonları getiriyordu.)
+    public class AppUserRole
     {
-
-        [ForeignKey("AppUser")]
         public Guid? AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
+        public AppUser? AppUser { get; set; } = null!;
 
-        [ForeignKey("AppRole")]
         public Guid? AppRoleId { get; set; }
-        public AppRole AppRole { get; set; }
+        public AppRole? AppRole { get; set; } = null!;
 
-        public virtual DateTime CreatedDate { get; set; }
-        public virtual DateTime? ModifiedDate { get; set; }
-
-        public virtual bool? IsPassived { get; set; } = false;
-        public static AppUserRole Create(string name)
-        {
-            return new AppUserRole()
-            {
-                Name = name
-            };
-        }
+  
     }
-
 }

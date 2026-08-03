@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using QrAssignment.Domain.Entity;
+using QrAssignment.Domain.Entity.App;
 using QrAssignment.Persistance.Configurations.Base;
 
-namespace QrAssignment.Persistance.Configurations
+namespace QrAssignment.Persistance.Configurations.App
 {
+    // NOT: QrLocation TenantBaseEntity'den türüyor. Eğer projenizde tenant kapsamlı
+    // entity'ler için ayrı bir TenantBaseEntityConfiguration<T> varsa, base olarak onu
+    // kullanın; TenantId FK / index yapılandırması orada merkezi tutulur.
     public sealed class QrLocationConfiguration : BaseEntityConfiguration<QrLocation>
     {
         public override void Configure(EntityTypeBuilder<QrLocation> builder)
@@ -13,12 +17,15 @@ namespace QrAssignment.Persistance.Configurations
 
             builder.ToTable("QrLocations");
 
-            //builder.HasOne(c => c.ParentLocation)
-            //       .WithMany(b => b.SubLocations)
-            //       .HasForeignKey(c => c.ParentLocationId)
-            //       .OnDelete(DeleteBehavior.Restrict);
+            builder.Property(x => x.Name)
+                   .IsRequired()
+                   .HasMaxLength(200);
 
-            builder.Property(p => p.Name).HasMaxLength(250).IsRequired();
+            builder.Property(x => x.LocationName)
+                   .HasMaxLength(200);
+
+            builder.HasIndex(x => x.Name)
+                   .IsUnique();
         }
     }
 }

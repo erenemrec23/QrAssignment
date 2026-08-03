@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Modules\Commands\" />
     <Folder Include="Features\QrApplicants\Queries\" />
   </ItemGroup>
 
