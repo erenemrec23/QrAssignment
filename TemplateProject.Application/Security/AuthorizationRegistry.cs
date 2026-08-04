@@ -209,7 +209,8 @@ namespace QrAssignment.Application.Security
             {
                 typeof(Features.AuthFeatures.Commands.Login.LoginCommand),
                 typeof(Features.AuthFeatures.Commands.ForgotPassword.ForgotPasswordCommand),
-                typeof(Features.AuthFeatures.Commands.ResetPassword.ResetPasswordCommand)
+                typeof(Features.AuthFeatures.Commands.ResetPassword.ResetPasswordCommand),
+                typeof(GetSystemModulesQuery),
             };
         }
         

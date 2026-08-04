@@ -290,7 +290,9 @@
   "Label.QrLocationQrCodeImageDownloadErrorMessageWithDetails": "QR Lokasyon Kodu Görseli İndirme İşlemi Başarısız Oldu. Hata Mesajı: {0}",
   "Label.QrLocationQrCodeImageDownloadErrorMessageWithDetailsAndInnerException": "QR Lokasyon Kodu Görseli İndirme İşlemi Başarısız Oldu. Hata Mesajı: {0}. İç Hata: {1}",
   "Label.QrLocationQrCodeImageDownloadErrorMessageWithDetailsAndInnerExceptionAndStackTrace": "QR Lokasyon Kodu Görseli İndirme İşlemi Başarısız Oldu. Hata Mesajı: {0}. İç Hata: {1}. Stack Trace: {2}",
-  "PageTitle.AppRoles": "Uygulama Rolleri"
+  "PageTitle.AppRoles": "Uygulama Rolleri",
+  "PageTitle.Admin": "Yönetici",
+  "Label.AuthorizeWizard": "Yetkilendirme Sihirbazı"
 
 
 
