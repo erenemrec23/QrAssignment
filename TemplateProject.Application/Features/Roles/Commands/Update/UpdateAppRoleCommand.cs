@@ -1,4 +1,5 @@
 ﻿using QrAssignment.Application.Abstractions;
+using QrAssignment.Application.Features.Roles.Commands.DTOs;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Roles.Commands.Update
@@ -9,6 +10,4 @@ namespace QrAssignment.Application.Features.Roles.Commands.Update
         List<RolePagePermissionDto> Permissions,
         List<Guid> UserIds
     ) : ICommand<Result>, IdValidationBase;
-     
-    public sealed record RolePagePermissionDto(string PageName, int PermissionValue);
 }

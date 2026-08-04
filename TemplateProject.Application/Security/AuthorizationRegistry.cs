@@ -10,7 +10,7 @@ using QrAssignment.Application.Features.Tenants.Queries.FormBase.GetPassivedById
 using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetList;
 using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetListExportExcel;
 using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetPassivedList;
-using QrAssignment.Domain.Shared;
+using QrAssignment.Domain.Shared.PagePermission;
 using RolesBulkExcelDto = QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleInputDto;
 // Alias tanımlamaları ile tip isimleri ve okunabilirlik sadeleştirildi
 using TenantsBulkExcelDto = QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantInputDto;

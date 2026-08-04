@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace QrAssignment.Domain.Shared
+namespace QrAssignment.Domain.Shared.PagePermission
 {
     [Flags] // Bu attribute çok kritiktir!
     public enum PagePermissions : int

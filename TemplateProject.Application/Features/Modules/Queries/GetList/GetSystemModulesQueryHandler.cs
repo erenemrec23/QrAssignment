@@ -3,11 +3,6 @@ using MediatR;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Shared;
 
-public sealed record PageCatalogItemDto(string PageKey, string Key);
-
-// GetSystemModulesQuery.cs
-public sealed record GetSystemModulesQuery : IRequest<Result<List<PageCatalogItemDto>>>;
-
 // GetSystemModulesQueryHandler.cs
 public sealed class GetSystemModulesQueryHandler
     : IRequestHandler<GetSystemModulesQuery, Result<List<PageCatalogItemDto>>>

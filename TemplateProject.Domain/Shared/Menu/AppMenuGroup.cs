@@ -26,8 +26,8 @@
 
         // Menüde görünmeyen, sadece yetki kapsamı olan sayfa (AuthorizationRegistry'deki
         // Page_UserPermissions). Grup atanmadı → MenuGroupId null, ShowInMenu false.
-        [PageDefinition(PageKey = "Page_UserPermissions",
-            TranslationKey = "UserPermissions", Order = 99, ShowInMenu = false)]
-        UserPermissions = 5,
+        //[PageDefinition(PageKey = "Page_UserPermissions",
+        //    TranslationKey = "UserPermissions", Order = 99, ShowInMenu = false)]
+        //UserPermissions = 5,
     }
 }

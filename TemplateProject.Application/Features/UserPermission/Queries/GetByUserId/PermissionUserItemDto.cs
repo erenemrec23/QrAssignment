@@ -2,9 +2,8 @@
 {
     public class PermissionUserPageItemDto
     {
-
-        public string PageName { get; init; } = string.Empty;
-
+        public string? PageName { get; init; }
+        public string? GroupKey { get; init; }
         public int PermissionValue { get; init; }
     }
 

@@ -8,9 +8,12 @@ internal sealed class PageRepository : IPageRepository
     public PageRepository(AppDbContext context) => _context = context;
 
     public Task<List<PageCatalogItemDto>> GetCatalogAsync(CancellationToken ct = default)
-        => _context.Set<Page>()
-            .AsNoTracking()
-            .OrderBy(p => p.Order)
-            .Select(p => new PageCatalogItemDto(p.PageKey, p.Key))
-            .ToListAsync(ct);
+    => _context.Set<Page>()
+        .AsNoTracking()
+        .OrderBy(p => p.MenuGroupId).ThenBy(p => p.Order)
+        .Select(p => new PageCatalogItemDto(
+            p.PageKey,
+            p.Key,
+            p.MenuGroup != null ? p.MenuGroup.Key : null))   // grupsuz sayfa → null
+        .ToListAsync(ct);
 }

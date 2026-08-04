@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using QrAssignment.Application.Interfaces;
-using QrAssignment.Domain.Shared;
 using QrAssignment.Application.DTOs;
 using QrAssignment.Application.Security; // Registry'nin olduğu namespace
 using System.Text.Json;
+using QrAssignment.Domain.Shared.PagePermission;
 
 namespace QrAssignment.Application.Behaviors
 {

@@ -6,6 +6,7 @@ using QrAssignment.Application.Features.Users.DTOs;
 using QrAssignment.Application.Features.Users.Queries.DTOs;
 using QrAssignment.Application.Features.Users.Queries.LookUp.DTOs;
 using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Shared.PagePermission;
 
 namespace QrAssignment.Application.Repositories
 {
@@ -41,6 +42,7 @@ namespace QrAssignment.Application.Repositories
 
         Task<AppUser?> GetByEmailForRememberPasswordAsync(string email, CancellationToken ct = default);
 
-        Task SyncUserPermissionsAsync(Guid userId, IEnumerable<PermissionUserUpdateDto> permissions, CancellationToken ct = default);
+        Task SyncUserPermissionsAsync(Guid userId, IEnumerable<PermissionUserUpdateDto> permissions,
+    PermissionTargetScope scope, CancellationToken ct = default);
     }
 }

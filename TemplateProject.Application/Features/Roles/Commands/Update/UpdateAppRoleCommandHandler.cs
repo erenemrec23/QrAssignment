@@ -5,6 +5,7 @@ using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared;
+using QrAssignment.Domain.Shared.PagePermission;
 
 public sealed class UpdateAppRoleCommandHandler : IRequestHandler<UpdateAppRoleCommand, Result>
 {
@@ -33,9 +34,8 @@ public sealed class UpdateAppRoleCommandHandler : IRequestHandler<UpdateAppRoleC
         // 1) Personel
         await _appRoleRepository.SyncAssignedUsersAsync(role.Id, request.UserIds, ct);
 
-        // 2) Sayfa yetkileri — PagePermission tablosu (tek metod: ekle/güncelle/sil)
-        await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, ct);
-
+        // 2) Sayfa yetkileri — PagePermission tablosu (tek metod: ekle/güncelle/sil) 
+        await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, PermissionTargetScope.Page, ct);
         // 3) Rol adı
         role.Name = request.Name;
         var updateResult = await _roleManager.UpdateAsync(role);

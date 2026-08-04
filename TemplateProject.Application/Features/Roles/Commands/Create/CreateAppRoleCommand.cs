@@ -1,5 +1,5 @@
 ﻿using QrAssignment.Application.Abstractions;
-using QrAssignment.Application.Features.Roles.Commands.Update; // RolePagePermissionDto
+using QrAssignment.Application.Features.Roles.Commands.DTOs;
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Roles.Commands.Create

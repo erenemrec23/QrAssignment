@@ -1,5 +1,5 @@
 ﻿using QrAssignment.Domain.Abstractions;
-using QrAssignment.Domain.Shared;
+using QrAssignment.Domain.Shared.PagePermission;
 
 namespace QrAssignment.Domain.Entity.App
 {
@@ -7,24 +7,33 @@ namespace QrAssignment.Domain.Entity.App
     {
         public Guid Id { get; set; }
 
-        // Sahip: ikisinden TAM BİRİ dolu (CHECK constraint garanti eder)
+        // Sahip: tam biri dolu (CHECK)
         public Guid? UserId { get; set; }
         public AppUser? User { get; set; }
-
         public Guid? RoleId { get; set; }
         public AppRole? Role { get; set; }
 
-        public int PageId { get; set; }                       // = (int)AppPage
-        public Page Page { get; set; } = null!;
+        // Hedef: tam biri dolu (CHECK) — tek sayfa YA DA tüm bir menü grubu
+        public int? PageId { get; set; }              // artık nullable
+        public Page? Page { get; set; }
+        public short? MenuGroupId { get; set; }       // yeni — MenuGroup.Id (short)
+        public MenuGroup? MenuGroup { get; set; }
 
-        public PagePermissions PermissionValue { get; set; }  // [Flags] enum → int kolon
+        public PagePermissions PermissionValue { get; set; }
+        public Guid? TenantId { get; set; }
 
-        public Guid? TenantId { get; set; }                   // sahibinden kopyalanır
-
+        // Sayfa hedefli (mevcut isimler korundu → repolar bozulmaz)
         public static PagePermission ForUser(Guid userId, int pageId, PagePermissions value, Guid? tenantId)
             => new() { UserId = userId, PageId = pageId, PermissionValue = value, TenantId = tenantId };
 
         public static PagePermission ForRole(Guid roleId, int pageId, PagePermissions value, Guid? tenantId)
             => new() { RoleId = roleId, PageId = pageId, PermissionValue = value, TenantId = tenantId };
+
+        // Grup hedefli (yeni)
+        public static PagePermission ForUserGroup(Guid userId, short menuGroupId, PagePermissions value, Guid? tenantId)
+            => new() { UserId = userId, MenuGroupId = menuGroupId, PermissionValue = value, TenantId = tenantId };
+
+        public static PagePermission ForRoleGroup(Guid roleId, short menuGroupId, PagePermissions value, Guid? tenantId)
+            => new() { RoleId = roleId, MenuGroupId = menuGroupId, PermissionValue = value, TenantId = tenantId };
     }
 }

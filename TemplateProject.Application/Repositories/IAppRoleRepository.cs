@@ -1,9 +1,10 @@
 ﻿using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
-using QrAssignment.Application.Features.Roles.Commands.Update;
-using QrAssignment.Application.Features.Roles.DTOs; 
+using QrAssignment.Application.Features.Roles.Commands.DTOs;
+using QrAssignment.Application.Features.Roles.DTOs;
 using QrAssignment.Application.Features.Roles.Queries.GetList;
 using QrAssignment.Domain.Entity.App;
+using QrAssignment.Domain.Shared.PagePermission;
 
 namespace QrAssignment.Application.Repositories
 {
@@ -34,7 +35,11 @@ namespace QrAssignment.Application.Repositories
         Task SetPassiveById(Guid id, CancellationToken ct);
         Task BulkSetPassiveByIds(List<Guid> ids, CancellationToken ct);
 
-        Task SyncRolePermissionsAsync(Guid roleId, IEnumerable<RolePagePermissionDto> permissions, CancellationToken ct = default);
+        Task SyncRolePermissionsAsync(
+    Guid roleId,
+    IEnumerable<RolePagePermissionDto> permissions,
+    PermissionTargetScope scope = PermissionTargetScope.Page,
+    CancellationToken ct = default);
 
     }
 }

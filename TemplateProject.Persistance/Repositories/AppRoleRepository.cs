@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
-using QrAssignment.Application.Features.Roles.Commands.Update;
+using QrAssignment.Application.Features.Roles.Commands.DTOs;
 using QrAssignment.Application.Features.Roles.DTOs;
 using QrAssignment.Application.Features.Roles.Queries.GetList;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
-using QrAssignment.Domain.Shared;
+using QrAssignment.Domain.Shared.PagePermission;
 using QrAssignment.Persistance.Context;
 using System.Linq.Expressions;
 
@@ -143,53 +143,66 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
         => SetActiveByIdAsync(id, ct);
 
     public async Task SyncRolePermissionsAsync(
-    Guid roleId, IEnumerable<RolePagePermissionDto> permissions, CancellationToken ct = default)
+      Guid roleId, IEnumerable<RolePagePermissionDto> permissions,
+      PermissionTargetScope scope = PermissionTargetScope.Page, CancellationToken ct = default)
     {
-        // Gelen yetkiler: sadece PermissionValue > 0 olanları tut (0 = yetki yok = satır olmasın)
-        var incoming = (permissions ?? [])
-            .Where(p => p.PermissionValue > 0)
-            .ToList();
+        var incoming = (permissions ?? []).Where(p => p.PermissionValue > 0).ToList();
+        var tenantId = _tenantIdService.GetTenantId();
 
-        // PageKey → PageId çevirisi (string ClaimType yerine artık gerçek FK)
-        var pageKeys = incoming.Select(p => p.PageName).ToHashSet();
-        var pageMap = await _context.Set<Page>()
-            .Where(pg => pageKeys.Contains(pg.PageKey))
-            .Select(pg => new { pg.Id, pg.PageKey })
-            .ToDictionaryAsync(x => x.PageKey, x => x.Id, ct);
-
-        // Rolün mevcut satırları
-        var current = await _context.Set<PagePermission>()
-            .Where(pp => pp.RoleId == roleId)
-            .ToListAsync(ct);
-
-        var tenantId = _tenantIdService.GetTenantId();   // rol tenant-scoped; satır da aynı tenant'ta
-
-        foreach (var p in incoming)
+        if (scope == PermissionTargetScope.Page)
         {
-            if (!pageMap.TryGetValue(p.PageName, out var pageId))
-                continue;   // bilinmeyen sayfa key'i — sessizce atla (istersen burada hata fırlat)
+            var keys = incoming.Where(p => !string.IsNullOrEmpty(p.PageName)).Select(p => p.PageName!).ToHashSet();
+            var map = await _context.Set<Page>()
+                .Where(pg => keys.Contains(pg.PageKey))
+                .Select(pg => new { pg.Id, pg.PageKey })
+                .ToDictionaryAsync(x => x.PageKey, x => x.Id, ct);
 
-            var existing = current.FirstOrDefault(x => x.PageId == pageId);
-            if (existing is null)
+            var current = await _context.Set<PagePermission>()
+                .Where(pp => pp.RoleId == roleId && pp.PageId != null)   // yalnızca SAYFA satırları
+                .ToListAsync(ct);
+
+            foreach (var p in incoming)
             {
-                _context.Set<PagePermission>().Add(
-                    PagePermission.ForRole(roleId, pageId, (PagePermissions)p.PermissionValue, tenantId));
+                if (string.IsNullOrEmpty(p.PageName) || !map.TryGetValue(p.PageName!, out var pageId)) continue;
+                var existing = current.FirstOrDefault(x => x.PageId == pageId);
+                if (existing is null)
+                    _context.Set<PagePermission>().Add(
+                        PagePermission.ForRole(roleId, pageId, (PagePermissions)p.PermissionValue, tenantId));
+                else
+                    existing.PermissionValue = (PagePermissions)p.PermissionValue;
             }
-            else
-            {
-                existing.PermissionValue = (PagePermissions)p.PermissionValue;   // güncelle
-            }
+
+            var ids = incoming.Where(p => !string.IsNullOrEmpty(p.PageName) && map.ContainsKey(p.PageName!))
+                              .Select(p => map[p.PageName!]).ToHashSet();
+            _context.Set<PagePermission>().RemoveRange(current.Where(x => !ids.Contains(x.PageId!.Value)));
         }
+        else // Group
+        {
+            var keys = incoming.Where(p => !string.IsNullOrEmpty(p.GroupKey)).Select(p => p.GroupKey!).ToHashSet();
+            var map = await _context.Set<MenuGroup>()
+                .Where(g => keys.Contains(g.Key))
+                .Select(g => new { g.Id, g.Key })
+                .ToDictionaryAsync(x => x.Key, x => x.Id, ct);
 
-        // Gelen listede artık olmayan sayfalar → sil
-        var incomingPageIds = incoming
-            .Where(p => pageMap.ContainsKey(p.PageName))
-            .Select(p => pageMap[p.PageName])
-            .ToHashSet();
+            var current = await _context.Set<PagePermission>()
+                .Where(pp => pp.RoleId == roleId && pp.MenuGroupId != null)   // yalnızca GRUP satırları
+                .ToListAsync(ct);
 
-        var toRemove = current.Where(x => !incomingPageIds.Contains(x.PageId));
-        _context.Set<PagePermission>().RemoveRange(toRemove);
+            foreach (var p in incoming)
+            {
+                if (string.IsNullOrEmpty(p.GroupKey) || !map.TryGetValue(p.GroupKey!, out var groupId)) continue;
+                var existing = current.FirstOrDefault(x => x.MenuGroupId == groupId);
+                if (existing is null)
+                    _context.Set<PagePermission>().Add(
+                        PagePermission.ForRoleGroup(roleId, groupId, (PagePermissions)p.PermissionValue, tenantId));
+                else
+                    existing.PermissionValue = (PagePermissions)p.PermissionValue;
+            }
 
-        // SaveChanges YOK — UnitOfWorkBehavior commit edecek (SyncAssignedUsersAsync ile aynı desen)
+            var ids = incoming.Where(p => !string.IsNullOrEmpty(p.GroupKey) && map.ContainsKey(p.GroupKey!))
+                              .Select(p => map[p.GroupKey!]).ToHashSet();
+            _context.Set<PagePermission>().RemoveRange(current.Where(x => !ids.Contains(x.MenuGroupId!.Value)));
+        }
+        // SaveChanges YOK — UnitOfWorkBehavior commit eder
     }
 }

@@ -5,6 +5,7 @@ using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared;
+using QrAssignment.Domain.Shared.PagePermission;
 
 namespace QrAssignment.Application.Features.Roles.Commands.Create
 {
@@ -50,7 +51,7 @@ namespace QrAssignment.Application.Features.Roles.Commands.Create
                 await _appRoleRepository.SyncAssignedUsersAsync(role.Id, request.UserIds, ct);
 
             // Sayfa yetkileri artık PagePermission tablosuna (Identity claim değil)
-            await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, ct);
+            await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, PermissionTargetScope.Page, ct);
 
             return Result.Success();
         }

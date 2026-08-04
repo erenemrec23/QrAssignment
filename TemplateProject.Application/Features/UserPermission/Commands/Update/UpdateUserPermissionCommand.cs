@@ -1,17 +1,11 @@
-﻿using MediatR;
-using QrAssignment.Application.Abstractions;
-using QrAssignment.Application.Interfaces;
+﻿using QrAssignment.Application.Abstractions;
 using QrAssignment.Domain.Shared;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using QrAssignment.Domain.Shared.PagePermission;
 
 namespace QrAssignment.Application.Features.Permission.Commands.Update
 {
     public sealed record UpdateUserPermissionCommand(
-        string UserId,
-        List<PermissionUserUpdateDto> Permissions) : ICommand<Result>
-    {
-
-    };
+    string UserId,
+    List<PermissionUserUpdateDto> Permissions,
+    PermissionTargetScope Scope = PermissionTargetScope.Page) : ICommand<Result>;
 }
