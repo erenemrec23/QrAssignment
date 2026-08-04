@@ -15,7 +15,7 @@ using RolesBulkExcelDto = QrAssignment.Application.Features.Roles.Commands.Excel
 // Alias tanımlamaları ile tip isimleri ve okunabilirlik sadeleştirildi
 using TenantsBulkExcelDto = QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate.BulkCreateTenantInputDto;
 using UsersBulkExcelDto = QrAssignment.Application.Features.Users.Commands.Excel.BulkCreate.BulkCreateAppUserInputDto;
-
+using GetListMenuQuery = QrAssignment.Application.Features.Menu.Queries.GetList.GetListMenuQuery;
 namespace QrAssignment.Application.Security
 {
     public static class AppPages
@@ -211,6 +211,7 @@ namespace QrAssignment.Application.Security
                 typeof(Features.AuthFeatures.Commands.ForgotPassword.ForgotPasswordCommand),
                 typeof(Features.AuthFeatures.Commands.ResetPassword.ResetPasswordCommand),
                 typeof(GetSystemModulesQuery),
+                typeof(GetListMenuQuery)
             };
         }
         

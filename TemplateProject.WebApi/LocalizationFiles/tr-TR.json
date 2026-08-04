@@ -292,7 +292,12 @@
   "Label.QrLocationQrCodeImageDownloadErrorMessageWithDetailsAndInnerExceptionAndStackTrace": "QR Lokasyon Kodu Görseli İndirme İşlemi Başarısız Oldu. Hata Mesajı: {0}. İç Hata: {1}. Stack Trace: {2}",
   "PageTitle.AppRoles": "Uygulama Rolleri",
   "GroupTitle.Admin": "Yönetici",
-  "Label.AuthorizeWizard": "Yetkilendirme Sihirbazı"
+  "Label.AuthorizeWizard": "Yetkilendirme Sihirbazı",
+  "Title.Wizard.ByPage": "Sayfa Bazlı Yetkilendirme",
+  "Title.Wizard.ByModule": "Modül Bazlı Yetkilendirme",
+  "Title.Wizard.SelectStep": "Yetkilendirme Adımlarını Seçiniz",
+  "Title.Wizard.PermissionStep": "Yetki Adımı",
+  "MenuGroup.Admin": "Yönetici Menüsü"
 
 
 

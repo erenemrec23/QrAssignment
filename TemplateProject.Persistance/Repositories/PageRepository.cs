@@ -2,6 +2,7 @@
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
+using QrAssignment.Application.Features.Menu.Queries.DTOs;
 internal sealed class PageRepository : IPageRepository
 {
     private readonly AppDbContext _context;
@@ -15,5 +16,18 @@ internal sealed class PageRepository : IPageRepository
             p.PageKey,
             p.Key,
             p.MenuGroup != null ? p.MenuGroup.Key : null))   // grupsuz sayfa → null
+        .ToListAsync(ct);
+
+    public Task<List<MenuGroupDto>> GetMenuAsync(CancellationToken ct = default)
+    => _context.Set<MenuGroup>()
+        .AsNoTracking()
+        .OrderBy(g => g.Order)
+        .Select(g => new MenuGroupDto(
+            g.Key,
+            g.Icon,
+            g.Pages.Where(p => p.ShowInMenu)
+                   .OrderBy(p => p.Order)
+                   .Select(p => new MenuPageDto(p.PageKey, p.Key, p.Icon, p.Route))
+                   .ToList()))
         .ToListAsync(ct);
 }

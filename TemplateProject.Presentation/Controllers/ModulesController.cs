@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc; 
-
+﻿using Microsoft.AspNetCore.Mvc;
+using QrAssignment.Application.Features.Menu.Queries.GetList;
 namespace QrAssignment.Presentation.Controllers
 {
     [ApiController]
@@ -10,5 +10,9 @@ namespace QrAssignment.Presentation.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetSystemModules(CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(new GetSystemModulesQuery(), cancellationToken));
+
+        [HttpGet("GetMenu")]
+        public async Task<IActionResult> GetMenu(CancellationToken ct)
+    => HandleResult(await Mediator.Send(new GetListMenuQuery(), ct));
     }
 }
