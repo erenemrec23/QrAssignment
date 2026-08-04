@@ -297,7 +297,10 @@
   "Title.Wizard.ByModule": "Modül Bazlı Yetkilendirme",
   "Title.Wizard.SelectStep": "Yetkilendirme Adımlarını Seçiniz",
   "Title.Wizard.PermissionStep": "Yetki Adımı",
-  "MenuGroup.Admin": "Yönetici Menüsü"
+  "MenuGroup.Admin": "Yönetici Menüsü",
+  "User-permission-wizard.List.Title": "Kullanıcı / Yetki Sihirbazı",
+  "Wizard.Next": "Sonraki",
+  "Role-permission-wizard.List.Title": "Rol / Yetki Sihirbazı"
 
 
 
