@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.DTOs;
-using QrAssignment.Application.Security; // Registry'nin olduğu namespace
+using QrAssignment.Application.Security;
 using System.Text.Json;
 using QrAssignment.Domain.Shared.PagePermission;
 
@@ -24,7 +24,6 @@ namespace QrAssignment.Application.Behaviors
             // 1. KONTROL: Bu komut serbest listesinde mi?
             if (AuthorizationRegistry.UnsecuredCommands.Contains(requestType))
             {
-                // Hiçbir güvenlik kontrolü yapmadan işleme devam et
                 return await next();
             }
 
@@ -34,6 +33,10 @@ namespace QrAssignment.Application.Behaviors
                 var userId = _currentUserService.UserId;
                 if (string.IsNullOrEmpty(userId))
                     throw new UnauthorizedAccessException("Kimlik doğrulama başarısız. Lütfen giriş yapın.");
+
+                // PageName registry'de sabitse onu kullan; null ise (dynamic) request'ten oku
+                string pageKey = authRequirement.PageName
+                    ?? ResolveDynamicPageKey(request, requestType);
 
                 var permissionsClaimValue = _currentUserService.GetClaims("permissions").FirstOrDefault();
                 if (string.IsNullOrEmpty(permissionsClaimValue))
@@ -47,36 +50,47 @@ namespace QrAssignment.Application.Behaviors
 
                     int totalEffectivePermission = 0;
 
-                    // Kayıt defterinden gelen sayfa adına (authRequirement.PageName) göre filtrele
                     foreach (var permission in permissionsList)
                     {
-                        if (permission.PageName == authRequirement.PageName)
+                        if (permission.PageName == pageKey)
                         {
                             totalEffectivePermission |= permission.PermissionValue;
                         }
                     }
 
                     if (totalEffectivePermission == 0)
-                        throw new UnauthorizedAccessException($"Bu sayfaya ({authRequirement.PageName}) erişim yetkiniz bulunmamaktadır.");
+                        throw new UnauthorizedAccessException($"Bu sayfaya ({pageKey}) erişim yetkiniz bulunmamaktadır.");
 
-                    var userPermissions = (PagePermissions)totalEffectivePermission;
+                    var userPermissions = (PageAccessFlags)totalEffectivePermission;
 
-                    // Kayıt defterinden gelen yetki seviyesine (authRequirement.Permission) göre kontrol et
                     if (!userPermissions.HasFlag(authRequirement.Permission))
-                        throw new UnauthorizedAccessException($"Bu işlemi gerçekleştirmek için yetkiniz eksik.");
+                        throw new UnauthorizedAccessException("Bu işlemi gerçekleştirmek için yetkiniz eksik.");
                 }
                 catch (JsonException)
                 {
                     throw new UnauthorizedAccessException("Yetki verisi formatı hatalı.");
                 }
 
-                // Yetki tamamsa işleme devam et
                 return await next();
             }
-
-            // 3. KONTROL: Komut defterde YANLIŞLIKLA UNUTULMUŞ! (Güvenlik Açığı Koruması)
-            // Sistemdeki bir Command bu iki listeden birinde değilse, uygulamanın çalışmasını kasıtlı olarak durduruyoruz.
+             
             throw new InvalidOperationException($"Güvenlik İhlali: '{requestType.Name}' komutu AuthorizationRegistry içerisinde Secured veya Unsecured olarak tanımlanmamış!");
+        }
+
+        /// <summary>
+        /// Registry'de PageName null ise (dynamic/page-scoped komut), request IPageScopedRequest
+        /// implement etmek zorundadır. Etmiyorsa bu bir konfigürasyon hatasıdır, sessizce geçilmez.
+        /// </summary>
+        private static string ResolveDynamicPageKey(TRequest request, Type requestType)
+        {
+            if (request is not IPageScopedRequest pageScoped)
+                throw new InvalidOperationException(
+                    $"Güvenlik İhlali: '{requestType.Name}' registry'de dynamic (PageName=null) olarak kayıtlı ama IPageScopedRequest implement etmiyor.");
+
+            if (string.IsNullOrWhiteSpace(pageScoped.PageKey))
+                throw new UnauthorizedAccessException("Geçersiz sayfa anahtarı (PageKey boş gönderildi).");
+
+            return pageScoped.PageKey;
         }
     }
 }

@@ -12,6 +12,7 @@ using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared.PagePermission;
 using QrAssignment.Persistance.Context;
 using System.Linq.Expressions;
+using TemplateProject.Persistance.Migrations;
 
 namespace QrAssignment.Persistance.Repositories;
 
@@ -172,65 +173,84 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
     }
 
     public async Task SyncUserPermissionsAsync(
-    Guid userId, IEnumerable<PermissionUserUpdateDto> permissions,
-    PermissionTargetScope scope, CancellationToken ct = default)
+    Guid userId, IEnumerable<PermissionUserUpdateDto> permissions, CancellationToken ct = default)
     {
         var incoming = (permissions ?? []).Where(p => p.PermissionValue > 0).ToList();
         var tenantId = _tenantIdService.GetTenantId();
 
-        if (scope == PermissionTargetScope.Page)
+        // Hedef tipine göre ayır — Scope alanına gerek yok, PageName/GroupKey belli ediyor
+        var pageItems = incoming.Where(p => !string.IsNullOrEmpty(p.PageName)).ToList();
+        var groupItems = incoming.Where(p => string.IsNullOrEmpty(p.PageName) && !string.IsNullOrEmpty(p.GroupKey)).ToList();
+
+        await SyncPageRowsAsync(userId, pageItems, tenantId, ct);
+        await SyncGroupRowsAsync(userId, groupItems, tenantId, ct);
+        // SaveChanges YOK — UnitOfWorkBehavior tek transaction'da commit eder
+    }
+
+    // --- SAYFA satırları ---
+    private async Task SyncPageRowsAsync(Guid userId, List<PermissionUserUpdateDto> items, Guid? tenantId, CancellationToken ct)
+    {
+        var keys = items.Select(p => p.PageName!).ToHashSet();
+        var map = await _context.Set<Page>()
+            .IgnoreQueryFilters(["SoftDeleteFilter"])
+            .Where(pg => keys.Contains(pg.PageKey))
+            .Select(pg => new { pg.Id, pg.PageKey })
+            .ToDictionaryAsync(x => x.PageKey, x => x.Id, ct);
+
+        var current = await _context.Set<PagePermission>()
+            .IgnoreQueryFilters(["SoftDeleteFilter"])
+            .Where(pp => pp.UserId == userId && pp.PageId != null)   // yalnızca SAYFA satırları
+            .ToListAsync(ct);
+
+        foreach (var p in items)
         {
-            var keys = incoming.Where(p => !string.IsNullOrEmpty(p.PageName)).Select(p => p.PageName!).ToHashSet();
-            var map = await _context.Set<Page>()
-                .Where(pg => keys.Contains(pg.PageKey))
-                .Select(pg => new { pg.Id, pg.PageKey })
-                .ToDictionaryAsync(x => x.PageKey, x => x.Id, ct);
-
-            var current = await _context.Set<PagePermission>()
-                .Where(pp => pp.UserId == userId && pp.PageId != null)   // yalnızca SAYFA satırları
-                .ToListAsync(ct);
-
-            foreach (var p in incoming)
+            if (!map.TryGetValue(p.PageName!, out var pageId)) continue;
+            var existing = current.FirstOrDefault(x => x.PageId == pageId);
+            if (existing is null)
+                _context.Set<PagePermission>().Add(
+                    PagePermission.ForUser(userId, pageId, (PageAccessFlags)p.PermissionValue, tenantId));
+            else
             {
-                if (string.IsNullOrEmpty(p.PageName) || !map.TryGetValue(p.PageName!, out var pageId)) continue;
-                var existing = current.FirstOrDefault(x => x.PageId == pageId);
-                if (existing is null)
-                    _context.Set<PagePermission>().Add(
-                        PagePermission.ForUser(userId, pageId, (PagePermissions)p.PermissionValue, tenantId));
-                else
-                    existing.PermissionValue = (PagePermissions)p.PermissionValue;
-            }
 
-            var ids = incoming.Where(p => !string.IsNullOrEmpty(p.PageName) && map.ContainsKey(p.PageName!))
-                              .Select(p => map[p.PageName!]).ToHashSet();
-            _context.Set<PagePermission>().RemoveRange(current.Where(x => !ids.Contains(x.PageId!.Value)));
+                existing.PermissionValue = (PageAccessFlags)p.PermissionValue;
+                existing.IsPassived = false; 
+            }
         }
-        else // Group
+
+        var ids = items.Where(p => map.ContainsKey(p.PageName!)).Select(p => map[p.PageName!]).ToHashSet();
+        _context.Set<PagePermission>().RemoveRange(current.Where(x => !ids.Contains(x.PageId!.Value)));
+    }
+
+    // --- GRUP satırları ---
+    private async Task SyncGroupRowsAsync(Guid userId, List<PermissionUserUpdateDto> items, Guid? tenantId, CancellationToken ct)
+    {
+        var keys = items.Select(p => p.GroupKey!).ToHashSet();
+        var map = await _context.Set<MenuGroup>()
+            .IgnoreQueryFilters(["SoftDeleteFilter"])
+            .Where(g => keys.Contains(g.Key))
+            .Select(g => new { g.Id, g.Key })
+            .ToDictionaryAsync(x => x.Key, x => x.Id, ct);
+
+        var current = await _context.Set<PagePermission>()
+            .IgnoreQueryFilters(["SoftDeleteFilter"])
+            .Where(pp => pp.UserId == userId && pp.MenuGroupId != null)   // yalnızca GRUP satırları
+            .ToListAsync(ct);
+
+        foreach (var p in items)
         {
-            var keys = incoming.Where(p => !string.IsNullOrEmpty(p.GroupKey)).Select(p => p.GroupKey!).ToHashSet();
-            var map = await _context.Set<MenuGroup>()
-                .Where(g => keys.Contains(g.Key))
-                .Select(g => new { g.Id, g.Key })
-                .ToDictionaryAsync(x => x.Key, x => x.Id, ct);
-
-            var current = await _context.Set<PagePermission>()
-                .Where(pp => pp.UserId == userId && pp.MenuGroupId != null)   // yalnızca GRUP satırları
-                .ToListAsync(ct);
-
-            foreach (var p in incoming)
-            {
-                if (string.IsNullOrEmpty(p.GroupKey) || !map.TryGetValue(p.GroupKey!, out var groupId)) continue;
-                var existing = current.FirstOrDefault(x => x.MenuGroupId == groupId);
-                if (existing is null)
-                    _context.Set<PagePermission>().Add(
-                        PagePermission.ForUserGroup(userId, groupId, (PagePermissions)p.PermissionValue, tenantId));
-                else
-                    existing.PermissionValue = (PagePermissions)p.PermissionValue;
+            if (!map.TryGetValue(p.GroupKey!, out var groupId)) continue;
+            var existing = current.FirstOrDefault(x => x.MenuGroupId == groupId);
+            if (existing is null)
+                _context.Set<PagePermission>().Add(
+                    PagePermission.ForUserGroup(userId, groupId, (PageAccessFlags)p.PermissionValue, tenantId));
+            else
+            { 
+                existing.PermissionValue = (PageAccessFlags)p.PermissionValue;
+                existing.IsPassived = false;
             }
-
-            var ids = incoming.Where(p => !string.IsNullOrEmpty(p.GroupKey) && map.ContainsKey(p.GroupKey!))
-                              .Select(p => map[p.GroupKey!]).ToHashSet();
-            _context.Set<PagePermission>().RemoveRange(current.Where(x => !ids.Contains(x.MenuGroupId!.Value)));
         }
+
+        var ids = items.Where(p => map.ContainsKey(p.GroupKey!)).Select(p => map[p.GroupKey!]).ToHashSet();
+        _context.Set<PagePermission>().RemoveRange(current.Where(x => !ids.Contains(x.MenuGroupId!.Value)));
     }
 }

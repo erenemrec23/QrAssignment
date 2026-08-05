@@ -12,8 +12,8 @@ using QrAssignment.Persistance.Context;
 namespace TemplateProject.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260804110211_last-changes-0408")]
-    partial class lastchanges0408
+    [Migration("20260805094515_Page_Permission_BaseEntity")]
+    partial class Page_Permission_BaseEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -327,8 +327,23 @@ namespace TemplateProject.Persistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsPassived")
+                        .HasColumnType("bit");
+
                     b.Property<short?>("MenuGroupId")
                         .HasColumnType("smallint");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int?>("PageId")
                         .HasColumnType("int");
@@ -336,8 +351,20 @@ namespace TemplateProject.Persistance.Migrations
                     b.Property<int>("PermissionValue")
                         .HasColumnType("int");
 
+                    b.Property<long>("RevNum")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RevNum"));
+
                     b.Property<Guid?>("RoleId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid?>("TenantId")
                         .HasColumnType("uniqueidentifier");
@@ -347,7 +374,11 @@ namespace TemplateProject.Persistance.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedByUserId");
+
                     b.HasIndex("MenuGroupId");
+
+                    b.HasIndex("ModifiedByUserId");
 
                     b.HasIndex("PageId");
 
@@ -367,7 +398,7 @@ namespace TemplateProject.Persistance.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL AND [PageId] IS NOT NULL");
 
-                    b.ToTable("PageAccessFlags", null, t =>
+                    b.ToTable("PagePermissions", null, t =>
                         {
                             t.HasCheckConstraint("CK_PagePermission_SingleOwner", "([UserId] IS NOT NULL AND [RoleId] IS NULL) OR ([UserId] IS NULL AND [RoleId] IS NOT NULL)");
 
@@ -757,10 +788,18 @@ namespace TemplateProject.Persistance.Migrations
 
             modelBuilder.Entity("QrAssignment.Domain.Entity.App.PagePermission", b =>
                 {
+                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId");
+
                     b.HasOne("QrAssignment.Domain.Entity.App.MenuGroup", "MenuGroup")
                         .WithMany()
                         .HasForeignKey("MenuGroupId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("QrAssignment.Domain.Entity.App.AppUser", "ModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("ModifiedByUserId");
 
                     b.HasOne("QrAssignment.Domain.Entity.App.Page", "Page")
                         .WithMany()
@@ -777,7 +816,11 @@ namespace TemplateProject.Persistance.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.Navigation("CreatedByUser");
+
                     b.Navigation("MenuGroup");
+
+                    b.Navigation("ModifiedByUser");
 
                     b.Navigation("Page");
 

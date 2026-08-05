@@ -167,9 +167,9 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
                 var existing = current.FirstOrDefault(x => x.PageId == pageId);
                 if (existing is null)
                     _context.Set<PagePermission>().Add(
-                        PagePermission.ForRole(roleId, pageId, (PagePermissions)p.PermissionValue, tenantId));
+                        PagePermission.ForRole(roleId, pageId, (PageAccessFlags)p.PermissionValue, tenantId));
                 else
-                    existing.PermissionValue = (PagePermissions)p.PermissionValue;
+                    existing.PermissionValue = (PageAccessFlags)p.PermissionValue;
             }
 
             var ids = incoming.Where(p => !string.IsNullOrEmpty(p.PageName) && map.ContainsKey(p.PageName!))
@@ -194,9 +194,9 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
                 var existing = current.FirstOrDefault(x => x.MenuGroupId == groupId);
                 if (existing is null)
                     _context.Set<PagePermission>().Add(
-                        PagePermission.ForRoleGroup(roleId, groupId, (PagePermissions)p.PermissionValue, tenantId));
+                        PagePermission.ForRoleGroup(roleId, groupId, (PageAccessFlags)p.PermissionValue, tenantId));
                 else
-                    existing.PermissionValue = (PagePermissions)p.PermissionValue;
+                    existing.PermissionValue = (PageAccessFlags)p.PermissionValue;
             }
 
             var ids = incoming.Where(p => !string.IsNullOrEmpty(p.GroupKey) && map.ContainsKey(p.GroupKey!))

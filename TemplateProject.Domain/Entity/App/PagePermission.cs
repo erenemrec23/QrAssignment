@@ -3,9 +3,8 @@ using QrAssignment.Domain.Shared.PagePermission;
 
 namespace QrAssignment.Domain.Entity.App
 {
-    public sealed class PagePermission : IMustHaveTenant
-    {
-        public Guid Id { get; set; }
+    public sealed class PagePermission : BaseEntity, IMustHaveTenant
+    { 
 
         // Sahip: tam biri dolu (CHECK)
         public Guid? UserId { get; set; }
@@ -19,21 +18,21 @@ namespace QrAssignment.Domain.Entity.App
         public short? MenuGroupId { get; set; }       // yeni — MenuGroup.Id (short)
         public MenuGroup? MenuGroup { get; set; }
 
-        public PagePermissions PermissionValue { get; set; }
+        public PageAccessFlags PermissionValue { get; set; }
         public Guid? TenantId { get; set; }
 
         // Sayfa hedefli (mevcut isimler korundu → repolar bozulmaz)
-        public static PagePermission ForUser(Guid userId, int pageId, PagePermissions value, Guid? tenantId)
+        public static PagePermission ForUser(Guid userId, int pageId, PageAccessFlags value, Guid? tenantId)
             => new() { UserId = userId, PageId = pageId, PermissionValue = value, TenantId = tenantId };
 
-        public static PagePermission ForRole(Guid roleId, int pageId, PagePermissions value, Guid? tenantId)
+        public static PagePermission ForRole(Guid roleId, int pageId, PageAccessFlags value, Guid? tenantId)
             => new() { RoleId = roleId, PageId = pageId, PermissionValue = value, TenantId = tenantId };
 
         // Grup hedefli (yeni)
-        public static PagePermission ForUserGroup(Guid userId, short menuGroupId, PagePermissions value, Guid? tenantId)
+        public static PagePermission ForUserGroup(Guid userId, short menuGroupId, PageAccessFlags value, Guid? tenantId)
             => new() { UserId = userId, MenuGroupId = menuGroupId, PermissionValue = value, TenantId = tenantId };
 
-        public static PagePermission ForRoleGroup(Guid roleId, short menuGroupId, PagePermissions value, Guid? tenantId)
+        public static PagePermission ForRoleGroup(Guid roleId, short menuGroupId, PageAccessFlags value, Guid? tenantId)
             => new() { RoleId = roleId, MenuGroupId = menuGroupId, PermissionValue = value, TenantId = tenantId };
     }
 }

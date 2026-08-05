@@ -360,7 +360,7 @@ namespace TemplateProject.Persistance.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("PagePermissions", null, t =>
+                    b.ToTable("PageAccessFlags", null, t =>
                         {
                             t.HasCheckConstraint("CK_PagePermission_SingleOwner", "([UserId] IS NOT NULL AND [RoleId] IS NULL) OR ([UserId] IS NULL AND [RoleId] IS NOT NULL)");
                         });

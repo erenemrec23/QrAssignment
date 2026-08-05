@@ -300,7 +300,11 @@
   "MenuGroup.Admin": "Yönetici Menüsü",
   "User-permission-wizard.List.Title": "Kullanıcı / Yetki Sihirbazı",
   "Wizard.Next": "Sonraki",
-  "Role-permission-wizard.List.Title": "Rol / Yetki Sihirbazı"
+  "Role-permission-wizard.List.Title": "Rol / Yetki Sihirbazı",
+  "Label.Modules": "Modüller",
+  "Label.Pages": "Sayfalar",
+  "Label.ModulePermissionHint": "Modül Yetkileri",
+  "Label.ManagePagePermissions": "Sayfa Yetkilerini Yönet"
 
 
 

@@ -42,7 +42,6 @@ namespace QrAssignment.Application.Repositories
 
         Task<AppUser?> GetByEmailForRememberPasswordAsync(string email, CancellationToken ct = default);
 
-        Task SyncUserPermissionsAsync(Guid userId, IEnumerable<PermissionUserUpdateDto> permissions,
-    PermissionTargetScope scope, CancellationToken ct = default);
+        Task SyncUserPermissionsAsync(Guid userId, IEnumerable<PermissionUserUpdateDto> permissions, CancellationToken ct = default);
     }
 }

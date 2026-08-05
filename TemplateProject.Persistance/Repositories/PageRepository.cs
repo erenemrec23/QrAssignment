@@ -1,8 +1,10 @@
-﻿using QrAssignment.Application.Repositories;
-using QrAssignment.Domain.Entity.App;
-using QrAssignment.Persistance.Context;
+﻿using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.Features.Menu.Queries.DTOs;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Entity.App;
+using QrAssignment.Persistance.Context;
+
 internal sealed class PageRepository : IPageRepository
 {
     private readonly AppDbContext _context;
@@ -30,4 +32,10 @@ internal sealed class PageRepository : IPageRepository
                    .Select(p => new MenuPageDto(p.PageKey, p.Key, p.Icon, p.Route))
                    .ToList()))
         .ToListAsync(ct);
+
+
+    public Task<Page> GetPageByKeyAsync(string pageKey, CancellationToken cancellationToken = default)
+    => _context.Set<Page>()
+        .AsNoTracking()
+        .FirstOrDefaultAsync(p => p.PageKey == pageKey , cancellationToken);
 }

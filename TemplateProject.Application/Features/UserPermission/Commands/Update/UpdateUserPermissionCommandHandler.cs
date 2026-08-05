@@ -24,7 +24,7 @@ namespace QrAssignment.Application.Features.Permission.Commands.Update
             if (!Guid.TryParse(request.UserId, out var userId))
                 return Result.Failure(new Error("UserNotFound", _localizer["Error.UserNotFound"]));
 
-            await _appUserRepository.SyncUserPermissionsAsync(userId, request.Permissions, request.Scope, ct);
+            await _appUserRepository.SyncUserPermissionsAsync(userId, request.Permissions, ct);
 
             return Result.Success();
         }

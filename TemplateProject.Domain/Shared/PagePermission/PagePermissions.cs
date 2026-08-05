@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QrAssignment.Domain.Shared.PagePermission
+﻿namespace QrAssignment.Domain.Shared.PagePermission
 {
     [Flags] // Bu attribute çok kritiktir!
-    public enum PagePermissions : int
+    public enum PageAccessFlags : int
     {
         None = 0,
         View = 1,          
@@ -17,6 +13,7 @@ namespace QrAssignment.Domain.Shared.PagePermission
         Delete = 64,
         ExportExcel = 128,  
         ImportExcel = 256,
+        ManagePagePermissions = 512,
 
         // Sık kullanılan kombinasyonlar (Opsiyonel)
         ViewAndInsert = View | Insert,  
