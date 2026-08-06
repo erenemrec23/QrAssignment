@@ -24,11 +24,11 @@ namespace QrAssignment.Application.Security
 {
     public static class AppPages
     {
-        public const string Tenants = "Page_Tenants";
-        public const string Users = "Page_Users";
-        public const string Roles = "Page_Roles";
-        public const string UserPermissions = "Page_UserPermissions";
-        public const string QrLocations = "Page_QrLocations";
+        public const string Tenants = "Tenants";
+        public const string Users = "Users";
+        public const string Roles = "Roles";
+        public const string UserPermissions = "UserPermissions";
+        public const string QrLocations = "QrLocations";
     }
 
     public static class AuthorizationRegistry

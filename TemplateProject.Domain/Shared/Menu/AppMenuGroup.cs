@@ -8,19 +8,19 @@
 
     public enum AppPage
     {
-        [PageDefinition(Group = AppMenuGroup.Admin, PageKey = "Page_Users",
+        [PageDefinition(Group = AppMenuGroup.Admin, PageKey = "Users",
             TranslationKey = "Users", Icon = "bi-people", Route = "/users", Order = 1)]
         Users = 1,
 
-        [PageDefinition(Group = AppMenuGroup.Admin, PageKey = "Page_QrLocations",
+        [PageDefinition(Group = AppMenuGroup.Admin, PageKey = "QrLocations",
             TranslationKey = "QrLocations", Icon = "bi-qr-code", Route = "/qr-locations", Order = 2)]
         QrLocations = 2,
 
-        [PageDefinition(Group = AppMenuGroup.Admin, PageKey = "Page_Tenants",
+        [PageDefinition(Group = AppMenuGroup.Admin, PageKey = "Tenants",
             TranslationKey = "Tenants", Icon = "bi-shop", Route = "/tenants", Order = 3)]
         Tenants = 3,
 
-        [PageDefinition(Group = AppMenuGroup.Admin, PageKey = "Page_Roles",
+        [PageDefinition(Group = AppMenuGroup.Admin, PageKey = "Roles",
             TranslationKey = "AppRoles", Icon = "bi-shield", Route = "/roles", Order = 4)]
         Roles = 4,
 
