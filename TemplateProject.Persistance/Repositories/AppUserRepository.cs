@@ -255,10 +255,9 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
         var ids = items.Where(p => map.ContainsKey(p.GroupKey!)).Select(p => map[p.GroupKey!]).ToHashSet();
         _context.Set<PagePermission>().RemoveRange(current.Where(x => !ids.Contains(x.MenuGroupId!.Value)));
     }
-      
-     
+
     public async Task<Paginate<PermissionLookUpListItemDto>> GetUserLookUpWithPermissionAsync(
-    GetUserLookUpWithPermissionQuery request, CancellationToken ct = default)
+        GetUserLookUpWithPermissionQuery request, CancellationToken ct = default)
     {
         var pageId = await _context.Set<Page>()
             .Where(p => p.PageKey == request.PageKey)
@@ -269,17 +268,16 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
             .Where(pp => pp.UserId != null && pp.PageId == pageId && pp.PermissionValue > 0)
             .Select(pp => pp.UserId!.Value);
 
-        // HAM entity IQueryable — projekte ETME
         var query = _context.AppUsers.AsNoTracking().AsQueryable();
 
-        // Filtre 1: isim araması
+        // 1. İsim arama filtresi
         if (!string.IsNullOrWhiteSpace(request.Name))
         {
             var term = request.Name.Trim();
             query = query.Where(u => EF.Functions.Like(u.FullName, $"%{term}%"));
         }
 
-        // Filtre 2: yetki durumu — HasPermission'ı entity üzerinde ifade et
+        // 2. Yetki durumu filtresi
         query = request.Filter switch
         {
             PermissionFilter.WithPermission => query.Where(u => permittedIds.Contains(u.Id)),
@@ -287,21 +285,40 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
             _ => query
         };
 
-        query = query.OrderBy(u => u.FullName);
+        // 3. ADIM: DTO Projeksiyonu
+        var projectedQuery = query.Select(u => new PermissionLookUpListItemDto
+        {
+            Id = u.Id,
+            Name = u.FullName,
+            HasPermission = permittedIds.Contains(u.Id)
+        });
 
-        // Projeksiyonu ToPaginateAsync'e ARGÜMAN olarak ver — T=AppUser, TDto çıkar
-        return await query.ToPaginateAsync(
-            request,
-            u => new PermissionLookUpListItemDto
-            {
-                Id = u.Id,
-                Name = u.FullName,
-                HasPermission = permittedIds.Contains(u.Id)
-            },
-            ct);
+        // 4. ADIM: MANUEL SIRALAMA (DynamicSort iptal, parametreden okuyoruz)
+        bool isAsc = string.Equals(request.SortDirection, "asc", StringComparison.OrdinalIgnoreCase);
+
+        if (string.Equals(request.SortBy, "Name", StringComparison.OrdinalIgnoreCase))
+        {
+            projectedQuery = isAsc
+                ? projectedQuery.OrderBy(x => x.Name)
+                : projectedQuery.OrderByDescending(x => x.Name);
+        }
+        else
+        {
+            // Varsayılan ya da SortBy = "HasPermission"
+            // Önce yetkili olanlar (desc) ya da tersi, sonra her durumda isme göre alfabetik
+            projectedQuery = isAsc
+                ? projectedQuery.OrderBy(x => x.HasPermission).ThenBy(x => x.Name)
+                : projectedQuery.OrderByDescending(x => x.HasPermission).ThenBy(x => x.Name);
+        }
+
+        // DynamicFilterAndSort null olmalı ki içindeki extension otomatik sort basmaya kalkıp bozmasın
+        request.DynamicFilterAndSort = null;
+
+        return await projectedQuery.ToPaginateAsync(request, x => x, ct);
     }
+
     public async Task<Paginate<PermissionLookUpListItemDto>> GetRoleLookUpWithPermissionAsync(
-    GetRoleLookUpWithPermissionQuery request, CancellationToken ct = default)
+        GetRoleLookUpWithPermissionQuery request, CancellationToken ct = default)
     {
         var pageId = await _context.Set<Page>()
             .Where(p => p.PageKey == request.PageKey)
@@ -327,16 +344,34 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
             _ => query
         };
 
-        query = query.OrderBy(r => r.Name);
+        // 1. ADIM: DTO Projeksiyonu
+        var projectedQuery = query.Select(r => new PermissionLookUpListItemDto
+        {
+            Id = r.Id,
+            Name = r.Name,
+            HasPermission = permittedIds.Contains(r.Id)
+        });
 
-        return await query.ToPaginateAsync(
-            request,
-            r => new PermissionLookUpListItemDto
-            {
-                Id = r.Id,
-                Name = r.Name,
-                HasPermission = permittedIds.Contains(r.Id)
-            },
-            ct);
+        // 2. ADIM: MANUEL SIRALAMA
+        bool isAsc = string.Equals(request.SortDirection, "asc", StringComparison.OrdinalIgnoreCase);
+
+        if (string.Equals(request.SortBy, "Name", StringComparison.OrdinalIgnoreCase))
+        {
+            projectedQuery = isAsc
+                ? projectedQuery.OrderBy(x => x.Name)
+                : projectedQuery.OrderByDescending(x => x.Name);
+        }
+        else
+        {
+            // Varsayılan ya da SortBy = "HasPermission"
+            projectedQuery = isAsc
+                ? projectedQuery.OrderBy(x => x.HasPermission).ThenBy(x => x.Name)
+                : projectedQuery.OrderByDescending(x => x.HasPermission).ThenBy(x => x.Name);
+        }
+
+        // DynamicFilterAndSort null olmalı ki içindeki extension otomatik sort basmaya kalkıp bozmasın
+        request.DynamicFilterAndSort = null;
+
+        return await projectedQuery.ToPaginateAsync(request, x => x, ct);
     }
 }

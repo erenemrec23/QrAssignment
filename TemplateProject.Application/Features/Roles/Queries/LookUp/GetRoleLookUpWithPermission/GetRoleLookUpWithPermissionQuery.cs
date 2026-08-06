@@ -18,7 +18,10 @@ namespace QrAssignment.Application.Features.Roles.Queries.LookUp.GetRoleLookUpWi
         public string PageKey { get; set; } = default!;
 
         public PermissionFilter Filter { get; set; } = PermissionFilter.All;
-        public string? Name { get; set; }
+        public string? Name { get; set; } 
+        public string? SortBy { get; set; } = "HasPermission";
+         
+        public string? SortDirection { get; set; } = "desc";
 
     }
 }

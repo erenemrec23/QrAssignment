@@ -18,6 +18,8 @@ namespace QrAssignment.Application.Features.Users.Queries.LookUp.GetPermissionLo
          
         public PermissionFilter Filter { get; set; } = PermissionFilter.All;
         public string? Name { get; set; }
+        public string? SortBy { get; set; } = "HasPermission";
 
+        public string? SortDirection { get; set; } = "desc";
     }
 }
