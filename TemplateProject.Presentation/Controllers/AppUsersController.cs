@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Common.Excel;
+using QrAssignment.Application.Features.Roles.Queries.LookUp.GetRoleLookUpWithPermission;
 using QrAssignment.Application.Features.Users.Commands.BulkDelete;
 using QrAssignment.Application.Features.Users.Commands.BulkSetActive;
 using QrAssignment.Application.Features.Users.Commands.BulkSetPassive;
@@ -16,6 +17,7 @@ using QrAssignment.Application.Features.Users.Queries.ListBase.GetList;
 using QrAssignment.Application.Features.Users.Queries.ListBase.GetListExportExcel;
 using QrAssignment.Application.Features.Users.Queries.ListBase.GetPassivedList;
 using QrAssignment.Application.Features.Users.Queries.LookUp.GetLookupList;
+using QrAssignment.Application.Features.Users.Queries.LookUp.GetPermissionLookUp;
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -97,5 +99,10 @@ namespace QrAssignment.Presentation.Controllers
         [HttpPatch("Bulk-Delete")]
         public async Task<IActionResult> BulkDelete([FromBody] BulkDeleteAppUserCommand command, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(command, cancellationToken));
+
+
+        [HttpPost("GetUserLookUpWithPermission")]
+        public async Task<IActionResult> GetUserLookUpWithPermission([FromBody] GetUserLookUpWithPermissionQuery query, CancellationToken cancellationToken)
+            => HandleResult(await Mediator.Send(query, cancellationToken));
     }
 }

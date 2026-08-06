@@ -17,6 +17,7 @@ using QrAssignment.Application.Features.Roles.Queries.ListBase.GetList;
 using QrAssignment.Application.Features.Roles.Queries.ListBase.GetListExportExcel;
 using QrAssignment.Application.Features.Roles.Queries.ListBase.GetPassivedList;
 using QrAssignment.Application.Features.Roles.Queries.LookUp.GetAssignedUserList;
+using QrAssignment.Application.Features.Roles.Queries.LookUp.GetRoleLookUpWithPermission;
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -136,6 +137,11 @@ namespace QrAssignment.Presentation.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid? id, CancellationToken cancellationToken)
               => HandleResult(await Mediator.Send(new DeleteAppRoleCommand(id), cancellationToken));
+
+
+        [HttpPost("GetRoleLookUpWithPermission")]
+        public async Task<IActionResult> GetRoleLookUpWithPermission([FromBody] GetRoleLookUpWithPermissionQuery query, CancellationToken cancellationToken)
+            => HandleResult(await Mediator.Send(query, cancellationToken));
 
 
     }

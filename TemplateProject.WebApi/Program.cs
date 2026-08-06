@@ -27,7 +27,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Angular uygulamasının çalıştığı origin'ler. Prod origin'ini appsettings'ten okumak daha temiz.
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
     .Get<string[]>() ?? new[] { "http://localhost:4200" };
@@ -50,17 +49,13 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod();
-        // JWT header-based olduğu için AllowCredentials gerekmiyor.
-        // Cookie tabanlı bir şeye geçersen: .AllowCredentials() ekle (ve AllowAnyOrigin KULLANMA).
     });
 });
 
-// -------------------- Katman servisleri --------------------
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
-// -------------------- OpenAPI / Scalar --------------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi(options =>
 {
@@ -86,8 +81,6 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    // Custom claim isimleri ("TenantId", "sub" vb.) otomatik map'lenmesin;
-    // FindFirst("TenantId") ve FindFirst(ClaimTypes.NameIdentifier) tutarlı çalışsın.
     options.MapInboundClaims = false;
 
     options.TokenValidationParameters = new TokenValidationParameters
@@ -103,9 +96,6 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)
         ),
 
-        // MapInboundClaims=false olduğu için token'daki claim tiplerini net belirt.
-        // Token'ı üretirken user id'yi hangi claim ile yazıyorsan onunla eşleşmeli
-        // (JwtRegisteredClaimNames.Sub ise "sub", ClaimTypes.NameIdentifier ise o).
         NameClaimType = ClaimTypes.NameIdentifier,
         RoleClaimType = ClaimTypes.Role,
 
@@ -113,9 +103,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// -------------------- Authorization (global fallback) --------------------
-// Aksi ([AllowAnonymous]) belirtilmedikçe TÜM endpoint'ler authenticated olmalı.
-// AuthController gibi anonim kalması gerekenlere [AllowAnonymous] koy.
 builder.Services.AddAuthorizationBuilder()
     .SetFallbackPolicy(new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
@@ -150,7 +137,6 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 builder.Services.AddSingleton<IAppLocalizer, AppLocalizer>();
 builder.Services.AddScoped<ILocalizationService, JsonLocalizationManager>();
 
-// -------------------- Rate limiting --------------------
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -177,31 +163,20 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
-// ==================== DB MIGRATE + SEED ====================
-// İstek karşılamadan önce şema güncel ve menü kataloğu senkron olmalı.
 using (var scope = app.Services.CreateScope())
 {
     var sp = scope.ServiceProvider;
-    var db = sp.GetRequiredService<AppDbContext>();   // ← kendi DbContext tipinle değiştir
+    var db = sp.GetRequiredService<AppDbContext>();   
     await db.Database.MigrateAsync();
     await new MenuCatalogSeeder(db).SeedAsync();
 }
-
-// ==================== MIDDLEWARE PIPELINE ====================
+ 
 app.UseExceptionHandler();
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
-
-// app.UseHttpsRedirection();   // Prod'da aç
-
 app.UseRouting();
 
 app.UseCors("AllowAngularApp");
 
+// Localization ayarları
 var supportedCulturesInfo = new[] { new CultureInfo("tr-TR"), new CultureInfo("en-US") };
 var localizationOptions = new RequestLocalizationOptions
 {
@@ -209,21 +184,33 @@ var localizationOptions = new RequestLocalizationOptions
     SupportedCultures = supportedCulturesInfo,
     SupportedUICultures = supportedCulturesInfo
 };
-localizationOptions.RequestCultureProviders.Clear();
+localizationOptions.RequestCultureProviders.Clear(); 
 app.UseRequestLocalization(localizationOptions);
+
+if (app.Environment.IsDevelopment())
+{
+    // 1. API Dokümantasyonu (Scalar / OpenAPI)
+    app.MapOpenApi().AllowAnonymous();
+    app.MapScalarApiReference().AllowAnonymous();
+
+    // 2. Serilog Log Arayüzü (/logs) - Canlıda asla açılmaz!
+    app.UseSerilogUi(options =>
+    {
+        options.WithRoutePrefix("logs");
+    });
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseRateLimiter();
 
-// Log arayüzü hassastır — mümkünse admin yetkisiyle koru (SerilogUi authorization filtresi).
 app.UseSerilogUi(options =>
 {
     options.WithRoutePrefix("logs");
 });
-
 app.MapControllers()
-   .RequireRateLimiting("IpBasedRateLimit");
+   .RequireRateLimiting("IpBasedRateLimit")
+   .RequireAuthorization();
 
 app.Run();

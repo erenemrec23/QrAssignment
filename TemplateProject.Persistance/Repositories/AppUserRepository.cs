@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Features.Permission.Commands.Update;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
+using QrAssignment.Application.Features.Roles.Queries.LookUp.GetRoleLookUpWithPermission;
 using QrAssignment.Application.Features.Users.DTOs;
 using QrAssignment.Application.Features.Users.Queries.DTOs;
 using QrAssignment.Application.Features.Users.Queries.LookUp.DTOs;
+using QrAssignment.Application.Features.Users.Queries.LookUp.GetPermissionLookUp;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
@@ -252,5 +254,89 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
 
         var ids = items.Where(p => map.ContainsKey(p.GroupKey!)).Select(p => map[p.GroupKey!]).ToHashSet();
         _context.Set<PagePermission>().RemoveRange(current.Where(x => !ids.Contains(x.MenuGroupId!.Value)));
+    }
+      
+     
+    public async Task<Paginate<PermissionLookUpListItemDto>> GetUserLookUpWithPermissionAsync(
+    GetUserLookUpWithPermissionQuery request, CancellationToken ct = default)
+    {
+        var pageId = await _context.Set<Page>()
+            .Where(p => p.PageKey == request.PageKey)
+            .Select(p => (int?)p.Id)
+            .FirstOrDefaultAsync(ct);
+
+        var permittedIds = _context.Set<PagePermission>()
+            .Where(pp => pp.UserId != null && pp.PageId == pageId && pp.PermissionValue > 0)
+            .Select(pp => pp.UserId!.Value);
+
+        // HAM entity IQueryable — projekte ETME
+        var query = _context.AppUsers.AsNoTracking().AsQueryable();
+
+        // Filtre 1: isim araması
+        if (!string.IsNullOrWhiteSpace(request.Name))
+        {
+            var term = request.Name.Trim();
+            query = query.Where(u => EF.Functions.Like(u.FullName, $"%{term}%"));
+        }
+
+        // Filtre 2: yetki durumu — HasPermission'ı entity üzerinde ifade et
+        query = request.Filter switch
+        {
+            PermissionFilter.WithPermission => query.Where(u => permittedIds.Contains(u.Id)),
+            PermissionFilter.WithoutPermission => query.Where(u => !permittedIds.Contains(u.Id)),
+            _ => query
+        };
+
+        query = query.OrderBy(u => u.FullName);
+
+        // Projeksiyonu ToPaginateAsync'e ARGÜMAN olarak ver — T=AppUser, TDto çıkar
+        return await query.ToPaginateAsync(
+            request,
+            u => new PermissionLookUpListItemDto
+            {
+                Id = u.Id,
+                Name = u.FullName,
+                HasPermission = permittedIds.Contains(u.Id)
+            },
+            ct);
+    }
+    public async Task<Paginate<PermissionLookUpListItemDto>> GetRoleLookUpWithPermissionAsync(
+    GetRoleLookUpWithPermissionQuery request, CancellationToken ct = default)
+    {
+        var pageId = await _context.Set<Page>()
+            .Where(p => p.PageKey == request.PageKey)
+            .Select(p => (int?)p.Id)
+            .FirstOrDefaultAsync(ct);
+
+        var permittedIds = _context.Set<PagePermission>()
+            .Where(pp => pp.RoleId != null && pp.PageId == pageId && pp.PermissionValue > 0)
+            .Select(pp => pp.RoleId!.Value);
+
+        var query = _context.AppRoles.AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(request.Name))
+        {
+            var term = request.Name.Trim();
+            query = query.Where(r => EF.Functions.Like(r.Name, $"%{term}%"));
+        }
+
+        query = request.Filter switch
+        {
+            PermissionFilter.WithPermission => query.Where(r => permittedIds.Contains(r.Id)),
+            PermissionFilter.WithoutPermission => query.Where(r => !permittedIds.Contains(r.Id)),
+            _ => query
+        };
+
+        query = query.OrderBy(r => r.Name);
+
+        return await query.ToPaginateAsync(
+            request,
+            r => new PermissionLookUpListItemDto
+            {
+                Id = r.Id,
+                Name = r.Name,
+                HasPermission = permittedIds.Contains(r.Id)
+            },
+            ct);
     }
 }

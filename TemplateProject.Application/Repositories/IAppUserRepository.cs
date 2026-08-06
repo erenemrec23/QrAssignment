@@ -1,12 +1,13 @@
-using Microsoft.AspNetCore.Identity;
 using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Features.Permission.Commands.Update;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
+using QrAssignment.Application.Features.Roles.Queries.LookUp.GetRoleLookUpWithPermission;
 using QrAssignment.Application.Features.Users.DTOs;
 using QrAssignment.Application.Features.Users.Queries.DTOs;
 using QrAssignment.Application.Features.Users.Queries.LookUp.DTOs;
+using QrAssignment.Application.Features.Users.Queries.LookUp.GetPermissionLookUp;
 using QrAssignment.Domain.Entity.App;
-using QrAssignment.Domain.Shared.PagePermission;
+using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Repositories
 {
@@ -43,5 +44,11 @@ namespace QrAssignment.Application.Repositories
         Task<AppUser?> GetByEmailForRememberPasswordAsync(string email, CancellationToken ct = default);
 
         Task SyncUserPermissionsAsync(Guid userId, IEnumerable<PermissionUserUpdateDto> permissions, CancellationToken ct = default);
+
+
+        Task<Paginate<PermissionLookUpListItemDto>> GetRoleLookUpWithPermissionAsync(
+    GetRoleLookUpWithPermissionQuery request, CancellationToken ct = default);
+        Task<Paginate<PermissionLookUpListItemDto>> GetUserLookUpWithPermissionAsync(
+    GetUserLookUpWithPermissionQuery request, CancellationToken ct = default);
     }
 }

@@ -7,11 +7,13 @@ using QrAssignment.Application.Features.QrLocations.Queries.FormBase.GetPassived
 using QrAssignment.Application.Features.QrLocations.Queries.ListBase.GetList;
 using QrAssignment.Application.Features.QrLocations.Queries.ListBase.GetListExportExcel;
 using QrAssignment.Application.Features.QrLocations.Queries.ListBase.GetPassivedList;
+using QrAssignment.Application.Features.Roles.Queries.LookUp.GetRoleLookUpWithPermission;
 using QrAssignment.Application.Features.Tenants.Queries.FormBase.GetById;
 using QrAssignment.Application.Features.Tenants.Queries.FormBase.GetPassivedById;
 using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetList;
 using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetListExportExcel;
 using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetPassivedList;
+using QrAssignment.Application.Features.Users.Queries.LookUp.GetPermissionLookUp;
 using QrAssignment.Domain.Shared.PagePermission;
 using GetListMenuQuery = QrAssignment.Application.Features.Menu.Queries.GetList.GetListMenuQuery;
 using RolesBulkExcelDto = QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate.BulkCreateAppRoleInputDto;
@@ -219,7 +221,9 @@ namespace QrAssignment.Application.Security
             };
             RegisterDynamic(registry, dynamicCommands, PageAccessFlags.ManagePagePermissions,
             typeof(GetPagePermissionsForPageQuery),
-            typeof(UpdatePagePermissionsForPageCommand));
+            typeof(UpdatePagePermissionsForPageCommand),
+            typeof(GetRoleLookUpWithPermissionQuery),
+            typeof(GetUserLookUpWithPermissionQuery));
         }
         
         private static void Register(

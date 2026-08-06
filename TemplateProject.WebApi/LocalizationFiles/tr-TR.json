@@ -304,7 +304,17 @@
   "Label.Modules": "Modüller",
   "Label.Pages": "Sayfalar",
   "Label.ModulePermissionHint": "Modül Yetkileri",
-  "Label.ManagePagePermissions": "Sayfa Yetkilerini Yönet"
+  "Label.ManagePagePermissions": "Sayfa Yetkilerini Yönet",
+  "Label.Unauthorized": "Yetkisiz",
+  "Label.Authorized": "Yetkili",
+  "Filter.All": "Tümü",
+  "Filter.WithPermission": "Yetkili",
+  "Filter.WithoutPermission": "Yetkisiz",
+  "Label.BelongsToModule": "Modüle Ait",
+  "Title.PagePermissionManagement": "Sayfa Yetki Yönetimi",
+  "Label.Status": "Durum",
+  "Label.UserFullName": "Kullanıcı Adı",
+  "Title.EditPermissions": "Yetkileri Düzenle"
 
 
 
