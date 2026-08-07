@@ -17,6 +17,6 @@
 
         // Sık kullanılan kombinasyonlar (Opsiyonel)
         ViewAndInsert = View | Insert,  
-        All = View | Insert | Update | Delete | SetPassive | SetActive | ExportExcel | ImportExcel 
+        All = View | Insert | Update | SetPassive | ViewPassive | SetActive | Delete |  ExportExcel | ImportExcel | ManagePagePermissions
     }
 }

@@ -22,6 +22,7 @@ using System.Globalization;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
+using QrAssignment.Persistence.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -212,5 +213,7 @@ app.UseSerilogUi(options =>
 app.MapControllers()
    .RequireRateLimiting("IpBasedRateLimit")
    .RequireAuthorization();
+await DatabaseSeeder.SeedAsync(app.Services);
+await app.RunAsync();
 
 app.Run();
