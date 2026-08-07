@@ -7,10 +7,11 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: api-qrassignment
-  AZURE_WEBAPP_PACKAGE_PATH: QrAssignment.WebApi/publish
+  AZURE_WEBAPP_PACKAGE_PATH: publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 10.0.x
-  WORKING_DIRECTORY: QrAssignment.WebApi
+  SOLUTION_PATH: QrAssignment.sln
+  PROJECT_PATH: QrAssignment.WebApi/QrAssignment.WebApi.csproj
 
 jobs:
   build:
@@ -24,13 +25,13 @@ jobs:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
       - name: Restore
-        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
 
       - name: Build
-        run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+        run: dotnet build ${{ env.SOLUTION_PATH }} --configuration ${{ env.CONFIGURATION }} --no-restore
 
       - name: Publish
-        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+        run: dotnet publish ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
