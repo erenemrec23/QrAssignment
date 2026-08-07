@@ -10,8 +10,6 @@ env:
   AZURE_WEBAPP_PACKAGE_PATH: publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 10.0.x
-  SOLUTION_PATH: QrAssignment.sln
-  PROJECT_PATH: QrAssignment.WebApi/QrAssignment.WebApi.csproj
 
 jobs:
   build:
@@ -25,13 +23,13 @@ jobs:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
       - name: Restore
-        run: dotnet restore ${{ env.SOLUTION_PATH }}
+        run: dotnet restore $(find . -name "*.sln" -print -quit)
 
       - name: Build
-        run: dotnet build ${{ env.SOLUTION_PATH }} --configuration ${{ env.CONFIGURATION }} --no-restore
+        run: dotnet build $(find . -name "*.sln" -print -quit) --configuration ${{ env.CONFIGURATION }} --no-restore
 
       - name: Publish
-        run: dotnet publish ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        run: dotnet publish $(find . -name "*WebApi.csproj" -print -quit) --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
