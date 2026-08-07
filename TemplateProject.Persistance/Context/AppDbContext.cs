@@ -28,6 +28,8 @@ public class AppDbContext : AuditDbContext
     public DbSet<AppUserRole> AppUserRole { get; set; }
 
     public DbSet<AppRole> AppRoles { get; set; }
+    public DbSet<PagePermission> PagePermissions { get; set; }
+    public DbSet<Page> Pages { get; set; }
     public DbSet<AppUserRefreshToken> AppUserRefreshTokens { get; set; }
 
     // NOT: QrApplicantConfiguration zaten mevcut ve ApplyConfigurationsFromAssembly

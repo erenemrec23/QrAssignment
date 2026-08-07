@@ -314,7 +314,8 @@
   "Title.PagePermissionManagement": "Sayfa Yetki Yönetimi",
   "Label.Status": "Durum",
   "Label.UserFullName": "Kullanıcı Adı",
-  "Title.EditPermissions": "Yetkileri Düzenle"
+  "Title.EditPermissions": "Yetkileri Düzenle",
+  "Button.Back": "Sayfaya Geri Dön"
 
 
 

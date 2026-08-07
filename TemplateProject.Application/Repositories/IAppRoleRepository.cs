@@ -37,8 +37,7 @@ namespace QrAssignment.Application.Repositories
 
         Task SyncRolePermissionsAsync(
     Guid roleId,
-    IEnumerable<RolePagePermissionDto> permissions,
-    PermissionTargetScope scope = PermissionTargetScope.Page,
+    IEnumerable<RolePagePermissionDto> permissions, 
     CancellationToken ct = default);
 
     }

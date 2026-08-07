@@ -13,5 +13,5 @@ public sealed class GetSystemModulesQueryHandler
 
     public async Task<Result<List<PageCatalogItemDto>>> Handle(
         GetSystemModulesQuery request, CancellationToken ct)
-        => Result.Success(await _pageRepository.GetCatalogAsync(ct));
+        => Result.Success(await _pageRepository.GetCatalogAsync(request.PageKey, ct));
 }

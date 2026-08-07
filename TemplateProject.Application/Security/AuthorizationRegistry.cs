@@ -1,6 +1,6 @@
 ﻿using QrAssignment.Application.Common.Excel;
+using QrAssignment.Application.Features.PagePermissions.Commands.Update;
 using QrAssignment.Application.Features.PagePermissions.Queries;
-using QrAssignment.Application.Features.Permission.Commands.UpdatePagePermissionsForPage;
 using QrAssignment.Application.Features.QrLocations.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.QrLocations.Queries.FormBase.GetById;
 using QrAssignment.Application.Features.QrLocations.Queries.FormBase.GetPassivedById;

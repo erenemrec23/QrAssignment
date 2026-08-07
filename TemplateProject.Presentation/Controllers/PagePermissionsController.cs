@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QrAssignment.Application.Features.PagePermissions.Commands.Update;
 using QrAssignment.Application.Features.PagePermissions.Queries;
-using QrAssignment.Application.Features.Permission.Commands.UpdatePagePermissionsForPage;
 using QrAssignment.Application.Features.Permission.Queries.GetPagePermissionsForPage;
 
 namespace QrAssignment.Presentation.Controllers

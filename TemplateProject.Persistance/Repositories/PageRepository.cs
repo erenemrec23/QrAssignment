@@ -10,15 +10,25 @@ internal sealed class PageRepository : IPageRepository
     private readonly AppDbContext _context;
     public PageRepository(AppDbContext context) => _context = context;
 
-    public Task<List<PageCatalogItemDto>> GetCatalogAsync(CancellationToken ct = default)
-    => _context.Set<Page>()
-        .AsNoTracking()
-        .OrderBy(p => p.MenuGroupId).ThenBy(p => p.Order)
-        .Select(p => new PageCatalogItemDto(
-            p.PageKey,
-            p.Key,
-            p.MenuGroup != null ? p.MenuGroup.Key : null))   // grupsuz sayfa → null
-        .ToListAsync(ct);
+    public Task<List<PageCatalogItemDto>> GetCatalogAsync(string? pageKey = null, CancellationToken ct = default)
+    {
+        var query = _context.Set<Page>()
+            .AsNoTracking();
+
+        // Filtreleme: pageKey dolu gelmişse ilgili sayfayı filtrele
+        if (!string.IsNullOrWhiteSpace(pageKey))
+        {
+            query = query.Where(p => p.PageKey == pageKey);
+        }
+
+        return query
+            .OrderBy(p => p.MenuGroupId).ThenBy(p => p.Order)
+            .Select(p => new PageCatalogItemDto(
+                p.PageKey,
+                p.Key,
+                p.MenuGroup != null ? p.MenuGroup.Key : null)) // grupsuz sayfa → null
+            .ToListAsync(ct);
+    }
 
     public Task<List<MenuGroupDto>> GetMenuAsync(CancellationToken ct = default)
     => _context.Set<MenuGroup>()

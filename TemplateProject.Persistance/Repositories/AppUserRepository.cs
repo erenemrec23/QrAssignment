@@ -173,7 +173,7 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
             })
             .ToList();
     }
-
+    // --- Tenant Sync & Permission Mappings ---22
     public async Task SyncUserPermissionsAsync(
     Guid userId, IEnumerable<PermissionUserUpdateDto> permissions, CancellationToken ct = default)
     {

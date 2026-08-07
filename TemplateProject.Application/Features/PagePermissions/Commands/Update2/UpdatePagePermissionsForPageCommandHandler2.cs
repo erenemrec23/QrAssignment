@@ -1,27 +1,26 @@
-﻿// Application/Features/Permission/Commands/UpdatePagePermissionsForPage/UpdatePagePermissionsForPageCommandHandler.cs
+﻿// Application/Features/Permission/Commands/UpdatePagePermissionsForPage/UpdatePagePermissionsForPageCommandHandler2.cs
 using MediatR;
-using QrAssignment.Application.Abstractions;
-using QrAssignment.Application.Features.QrLocations.Commands.Update;
+using QrAssignment.Application.Features.PagePermissions.Commands.Update;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared;
 
-namespace QrAssignment.Application.Features.Permission.Commands.UpdatePagePermissionsForPage
+namespace QrAssignment.Application.Features.PagePermissions.Commands.Update2
 {
-    public sealed class UpdatePagePermissionsForPageCommandHandler
-        : IRequestHandler<UpdatePagePermissionsForPageCommand, Result>
-    { 
+    public sealed class UpdatePagePermissionsForPageCommandHandler2
+        : IRequestHandler<UpdatePagePermissionsForPageCommand2, Result>
+    {
         private readonly IPageRepository _pageRepository;
-        private readonly IPagePermissionRepository _permissionRepository;   
+        private readonly IPagePermissionRepository _permissionRepository;
 
-        public UpdatePagePermissionsForPageCommandHandler(IPageRepository pageRepository, IPagePermissionRepository permissionRepository)
-        { 
+        public UpdatePagePermissionsForPageCommandHandler2(IPageRepository pageRepository, IPagePermissionRepository permissionRepository)
+        {
             _pageRepository = pageRepository;
             _permissionRepository = permissionRepository;
         }
 
         public async Task<Result> Handle(
-            UpdatePagePermissionsForPageCommand request, CancellationToken cancellationToken)
+            UpdatePagePermissionsForPageCommand2 request, CancellationToken cancellationToken)
         {
             // Defense in depth: pipeline'da bypass edilse bile PageKey gerçekten var mı diye burada da doğrula
             var page = await _pageRepository.GetPageByKeyAsync(request.PageKey, cancellationToken);
@@ -30,22 +29,22 @@ namespace QrAssignment.Application.Features.Permission.Commands.UpdatePagePermis
                 return Result.Failure(
                     new Error("Page.NotFound", $"'{request.PageKey}' anahtarına sahip sayfa bulunamadı."));
 
-          
+
 
             var assignments = await _permissionRepository.GetPagePermissionList(page.Id, cancellationToken);
 
 
             _permissionRepository.DeleteRange(assignments);
-            var newRows = request.Assignments.Select(a => new PagePermission
-            { 
+            var newRows = request.Permissions.Select(a => new PagePermission
+            {
                 PageId = page.Id,
-                UserId = a.UserId,
-                RoleId = a.RoleId,
-                PermissionValue = (QrAssignment.Domain.Shared.PagePermission.PageAccessFlags)a.PermissionValue
+                //UserId = a.UserId,
+                //RoleId = a.RoleId,
+                PermissionValue = (Domain.Shared.PagePermission.PageAccessFlags)a.PermissionValue
             });
 
             await _permissionRepository.AddRangeAsync(newRows, cancellationToken);
-             
+
 
             return Result.Success();
         }

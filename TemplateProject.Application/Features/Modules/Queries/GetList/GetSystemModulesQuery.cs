@@ -1,5 +1,4 @@
-﻿// Application/Features/Modules/Queries/GetSystemModules/PageCatalogItemDto.cs
-using MediatR;
+﻿using MediatR;
 using QrAssignment.Domain.Shared;
-// GetSystemModulesQuery.cs
-public sealed record GetSystemModulesQuery : IRequest<Result<List<PageCatalogItemDto>>>;
+
+public sealed record GetSystemModulesQuery(string? PageKey = null) : IRequest<Result<List<PageCatalogItemDto>>>;

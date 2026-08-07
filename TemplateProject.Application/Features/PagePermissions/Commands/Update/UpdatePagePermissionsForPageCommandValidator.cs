@@ -2,7 +2,7 @@
 using FluentValidation;
 using QrAssignment.Application.Features.PagePermissions.Queries;
 
-namespace QrAssignment.Application.Features.Permission.Commands.UpdatePagePermissionsForPage
+namespace QrAssignment.Application.Features.PagePermissions.Commands.Update
 {
     public sealed class UpdatePagePermissionsForPageCommandValidator
         : AbstractValidator<UpdatePagePermissionsForPageCommand>
@@ -11,12 +11,12 @@ namespace QrAssignment.Application.Features.Permission.Commands.UpdatePagePermis
         {
             RuleFor(x => x.PageKey).NotEmpty();
 
-            RuleForEach(x => x.Assignments).ChildRules(assignment =>
+            RuleForEach(x => x.Permissions).ChildRules(assignment =>
             {
-                assignment.RuleFor(a => a)
-                    .Must(a => (a.UserId.HasValue && !a.RoleId.HasValue)
-                            || (!a.UserId.HasValue && a.RoleId.HasValue))
-                    .WithMessage("Her yetki ataması ya bir kullanıcıya ya da bir role ait olmalıdır, ikisi birden veya hiçbiri olamaz.");
+                //assignment.RuleFor(a => a)
+                //    .Must(a => (a.UserId.HasValue && !a.RoleId.HasValue)
+                //            || (!a.UserId.HasValue && a.RoleId.HasValue))
+                //    .WithMessage("Her yetki ataması ya bir kullanıcıya ya da bir role ait olmalıdır, ikisi birden veya hiçbiri olamaz.");
             });
         }
     }

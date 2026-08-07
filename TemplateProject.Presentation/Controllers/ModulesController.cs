@@ -6,10 +6,10 @@ namespace QrAssignment.Presentation.Controllers
     [Route("api/[controller]")]
     public sealed class ModulesController : ApiControllerBase
     {
+         
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetSystemModules(CancellationToken cancellationToken)
-            => HandleResult(await Mediator.Send(new GetSystemModulesQuery(), cancellationToken));
+        public async Task<IActionResult> GetSystemModules([FromQuery] GetSystemModulesQuery query, CancellationToken cancellationToken) => HandleResult(await Mediator.Send(query, cancellationToken));
 
         [HttpGet("GetMenu")]
         public async Task<IActionResult> GetMenu(CancellationToken ct)

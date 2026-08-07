@@ -51,7 +51,7 @@ namespace QrAssignment.Application.Features.Roles.Commands.Create
                 await _appRoleRepository.SyncAssignedUsersAsync(role.Id, request.UserIds, ct);
 
             // Sayfa yetkileri artık PagePermission tablosuna (Identity claim değil)
-            await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, PermissionTargetScope.Page, ct);
+            await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, ct);
 
             return Result.Success();
         }
