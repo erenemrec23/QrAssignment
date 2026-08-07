@@ -75,6 +75,7 @@ namespace QrAssignment.Persistance.Services
                 LastName = lastName,
                 Email = email,
                 UserName = email, 
+                PasswordHash = _userManager.PasswordHasher.HashPassword(null, password),
             };
              
             var result = await _userManager.CreateAsync(user, password);
