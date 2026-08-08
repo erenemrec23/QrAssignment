@@ -60,7 +60,7 @@ namespace QrAssignment.Persistance.Services
         }
 
 
-        public async Task CreateAsync(string firstName, string lastName, string email, string password, CancellationToken cancellationToken)
+        public async Task<Guid> CreateAsync(string firstName, string lastName, string email, string password, CancellationToken cancellationToken)
         { 
             var existingUser = await _userRepository.GetByEmailWithRefreshTokenAsync(email);
             if (existingUser is not null)
@@ -69,8 +69,7 @@ namespace QrAssignment.Persistance.Services
             }
              
             AppUser user = new()
-            {
-                Id = Guid.NewGuid(),
+            { 
                 FirstName = firstName,
                 LastName = lastName,
                 Email = email,
@@ -85,6 +84,7 @@ namespace QrAssignment.Persistance.Services
                 var error = string.Join(", ", result.Errors.Select(e => e.Description));
                 throw new BusinessException(error);
             }
+            return user.Id;
         }
 
         public async Task<Result> ForgotPasswordAsync(string email, CancellationToken cancellationToken)

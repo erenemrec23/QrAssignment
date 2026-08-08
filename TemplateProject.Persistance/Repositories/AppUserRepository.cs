@@ -39,6 +39,9 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
             u.ModifiedDate,
             u.CreatedDate);
 
+
+    
+
     private static Expression<Func<AppUser, AppUserItemDto>> ProjectionItem =>
         u => new AppUserItemDto(u.Id, u.FirstName, u.LastName, u.Email!, u.RowVersion);
 
@@ -374,4 +377,44 @@ internal sealed class AppUserRepository : GenericAppRepository<AppUser>, IAppUse
 
         return await projectedQuery.ToPaginateAsync(request, x => x, ct);
     }
+
+    public async Task<List<Guid>> GetAssignedRoleIdsAsync(Guid userId, CancellationToken ct)
+    {
+        return await _context.AppUserRole
+            .AsNoTracking()
+            .Where(ur => ur.AppUserId == userId && ur.AppRoleId.HasValue)
+            .Select(ur => ur.AppRoleId!.Value)
+            .ToListAsync(ct);
+    }
+
+    //public async Task SyncAssignedRolesAsync(Guid userId, IEnumerable<Guid> roleIds, CancellationToken ct)
+    //{
+    //    // Olmasi gereken roller (formdan gelen)
+    //    var target = roleIds?.ToHashSet() ?? new HashSet<Guid>();
+
+    //    // DB'de su an bu kullaniciya atanmis satirlar
+    //    var current = await _context.AppUserRole
+    //        .Where(ur => ur.AppUserId == userId)
+    //        .ToListAsync(ct);
+
+    //    var currentIds = current
+    //        .Where(ur => ur.AppRoleId.HasValue)
+    //        .Select(ur => ur.AppRoleId!.Value)
+    //        .ToHashSet();
+
+    //    // 1) DB'de var ama formda YOK -> cikar
+    //    var toRemove = current.Where(ur => ur.AppRoleId.HasValue
+    //                                    && !target.Contains(ur.AppRoleId.Value));
+    //    _context.AppUserRole.RemoveRange(toRemove);
+
+    //    // 2) Formda var ama DB'de YOK -> ekle
+    //    var toAdd = target
+    //        .Where(id => !currentIds.Contains(id))
+    //        .Select(id => new AppUserRole { AppUserId = userId, AppRoleId = id });
+    //    await _context.AppUserRole.AddRangeAsync(toAdd, ct);
+
+    //    // 3) Ikisinde de olanlara dokunulmuyor -> mevcut satir ve audit alanlari korunur
+
+    //    // SaveChanges YOK — UnitOfWorkBehavior commit edecek
+    //}
 }

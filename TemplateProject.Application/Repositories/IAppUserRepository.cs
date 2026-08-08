@@ -50,5 +50,8 @@ namespace QrAssignment.Application.Repositories
     GetRoleLookUpWithPermissionQuery request, CancellationToken ct = default);
         Task<Paginate<PermissionLookUpListItemDto>> GetUserLookUpWithPermissionAsync(
     GetUserLookUpWithPermissionQuery request, CancellationToken ct = default);
+
+        Task<List<Guid>> GetAssignedRoleIdsAsync(Guid userId, CancellationToken ct);
+
     }
 }

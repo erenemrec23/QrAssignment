@@ -6,6 +6,7 @@ using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
 using QrAssignment.Application.Features.Roles.Commands.DTOs;
 using QrAssignment.Application.Features.Roles.DTOs;
 using QrAssignment.Application.Features.Roles.Queries.GetList;
+using QrAssignment.Application.Features.Users.Queries.LookUp.DTOs;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
@@ -31,6 +32,12 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
             r.CreatedByUser != null ? r.CreatedByUser.FullName : "",
             r.ModifiedDate,
             r.CreatedDate);
+
+    private static Expression<Func<AppRole, RoleLookUpListItemDto>> ProjectionLookUpList =>
+        r => new RoleLookUpListItemDto(
+            r.Id,
+            r.Name!);
+
     private static Expression<Func<AppRole, RoleItemDto>> ProjectionItem =>
         r => new RoleItemDto(r.Id, r.Name!, r.RowVersion);
     private static Expression<Func<AppRole, RoleListItemExcelDto>> ProjectionExcelItem =>
@@ -227,4 +234,8 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
         var ids = items.Where(p => map.ContainsKey(p.GroupKey!)).Select(p => map[p.GroupKey!]).ToHashSet();
         _context.PagePermissions.RemoveRange(current.Where(x => !ids.Contains(x.MenuGroupId!.Value)));
     }
+
+
+    public Task<Paginate<RoleLookUpListItemDto>> GetDtoLookUpListAsync(PageRequestBaseDto request, CancellationToken ct = default)
+        => PaginateAsync(ProjectionLookUpList, request, ct);
 }

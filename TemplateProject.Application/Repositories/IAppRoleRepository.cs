@@ -3,6 +3,7 @@ using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
 using QrAssignment.Application.Features.Roles.Commands.DTOs;
 using QrAssignment.Application.Features.Roles.DTOs;
 using QrAssignment.Application.Features.Roles.Queries.GetList;
+using QrAssignment.Application.Features.Users.Queries.LookUp.DTOs;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared.PagePermission;
 
@@ -39,7 +40,7 @@ namespace QrAssignment.Application.Repositories
     Guid roleId,
     IEnumerable<RolePagePermissionDto> permissions, 
     CancellationToken ct = default);
-
+        Task<Paginate<RoleLookUpListItemDto>> GetDtoLookUpListAsync(PageRequestBaseDto request, CancellationToken ct = default);
     }
 }
  

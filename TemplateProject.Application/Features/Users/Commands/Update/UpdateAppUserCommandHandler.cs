@@ -1,7 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using QrAssignment.Application.Features.Permission.Commands.Update; // PermissionUserUpdateDto
 using QrAssignment.Application.Interfaces;
-using QrAssignment.Domain.Entity.App;   // AppUser
+using QrAssignment.Application.Repositories;                        // IAppUserRepository
+using QrAssignment.Domain.Entity.App;                              // AppUser
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Users.Commands.Update
@@ -9,11 +11,16 @@ namespace QrAssignment.Application.Features.Users.Commands.Update
     internal sealed class UpdateAppUserCommandHandler : IRequestHandler<UpdateAppUserCommand, Result>
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IAppUserRepository _appUserRepository;
         private readonly IAppLocalizer _localizer;
 
-        public UpdateAppUserCommandHandler(UserManager<AppUser> userManager, IAppLocalizer localizer)
+        public UpdateAppUserCommandHandler(
+            UserManager<AppUser> userManager,
+            IAppUserRepository appUserRepository,
+            IAppLocalizer localizer)
         {
             _userManager = userManager;
+            _appUserRepository = appUserRepository;
             _localizer = localizer;
         }
 
@@ -33,6 +40,20 @@ namespace QrAssignment.Application.Features.Users.Commands.Update
                     string.Format(
                         _localizer["Error.UserCanNotUpdated"],
                         string.Join(", ", updateResult.Errors.Select(e => e.Description)))));
+
+            // Yetkiler ayni istekte senkronize edilir (matris ekrani Scope=Page).
+            if (request.Permissions is not null)
+            {
+                await _appUserRepository.SyncUserPermissionsAsync(
+                    user.Id, request.Permissions, cancellationToken);
+            }
+
+            // Roller ayni istekte senkronize edilir.
+            if (request.RoleIds is not null)
+            {
+                await _appUserRepository.SyncAssignedRolesAsync(
+                    user.Id, request.RoleIds, cancellationToken);
+            }
 
             return Result.Success();
         }

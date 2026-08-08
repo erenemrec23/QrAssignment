@@ -101,7 +101,9 @@ namespace QrAssignment.Application.Security
                 typeof(Features.Users.Queries.FormBase.GetById.GetByIdAppUserQuery),
                 typeof(Features.Users.Queries.ListBase.GetList.GetListAppUserQuery),
                 typeof(Features.Users.Queries.LookUp.GetLookupList.GetLookUpListAppUserQuery),
-                typeof(Features.Permission.Queries.GetByUserId.GetUserPermissionByUserIdQuery));
+                typeof(Features.Permission.Queries.GetByUserId.GetUserPermissionByUserIdQuery),
+                typeof(Features.Roles.Queries.LookUp.GetRoleLookUp.GetRoleLookUpQuery),
+                typeof(Features.Users.Queries.LookUp.GetLookUpListAppUserAssignedRoleId.GetLookUpListAppUserAssignedRoleIdQuery));
 
             Register(registry, AppPages.Users, PageAccessFlags.SetPassive,
                 typeof(Features.Users.Commands.SetPassive.SetPassiveAppUserCommand),

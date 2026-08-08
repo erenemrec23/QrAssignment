@@ -180,6 +180,7 @@
   "Permission.SetPassive": "Pasif Yapma",
   "Permission.SetActive": "Aktif Yapma",
   "Permission.ViewPassive": "Görüntüleme (Pasifleri)",
+  "Permission.ManagePagePermissions": "Sayfa Yetkilerini Yönet",
   "Label.SelectAllPermissions": "Tüm Yetkileri Seç",
   "PageTitle.MainPage": "Ana Sayfa",
   "PageTitle.Users": "Kullanıcılar",
@@ -315,7 +316,9 @@
   "Label.Status": "Durum",
   "Label.UserFullName": "Kullanıcı Adı",
   "Title.EditPermissions": "Yetkileri Düzenle",
-  "Button.Back": "Sayfaya Geri Dön"
+  "Button.Back": "Sayfaya Geri Dön",
+  "Label.PageUserPermissions": "Sayfa / Kullanıcı Yetkilendirme",
+  "Label.AssignRoles": "Rol Atamaları"
 
 
 

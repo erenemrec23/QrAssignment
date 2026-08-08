@@ -17,7 +17,10 @@ using QrAssignment.Application.Features.Roles.Queries.ListBase.GetList;
 using QrAssignment.Application.Features.Roles.Queries.ListBase.GetListExportExcel;
 using QrAssignment.Application.Features.Roles.Queries.ListBase.GetPassivedList;
 using QrAssignment.Application.Features.Roles.Queries.LookUp.GetAssignedUserList;
+using QrAssignment.Application.Features.Roles.Queries.LookUp.GetRoleLookUp;
 using QrAssignment.Application.Features.Roles.Queries.LookUp.GetRoleLookUpWithPermission;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -142,6 +145,13 @@ namespace QrAssignment.Presentation.Controllers
         [HttpPost("GetRoleLookUpWithPermission")]
         public async Task<IActionResult> GetRoleLookUpWithPermission([FromBody] GetRoleLookUpWithPermissionQuery query, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(query, cancellationToken));
+
+
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetRoleLookUpList([FromQuery] GetRoleLookUpQuery query, CancellationToken cancellationToken)
+    => HandleResult(await Mediator.Send(query, cancellationToken));
+
 
 
     }

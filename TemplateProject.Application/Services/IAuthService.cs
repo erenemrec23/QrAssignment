@@ -10,7 +10,7 @@ namespace QrAssignment.Application.Services
     { 
         Task<LoginCommandResponse> LoginAsync(string email, string password, CancellationToken cancellationToken);
 
-        Task CreateAsync(string firstName, string lastName, string email, string password, CancellationToken cancellationToken);
+        Task<Guid> CreateAsync(string firstName, string lastName, string email, string password, CancellationToken cancellationToken);
 
         Task<Result> ForgotPasswordAsync(string email, CancellationToken cancellationToken);
         Task<Result> ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Common.Excel;
+using QrAssignment.Application.Features.Roles.Queries.FormBase.GetById;
 using QrAssignment.Application.Features.Roles.Queries.LookUp.GetRoleLookUpWithPermission;
 using QrAssignment.Application.Features.Users.Commands.BulkDelete;
 using QrAssignment.Application.Features.Users.Commands.BulkSetActive;
@@ -17,7 +18,10 @@ using QrAssignment.Application.Features.Users.Queries.ListBase.GetList;
 using QrAssignment.Application.Features.Users.Queries.ListBase.GetListExportExcel;
 using QrAssignment.Application.Features.Users.Queries.ListBase.GetPassivedList;
 using QrAssignment.Application.Features.Users.Queries.LookUp.GetLookupList;
+using QrAssignment.Application.Features.Users.Queries.LookUp.GetLookUpListAppUserAssignedRoleId;
 using QrAssignment.Application.Features.Users.Queries.LookUp.GetPermissionLookUp;
+using QrAssignment.Application.Repositories;
+using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Presentation.Controllers
 {
@@ -101,8 +105,17 @@ namespace QrAssignment.Presentation.Controllers
             => HandleResult(await Mediator.Send(command, cancellationToken));
 
 
-        [HttpPost("GetUserLookUpWithPermission")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> GetUserLookUpWithPermission([FromBody] GetUserLookUpWithPermissionQuery query, CancellationToken cancellationToken)
             => HandleResult(await Mediator.Send(query, cancellationToken));
+
+
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetUserAssignedRoleIds(Guid userId, CancellationToken cancellationToken)
+            => HandleResult(await Mediator.Send(new GetLookUpListAppUserAssignedRoleIdQuery(userId), cancellationToken));
+
+
+
     }
 }

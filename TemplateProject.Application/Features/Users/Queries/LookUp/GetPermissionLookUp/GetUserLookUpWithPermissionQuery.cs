@@ -22,4 +22,7 @@ namespace QrAssignment.Application.Features.Users.Queries.LookUp.GetPermissionLo
 
         public string? SortDirection { get; set; } = "desc";
     }
+
+
+
 }
