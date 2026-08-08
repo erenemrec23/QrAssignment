@@ -318,9 +318,15 @@
   "Title.EditPermissions": "Yetkileri Düzenle",
   "Button.Back": "Sayfaya Geri Dön",
   "Label.PageUserPermissions": "Sayfa / Kullanıcı Yetkilendirme",
-  "Label.AssignRoles": "Rol Atamaları"
-
-
+  "Label.AssignRoles": "Rol Atamaları",
+  "ExcelImport.SelectMatchingColumn": "Eşleşen Kolonu Seçiniz",
+  "Button.Continue": "Devam Et",
+  "ExcelImport.MappingDescription": "Eşleşen kolonları seçtikten sonra devam edebilirsiniz.",
+  "ExcelImport.MappingTitle": "Kolon Eşleştirme",
+  "ExcelImport.ColumnMappingStep": "Kolon Eşleştirme Adımı",
+  "ExcelImport.ExpectedColumn": "Beklenen Kolon",
+  "ExcelImport.UserColumn": "Kullanıcı Kolonu",
+  "ExcelImport.ReUpload": "Yeniden Yükle"
 
 
 
