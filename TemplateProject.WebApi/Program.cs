@@ -166,20 +166,20 @@ try
 
     var app = builder.Build();
 
-    using (var scope = app.Services.CreateScope())
-    {
-        try
-        {
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            await db.Database.MigrateAsync();
-            await new MenuCatalogSeeder(db).SeedAsync();
-        }
-        catch (Exception ex)
-        {
-            Log.Fatal(ex, "Startup migration/seed sırasında hata oluştu.");
-            throw;
-        }
-    }
+    //using (var scope = app.Services.CreateScope())
+    //{
+    //    try
+    //    {
+    //        //var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    //        //await db.Database.MigrateAsync();
+    //        //await new MenuCatalogSeeder(db).SeedAsync();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Log.Fatal(ex, "Startup migration/seed sırasında hata oluştu.");
+    //        throw;
+    //    }
+    //}
 
     app.UseExceptionHandler();
 
@@ -227,7 +227,7 @@ try
     app.MapControllers()
        .RequireRateLimiting("IpBasedRateLimit");
 
-    await DatabaseSeeder.SeedAsync(app.Services);
+    //await DatabaseSeeder.SeedAsync(app.Services);
     await app.RunAsync();
 }
 catch (Exception ex)
