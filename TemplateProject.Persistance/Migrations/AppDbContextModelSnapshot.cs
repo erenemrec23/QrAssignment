@@ -8,7 +8,7 @@ using QrAssignment.Persistance.Context;
 
 #nullable disable
 
-namespace TemplateProject.Persistance.Migrations
+namespace QrAssignment.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot

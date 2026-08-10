@@ -13,8 +13,7 @@ using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared.PagePermission;
 using QrAssignment.Persistance.Context;
-using System.Linq.Expressions;
-using TemplateProject.Persistance.Migrations;
+using System.Linq.Expressions; 
 
 namespace QrAssignment.Persistance.Repositories;
 
