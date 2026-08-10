@@ -4,12 +4,11 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - main  # master'ı kaldırdık
 
 env:
   AZURE_WEBAPP_NAME: api-qrassignment
-  # 1. DEĞİŞİKLİK: Çıktılar artık kaynak koda karışmak yerine 'publish' adlı izole bir klasöre toplanacak.
-  AZURE_WEBAPP_PACKAGE_PATH: './publish' 
+  AZURE_WEBAPP_PACKAGE_PATH: '${{ github.workspace }}/publish' # Garantili mutlak yol
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 10.0.x
 
@@ -31,8 +30,7 @@ jobs:
         run: dotnet build $(find . -name "*.sln" -print -quit) --configuration ${{ env.CONFIGURATION }} --no-restore
 
       - name: Publish
-        # 2. DEĞİŞİKLİK: find komutu kaldırıldı. Lütfen klasör adın ve csproj adın tam olarak neyse buraya onu yaz. 
-        # (Örn: TemplateProject.WebApi/QrAssignment.WebApi.csproj veya QrAssignment.WebApi/QrAssignment.WebApi.csproj)
+        # UYARI: Buradaki csproj yolunu kendi projene göre (Örn: src/QrAssignment.WebApi/QrAssignment.WebApi.csproj) güncelle!
         run: dotnet publish "TemplateProject.WebApi/QrAssignment.WebApi.csproj" --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Publish Artifacts
@@ -49,11 +47,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: webapp
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} # İndirme yolunu açıkça belirtiyoruz
 
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-          app-offline: true
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} # Doğru klasörden deploy edilecek
