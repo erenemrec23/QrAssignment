@@ -23,208 +23,212 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
 using QrAssignment.Persistence.Seeders;
+
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-var allowedOrigins = builder.Configuration
-    .GetSection("Cors:AllowedOrigins")
-    .Get<string[]>() ?? new[] { "http://localhost:4200" };
+    var allowedOrigins = builder.Configuration
+        .GetSection("Cors:AllowedOrigins")
+        .Get<string[]>() ?? new[] { "http://localhost:4200" };
 
-// -------------------- Serilog UI --------------------
-builder.Services.AddSerilogUi(options =>
-{
-    options.UseSqlServer(sqlOpts =>
+    // -------------------- Serilog UI --------------------
+    builder.Services.AddSerilogUi(options =>
     {
-        sqlOpts.WithConnectionString(connectionString);
-        sqlOpts.WithTable("Logs");
+        options.UseSqlServer(sqlOpts =>
+        {
+            sqlOpts.WithConnectionString(connectionString);
+            sqlOpts.WithTable("Logs");
+        });
     });
-});
 
-// -------------------- CORS (yalnızca Angular) --------------------
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAngularApp", policy =>
+    // -------------------- CORS (yalnızca Angular) --------------------
+    builder.Services.AddCors(options =>
     {
-        policy.WithOrigins(allowedOrigins)
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        options.AddPolicy("AllowAngularApp", policy =>
+        {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
     });
-});
 
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddPersistenceServices(builder.Configuration);
-builder.Services.AddApplicationServices();
+    builder.Services.AddInfrastructureServices(builder.Configuration);
+    builder.Services.AddPersistenceServices(builder.Configuration);
+    builder.Services.AddApplicationServices();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi(options =>
-{
-    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddOpenApi(options =>
     {
-        document.Info.Title = "Proje API Başlığı";
-        document.Info.Version = "v1";
-        document.Info.Description = "Sistemdeki tüm backend servisleri için dokümantasyon.";
-        return Task.CompletedTask;
+        options.AddDocumentTransformer((document, context, cancellationToken) =>
+        {
+            document.Info.Title = "Proje API Başlığı";
+            document.Info.Version = "v1";
+            document.Info.Description = "Sistemdeki tüm backend servisleri için dokümantasyon.";
+            return Task.CompletedTask;
+        });
     });
-});
 
-// -------------------- Presentation / Controllers --------------------
-builder.Services.AddPresentation();
-builder.Services.AddControllers()
-    .AddApplicationPart(QrAssignment.Presentation.AssemblyReference.Assembly);
+    // -------------------- Presentation / Controllers --------------------
+    builder.Services.AddPresentation();
+    builder.Services.AddControllers()
+        .AddApplicationPart(QrAssignment.Presentation.AssemblyReference.Assembly);
 
-// -------------------- Authentication (JWT) --------------------
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.MapInboundClaims = false;
-
-    options.TokenValidationParameters = new TokenValidationParameters
+    // -------------------- Authentication (JWT) --------------------
+    builder.Services.AddAuthentication(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)
-        ),
-
-        NameClaimType = ClaimTypes.NameIdentifier,
-        RoleClaimType = ClaimTypes.Role,
-
-        ClockSkew = TimeSpan.Zero
-    };
-});
-
-builder.Services.AddAuthorizationBuilder()
-    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build());
-
-// -------------------- Localization --------------------
-builder.Services.AddLocalization();
-builder.Services.AddSingleton<JsonLocalizationManager>();
-builder.Services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
-
-var supportedCultures = new[] { "tr-TR", "en-US" };
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    options.SetDefaultCulture("tr-TR");
-    options.AddSupportedCultures(supportedCultures);
-    options.AddSupportedUICultures(supportedCultures);
-});
-
-// -------------------- Serilog host --------------------
-builder.Host.UseSerilog((context, loggerConfig) =>
-    loggerConfig
-        .ReadFrom.Configuration(context.Configuration)
-        .WriteTo.Console()
-        .WriteTo.MSSqlServer(
-            connectionString: connectionString,
-            sinkOptions: new MSSqlServerSinkOptions
-            {
-                TableName = "Logs",
-                AutoCreateSqlTable = true
-            }));
-
-builder.Services.AddSingleton<IAppLocalizer, AppLocalizer>();
-builder.Services.AddScoped<ILocalizationService, JsonLocalizationManager>();
-
-builder.Services.AddRateLimiter(options =>
-{
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-
-    options.OnRejected = async (context, token) =>
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
     {
-        context.HttpContext.Response.ContentType = "application/json";
-        var errorResponse = "{\"success\": false, \"message\": \"Çok fazla istek attınız. Lütfen bir süre bekleyip tekrar deneyin.\"}";
-        await context.HttpContext.Response.WriteAsync(errorResponse, cancellationToken: token);
-    };
+        options.MapInboundClaims = false;
 
-    options.AddPolicy("IpBasedRateLimit", httpContext =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-            factory: partition => new FixedWindowRateLimiterOptions
-            {
-                AutoReplenishment = true,
-                PermitLimit = 60,
-                QueueLimit = 0,
-                Window = TimeSpan.FromMinutes(1)
-            }
-        ));
-});
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
 
-var app = builder.Build();
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)
+            ),
 
-using (var scope = app.Services.CreateScope())
-{
-    try
+            NameClaimType = ClaimTypes.NameIdentifier,
+            RoleClaimType = ClaimTypes.Role,
+
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+    builder.Services.AddAuthorizationBuilder()
+        .SetFallbackPolicy(new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .Build());
+
+    // -------------------- Localization --------------------
+    builder.Services.AddLocalization();
+    builder.Services.AddSingleton<JsonLocalizationManager>();
+    builder.Services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
+
+    var supportedCultures = new[] { "tr-TR", "en-US" };
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
     {
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await db.Database.MigrateAsync();
-        await new MenuCatalogSeeder(db).SeedAsync();
+        options.SetDefaultCulture("tr-TR");
+        options.AddSupportedCultures(supportedCultures);
+        options.AddSupportedUICultures(supportedCultures);
+    });
+
+    // -------------------- Serilog host --------------------
+    builder.Host.UseSerilog((context, loggerConfig) =>
+        loggerConfig
+            .ReadFrom.Configuration(context.Configuration)
+            .WriteTo.Console()
+            .WriteTo.MSSqlServer(
+                connectionString: connectionString,
+                sinkOptions: new MSSqlServerSinkOptions
+                {
+                    TableName = "Logs",
+                    AutoCreateSqlTable = true
+                }));
+
+    builder.Services.AddSingleton<IAppLocalizer, AppLocalizer>();
+    builder.Services.AddScoped<ILocalizationService, JsonLocalizationManager>();
+
+    builder.Services.AddRateLimiter(options =>
+    {
+        options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+        options.OnRejected = async (context, token) =>
+        {
+            context.HttpContext.Response.ContentType = "application/json";
+            var errorResponse = "{\"success\": false, \"message\": \"Çok fazla istek attınız. Lütfen bir süre bekleyip tekrar deneyin.\"}";
+            await context.HttpContext.Response.WriteAsync(errorResponse, cancellationToken: token);
+        };
+
+        options.AddPolicy("IpBasedRateLimit", httpContext =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                factory: partition => new FixedWindowRateLimiterOptions
+                {
+                    AutoReplenishment = true,
+                    PermitLimit = 60,
+                    QueueLimit = 0,
+                    Window = TimeSpan.FromMinutes(1)
+                }
+            ));
+    });
+
+    var app = builder.Build();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        try
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            await db.Database.MigrateAsync();
+            await new MenuCatalogSeeder(db).SeedAsync();
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Startup migration/seed sırasında hata oluştu.");
+            throw;
+        }
     }
-    catch (Exception ex)
+
+    app.UseExceptionHandler();
+
+    // CORS middleware'i yönlendirmeden (Routing) önce konumlandırıldı[cite: 1]
+    app.UseCors("AllowAngularApp");
+
+    app.UseRouting();
+
+    // Localization ayarları
+    var supportedCulturesInfo = new[] { new CultureInfo("tr-TR"), new CultureInfo("en-US") };
+    var localizationOptions = new RequestLocalizationOptions
     {
-        Log.Fatal(ex, "Startup migration/seed sırasında hata oluştu.");
-        throw; // isterse burada throw'u kaldırıp sadece loglayabilirsin, ama sessiz geçmemesi için en azından logla
+        DefaultRequestCulture = new RequestCulture("tr-TR"),
+        SupportedCultures = supportedCulturesInfo,
+        SupportedUICultures = supportedCulturesInfo
+    };
+    localizationOptions.RequestCultureProviders.Clear();
+    app.UseRequestLocalization(localizationOptions);
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.MapOpenApi().AllowAnonymous();
+        app.MapScalarApiReference().AllowAnonymous();
+
+        app.UseSerilogUi(options =>
+        {
+            options.WithRoutePrefix("logs");
+        });
     }
-}
 
-app.UseExceptionHandler();
-app.UseRouting();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-app.UseCors("AllowAngularApp");
+    app.UseRateLimiter();
 
-// Localization ayarları
-var supportedCulturesInfo = new[] { new CultureInfo("tr-TR"), new CultureInfo("en-US") };
-var localizationOptions = new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new RequestCulture("tr-TR"),
-    SupportedCultures = supportedCulturesInfo,
-    SupportedUICultures = supportedCulturesInfo
-};
-localizationOptions.RequestCultureProviders.Clear();
-app.UseRequestLocalization(localizationOptions);
-
-if (app.Environment.IsDevelopment())
-{
-    // 1. API Dokümantasyonu (Scalar / OpenAPI)
-    app.MapOpenApi().AllowAnonymous();
-    app.MapScalarApiReference().AllowAnonymous();
-
-    // 2. Serilog Log Arayüzü (/logs) - Canlıda asla açılmaz!
     app.UseSerilogUi(options =>
     {
         options.WithRoutePrefix("logs");
     });
-}
 
-app.UseAuthentication();
-app.UseAuthorization();
+    app.MapGet("/health", () => Results.Ok(new { status = "Healthy", time = DateTime.UtcNow }))
+       .AllowAnonymous();
 
-app.UseRateLimiter();
+    // Global RequireAuthorization() kaldırıldı, [AllowAnonymous] ileAuthController serbest bırakıldı[cite: 1]
+    app.MapControllers()
+       .RequireRateLimiting("IpBasedRateLimit");
 
-app.UseSerilogUi(options =>
-{
-    options.WithRoutePrefix("logs");
-});
-app.MapGet("/health", () => Results.Ok(new { status = "Healthy", time = DateTime.UtcNow }))
-   .AllowAnonymous();
-app.MapControllers()
-   .RequireRateLimiting("IpBasedRateLimit")
-   .RequireAuthorization();
-await DatabaseSeeder.SeedAsync(app.Services);
-await app.RunAsync();
+    await DatabaseSeeder.SeedAsync(app.Services);
+    await app.RunAsync();
 }
 catch (Exception ex)
 {
