@@ -222,7 +222,11 @@ try
 
     app.MapGet("/health", () => Results.Ok(new { status = "Healthy", time = DateTime.UtcNow }))
        .AllowAnonymous();
-
+    app.MapGet("/debug-cors", () => Results.Ok(new
+    {
+        allowedOrigins = allowedOrigins,
+        rawConfig = builder.Configuration["Cors:AllowedOrigins"]
+    })).AllowAnonymous();
     // Global RequireAuthorization() kaldırıldı, [AllowAnonymous] ileAuthController serbest bırakıldı[cite: 1]
     app.MapControllers()
        .RequireRateLimiting("IpBasedRateLimit");
