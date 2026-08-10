@@ -161,17 +161,17 @@ builder.Services.AddRateLimiter(options =>
             }
         ));
 });
-//test
+
 var app = builder.Build();
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var sp = scope.ServiceProvider;
-//    var db = sp.GetRequiredService<AppDbContext>();   
-//    await db.Database.MigrateAsync();
-//    await new MenuCatalogSeeder(db).SeedAsync();
-//}
- 
+using (var scope = app.Services.CreateScope())
+{
+    var sp = scope.ServiceProvider;
+    var db = sp.GetRequiredService<AppDbContext>();
+    await db.Database.MigrateAsync();
+    await new MenuCatalogSeeder(db).SeedAsync();
+}
+
 app.UseExceptionHandler();
 app.UseRouting();
 
@@ -185,7 +185,7 @@ var localizationOptions = new RequestLocalizationOptions
     SupportedCultures = supportedCulturesInfo,
     SupportedUICultures = supportedCulturesInfo
 };
-localizationOptions.RequestCultureProviders.Clear(); 
+localizationOptions.RequestCultureProviders.Clear();
 app.UseRequestLocalization(localizationOptions);
 
 if (app.Environment.IsDevelopment())
