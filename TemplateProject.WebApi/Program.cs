@@ -164,13 +164,20 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var sp = scope.ServiceProvider;
-//    var db = sp.GetRequiredService<AppDbContext>();
-//    await db.Database.MigrateAsync();
-//    await new MenuCatalogSeeder(db).SeedAsync();
-//}
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await db.Database.MigrateAsync();
+        await new MenuCatalogSeeder(db).SeedAsync();
+    }
+    catch (Exception ex)
+    {
+        Log.Fatal(ex, "Startup migration/seed sırasında hata oluştu.");
+        throw; // isterse burada throw'u kaldırıp sadece loglayabilirsin, ama sessiz geçmemesi için en azından logla
+    }
+}
 
 app.UseExceptionHandler();
 app.UseRouting();
