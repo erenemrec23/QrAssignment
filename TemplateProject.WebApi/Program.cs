@@ -23,8 +23,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
 using QrAssignment.Persistence.Seeders;
-
-var builder = WebApplication.CreateBuilder(args);
+try
+{
+    var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -224,3 +225,10 @@ app.MapControllers()
    .RequireAuthorization();
 await DatabaseSeeder.SeedAsync(app.Services);
 await app.RunAsync();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Fatal Error on Startup: {ex.Message}");
+    Console.WriteLine(ex.StackTrace);
+    throw;
+}
