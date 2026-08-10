@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using QrAssignment.Application.Abstractions;
+using QrAssignment.Application.Features.Permission.Commands.Update;
+using QrAssignment.Application.Features.Roles.Commands.DTOs;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
+using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared;
 using QrAssignment.Domain.Shared.PagePermission;
@@ -15,17 +18,20 @@ namespace QrAssignment.Application.Features.Roles.Commands.Create
         private readonly IAppRoleRepository _appRoleRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAppLocalizer _localizer;
+        private readonly IPermissionSyncService _permissionSyncService;
 
         public CreateAppRoleCommandHandler(
             RoleManager<AppRole> roleManager,
             IAppRoleRepository appRoleRepository,
             IUnitOfWork unitOfWork,
-            IAppLocalizer localizer)
+            IAppLocalizer localizer,
+            IPermissionSyncService permissionSyncService)
         {
             _roleManager = roleManager;
             _appRoleRepository = appRoleRepository;
             _unitOfWork = unitOfWork;
             _localizer = localizer;
+            _permissionSyncService = permissionSyncService;
         }
 
         public async Task<Result> Handle(CreateAppRoleCommand request, CancellationToken ct)
@@ -51,7 +57,7 @@ namespace QrAssignment.Application.Features.Roles.Commands.Create
                 await _appRoleRepository.SyncAssignedUsersAsync(role.Id, request.UserIds, ct);
 
             // Sayfa yetkileri artık PagePermission tablosuna (Identity claim değil)
-            await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, ct);
+            await _permissionSyncService.SyncRolesPermissionsAsync(new List<Guid> { role.Id }, request.Permissions.Select(s => new PermissionUserUpdateDto(s.PageName, s.GroupKey, s.PermissionValue)).ToList(), ct);
 
             return Result.Success();
         }

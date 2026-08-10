@@ -4,6 +4,7 @@ using MediatR;
 using QrAssignment.Application.Features.Permission.Commands.Update;
 using QrAssignment.Application.Features.Roles.Commands.DTOs;
 using QrAssignment.Application.Repositories;
+using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared;
 
@@ -18,16 +19,19 @@ namespace QrAssignment.Application.Features.PagePermissions.Commands.Update
         private readonly IPagePermissionRepository _permissionRepository;
         private readonly IAppRoleRepository _appRoleRepository;
         private readonly IAppUserRepository _appUserRepository;
+        private readonly IPermissionSyncService _permissionSyncService;
 
         public UpdatePagePermissionsForPageCommandHandler(IPageRepository pageRepository, 
             IPagePermissionRepository permissionRepository, 
             IAppRoleRepository roleRepository,
-            IAppUserRepository appUserRepository)
+            IAppUserRepository appUserRepository,
+            IPermissionSyncService permissionSyncService)
         { 
             _pageRepository = pageRepository;
             _permissionRepository = permissionRepository;
             _appRoleRepository = roleRepository;
             _appUserRepository = appUserRepository;
+            _permissionSyncService = permissionSyncService;
         }
 
         public async Task<Result> Handle(
@@ -43,8 +47,9 @@ namespace QrAssignment.Application.Features.PagePermissions.Commands.Update
 
             if (request.RoleId.HasValue)
             {
-
-                await _appRoleRepository.SyncRolePermissionsAsync(request.RoleId.Value, request.Permissions.Select(s => new RolePagePermissionDto(s.PageName, s.GroupKey,s.PermissionValue)), cancellationToken);
+                var lis = new List<Guid>();
+                lis.Add(request.RoleId.Value);
+                await _permissionSyncService.SyncRolesPermissionsAsync(lis, request.Permissions.Select(s => new PermissionUserUpdateDto(s.PageName, s.GroupKey,s.PermissionValue)), cancellationToken);
             
             }
             else

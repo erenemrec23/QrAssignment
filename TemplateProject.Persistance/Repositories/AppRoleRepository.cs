@@ -1,16 +1,12 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using QrAssignment.Application.DTOs.List;
 using QrAssignment.Application.Features.Permission.Queries.GetByUserId;
-using QrAssignment.Application.Features.Roles.Commands.DTOs;
 using QrAssignment.Application.Features.Roles.DTOs;
 using QrAssignment.Application.Features.Roles.Queries.GetList;
 using QrAssignment.Application.Features.Users.Queries.LookUp.DTOs;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
-using QrAssignment.Domain.Shared.PagePermission;
 using QrAssignment.Persistance.Context;
 using System.Linq.Expressions;
 
