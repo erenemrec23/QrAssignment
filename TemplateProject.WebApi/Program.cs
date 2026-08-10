@@ -217,5 +217,3 @@ app.MapControllers()
    .RequireAuthorization();
 await DatabaseSeeder.SeedAsync(app.Services);
 await app.RunAsync();
-
-app.Run();
