@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using QrAssignment.Application.Interfaces;
 
 namespace QrAssignment.Presentation.Controllers;
@@ -13,7 +14,7 @@ public sealed class LocalizationController : ControllerBase
     {
         _localizationService = localizationService;
     }
-
+    [AllowAnonymous]
     [HttpGet("{lang}")]
     public IActionResult GetTranslations(string lang)
     {
