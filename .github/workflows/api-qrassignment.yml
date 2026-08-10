@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master  # Şu an görsellerde master dalında olduğun için bunu aktif tutuyoruz
-      - main
+      - main  # Sadece main dalını dinliyoruz
 
 env:
   AZURE_WEBAPP_NAME: api-qrassignment
@@ -24,11 +23,15 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
-      # 1. DEĞİŞİKLİK: .sln bağımlılığı kaldırıldı. Doğrudan senin projen restore edilecek.
+      # 1. DEĞİŞİKLİK: .sln aramak yerine doğrudan projeyi restore ediyoruz
       - name: Restore
         run: dotnet restore "TemplateProject.WebApi/QrAssignment.WebApi.csproj"
 
-      # 2. DEĞİŞİKLİK: --no-build kaldırıldı! Proje zorla ve kesin olarak baştan derlenecek.
+      # 2. DEĞİŞİKLİK: .sln yerine doğrudan projeyi derliyoruz
+      - name: Build
+        run: dotnet build "TemplateProject.WebApi/QrAssignment.WebApi.csproj" --configuration ${{ env.CONFIGURATION }} --no-restore
+
+      # 3. DEĞİŞİKLİK: --no-build PARAMETRESİ KALDIRILDI! 
       - name: Publish
         run: dotnet publish "TemplateProject.WebApi/QrAssignment.WebApi.csproj" --configuration ${{ env.CONFIGURATION }} --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
