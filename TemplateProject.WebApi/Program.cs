@@ -164,13 +164,13 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var sp = scope.ServiceProvider;
-    var db = sp.GetRequiredService<AppDbContext>();
-    await db.Database.MigrateAsync();
-    await new MenuCatalogSeeder(db).SeedAsync();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var sp = scope.ServiceProvider;
+//    var db = sp.GetRequiredService<AppDbContext>();
+//    await db.Database.MigrateAsync();
+//    await new MenuCatalogSeeder(db).SeedAsync();
+//}
 
 app.UseExceptionHandler();
 app.UseRouting();
@@ -215,5 +215,5 @@ app.MapGet("/health", () => Results.Ok(new { status = "Healthy", time = DateTime
 app.MapControllers()
    .RequireRateLimiting("IpBasedRateLimit")
    .RequireAuthorization();
-await DatabaseSeeder.SeedAsync(app.Services);
+//await DatabaseSeeder.SeedAsync(app.Services);
 await app.RunAsync();
