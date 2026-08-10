@@ -29,7 +29,7 @@ jobs:
         run: dotnet build $(find . -name "*.sln" -print -quit) --configuration ${{ env.CONFIGURATION }} --no-restore
 
       - name: Publish
-        run: dotnet publish $(find . -name "*WebApi.csproj" -print -quit) --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        run: dotnet publish $(find . -name "*Presentation.csproj" -print -quit) --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
