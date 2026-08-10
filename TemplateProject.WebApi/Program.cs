@@ -183,10 +183,10 @@ try
 
     app.UseExceptionHandler();
 
+    app.UseRouting();
     // CORS middleware'i yönlendirmeden (Routing) önce konumlandırıldı[cite: 1]
     app.UseCors("AllowAngularApp");
 
-    app.UseRouting();
 
     // Localization ayarları
     var supportedCulturesInfo = new[] { new CultureInfo("tr-TR"), new CultureInfo("en-US") };
