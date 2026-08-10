@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Services;
 using QrAssignment.Presentation.Middlewares;
 using QrAssignment.Presentation.Services;
 
@@ -11,8 +12,8 @@ public static class DependencyInjection
     { 
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
-
+        services.AddScoped<ICurrentUserService, CurrentUserService>(); 
+        
         return services;
     }
 }

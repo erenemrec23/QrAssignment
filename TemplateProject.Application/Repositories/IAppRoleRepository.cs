@@ -36,10 +36,10 @@ namespace QrAssignment.Application.Repositories
         Task SetPassiveById(Guid id, CancellationToken ct);
         Task BulkSetPassiveByIds(List<Guid> ids, CancellationToken ct);
 
-        Task SyncRolePermissionsAsync(
-    Guid roleId,
-    IEnumerable<RolePagePermissionDto> permissions, 
-    CancellationToken ct = default);
+    //    Task SyncRolePermissionsAsync(
+    //Guid roleId,
+    //IEnumerable<RolePagePermissionDto> permissions, 
+    //CancellationToken ct = default);
         Task<Paginate<RoleLookUpListItemDto>> GetDtoLookUpListAsync(PageRequestBaseDto request, CancellationToken ct = default);
     }
 }

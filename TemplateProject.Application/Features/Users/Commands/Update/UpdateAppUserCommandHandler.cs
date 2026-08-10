@@ -1,9 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using QrAssignment.Application.Features.Permission.Commands.Update; // PermissionUserUpdateDto
 using QrAssignment.Application.Interfaces;
-using QrAssignment.Application.Repositories;                        // IAppUserRepository
-using QrAssignment.Domain.Entity.App;                              // AppUser
+using QrAssignment.Application.Repositories;   // IAppUserRepository (rol atama join'i icin)
+using QrAssignment.Application.Services;        // IPermissionSyncService
+using QrAssignment.Domain.Entity.App;          // AppUser
 using QrAssignment.Domain.Shared;
 
 namespace QrAssignment.Application.Features.Users.Commands.Update
@@ -12,15 +12,18 @@ namespace QrAssignment.Application.Features.Users.Commands.Update
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IAppUserRepository _appUserRepository;
+        private readonly IPermissionSyncService _permissionSyncService;
         private readonly IAppLocalizer _localizer;
 
         public UpdateAppUserCommandHandler(
             UserManager<AppUser> userManager,
             IAppUserRepository appUserRepository,
+            IPermissionSyncService permissionSyncService,
             IAppLocalizer localizer)
         {
             _userManager = userManager;
             _appUserRepository = appUserRepository;
+            _permissionSyncService = permissionSyncService;
             _localizer = localizer;
         }
 
@@ -41,14 +44,14 @@ namespace QrAssignment.Application.Features.Users.Commands.Update
                         _localizer["Error.UserCanNotUpdated"],
                         string.Join(", ", updateResult.Errors.Select(e => e.Description)))));
 
-            // Yetkiler ayni istekte senkronize edilir (matris ekrani Scope=Page).
+            // Yetkiler artik servis uzerinden (coka-cok imza; tek kullanici tek elemanli liste).
             if (request.Permissions is not null)
             {
-                await _appUserRepository.SyncUserPermissionsAsync(
-                    user.Id, request.Permissions, cancellationToken);
+                await _permissionSyncService.SyncUsersPermissionsAsync(
+                    new[] { user.Id }, request.Permissions, cancellationToken);
             }
 
-            // Roller ayni istekte senkronize edilir.
+            // Rol atama (AppUserRole join) repository'de kaliyor.
             if (request.RoleIds is not null)
             {
                 await _appUserRepository.SyncAssignedRolesAsync(

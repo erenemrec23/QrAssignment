@@ -44,6 +44,8 @@ namespace QrAssignment.Persistance
             });
 
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IPermissionSyncService, PermissionSyncService>();
+            
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<IDbExceptionTranslator, SqlServerExceptionTranslator>();

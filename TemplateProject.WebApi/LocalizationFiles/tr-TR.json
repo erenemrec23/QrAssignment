@@ -326,7 +326,12 @@
   "ExcelImport.ColumnMappingStep": "Kolon Eşleştirme Adımı",
   "ExcelImport.ExpectedColumn": "Beklenen Kolon",
   "ExcelImport.UserColumn": "Kullanıcı Kolonu",
-  "ExcelImport.ReUpload": "Yeniden Yükle"
+  "ExcelImport.ReUpload": "Yeniden Yükle",
+  "Label.Selected": "Seçilen",
+  "Button.BulkAssignPermissions": "Toplu Yetki Atama",
+  "Title.Wizard.SelectRoles": "Rol Seçimi",
+  "Title.Wizard.SelectUsers": "Kullanıcı Seçimi",
+  "Wizard.Back": "Geri"
 
 
 

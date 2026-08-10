@@ -150,90 +150,90 @@ internal sealed class AppRoleRepository : GenericAppRepository<AppRole>, IAppRol
     public Task SetActiveAsync(Guid id, CancellationToken ct)
         => SetActiveByIdAsync(id, ct);
 
-    public async Task SyncRolePermissionsAsync(
-        Guid roleId, IEnumerable<RolePagePermissionDto> permissions,
-        CancellationToken ct = default)
-    {
-        var incoming = (permissions ?? []).Where(p => p.PermissionValue > 0).ToList();
-        var tenantId = _tenantIdService.GetTenantId();
+    //public async Task SyncRolePermissionsAsync(
+    //    Guid roleId, IEnumerable<RolePagePermissionDto> permissions,
+    //    CancellationToken ct = default)
+    //{
+    //    var incoming = (permissions ?? []).Where(p => p.PermissionValue > 0).ToList();
+    //    var tenantId = _tenantIdService.GetTenantId();
 
-        // Hedef tipine göre ayır — Scope alanına gerek yok, PageName/GroupKey belli ediyor
-        var pageItems = incoming.Where(p => !string.IsNullOrEmpty(p.PageName)).ToList();
-        var groupItems = incoming.Where(p => string.IsNullOrEmpty(p.PageName) && !string.IsNullOrEmpty(p.GroupKey)).ToList();
+    //    // Hedef tipine göre ayır — Scope alanına gerek yok, PageName/GroupKey belli ediyor
+    //    var pageItems = incoming.Where(p => !string.IsNullOrEmpty(p.PageName)).ToList();
+    //    var groupItems = incoming.Where(p => string.IsNullOrEmpty(p.PageName) && !string.IsNullOrEmpty(p.GroupKey)).ToList();
 
-        await SyncPageRowsAsync(roleId, pageItems, tenantId, ct);
-        await SyncGroupRowsAsync(roleId, groupItems, tenantId, ct);
-        // SaveChanges YOK — UnitOfWorkBehavior tek transaction'da commit eder
-    }
+    //    await SyncPageRowsAsync(roleId, pageItems, tenantId, ct);
+    //    await SyncGroupRowsAsync(roleId, groupItems, tenantId, ct);
+    //    // SaveChanges YOK — UnitOfWorkBehavior tek transaction'da commit eder
+    //}
 
-    // --- SAYFA satırları ---
-    private async Task SyncPageRowsAsync(Guid roleId, List<RolePagePermissionDto> items, Guid? tenantId, CancellationToken ct)
-    {
-        var keys = items.Select(p => p.PageName!).ToHashSet();
-        var map = await _context.Pages
-            .IgnoreQueryFilters(["SoftDeleteFilter"])
-            .Where(pg => keys.Contains(pg.PageKey))
-            .Select(pg => new { pg.Id, pg.PageKey })
-            .ToDictionaryAsync(x => x.PageKey, x => x.Id, ct);
+    //// --- SAYFA satırları ---
+    //private async Task SyncPageRowsAsync(Guid roleId, List<RolePagePermissionDto> items, Guid? tenantId, CancellationToken ct)
+    //{
+    //    var keys = items.Select(p => p.PageName!).ToHashSet();
+    //    var map = await _context.Pages
+    //        .IgnoreQueryFilters(["SoftDeleteFilter"])
+    //        .Where(pg => keys.Contains(pg.PageKey))
+    //        .Select(pg => new { pg.Id, pg.PageKey })
+    //        .ToDictionaryAsync(x => x.PageKey, x => x.Id, ct);
 
-        var current = await _context.PagePermissions
-            .IgnoreQueryFilters(["SoftDeleteFilter"])
-            .Where(pp => pp.RoleId == roleId && pp.PageId != null)   // yalnızca SAYFA satırları
-            .ToListAsync(ct);
+    //    var current = await _context.PagePermissions
+    //        .IgnoreQueryFilters(["SoftDeleteFilter"])
+    //        .Where(pp => pp.RoleId == roleId && pp.PageId != null)   // yalnızca SAYFA satırları
+    //        .ToListAsync(ct);
 
-        foreach (var p in items)
-        {
-            if (!map.TryGetValue(p.PageName!, out var pageId)) continue;
-            var existing = current.FirstOrDefault(x => x.PageId == pageId);
-            if (existing is null)
-                _context.PagePermissions.Add(
-                    PagePermission.ForRole(roleId, pageId, (PageAccessFlags)p.PermissionValue, tenantId));
-            else
-            {
+    //    foreach (var p in items)
+    //    {
+    //        if (!map.TryGetValue(p.PageName!, out var pageId)) continue;
+    //        var existing = current.FirstOrDefault(x => x.PageId == pageId);
+    //        if (existing is null)
+    //            _context.PagePermissions.Add(
+    //                PagePermission.ForRole(roleId, pageId, (PageAccessFlags)p.PermissionValue, tenantId));
+    //        else
+    //        {
                
-                existing.PermissionValue = (PageAccessFlags)p.PermissionValue;
-                existing.IsPassived = false;
-                _context.PagePermissions.Update(existing);
-            }
-        }
+    //            existing.PermissionValue = (PageAccessFlags)p.PermissionValue;
+    //            existing.IsPassived = false;
+    //            _context.PagePermissions.Update(existing);
+    //        }
+    //    }
 
-        var ids = items.Where(p => map.ContainsKey(p.PageName!)).Select(p => map[p.PageName!]).ToHashSet();
-        _context.PagePermissions.RemoveRange(current.Where(x => !ids.Contains(x.PageId!.Value)));
-    }
+    //    var ids = items.Where(p => map.ContainsKey(p.PageName!)).Select(p => map[p.PageName!]).ToHashSet();
+    //    _context.PagePermissions.RemoveRange(current.Where(x => !ids.Contains(x.PageId!.Value)));
+    //}
 
-    // --- GRUP satırları ---
-    private async Task SyncGroupRowsAsync(Guid roleId, List<RolePagePermissionDto> items, Guid? tenantId, CancellationToken ct)
-    {
-        var keys = items.Select(p => p.GroupKey!).ToHashSet();
-        var map = await _context.Set<MenuGroup>()
-            .IgnoreQueryFilters(["SoftDeleteFilter"])
-            .Where(g => keys.Contains(g.Key))
-            .Select(g => new { g.Id, g.Key })
-            .ToDictionaryAsync(x => x.Key, x => x.Id, ct);
+    //// --- GRUP satırları ---
+    //private async Task SyncGroupRowsAsync(Guid roleId, List<RolePagePermissionDto> items, Guid? tenantId, CancellationToken ct)
+    //{
+    //    var keys = items.Select(p => p.GroupKey!).ToHashSet();
+    //    var map = await _context.Set<MenuGroup>()
+    //        .IgnoreQueryFilters(["SoftDeleteFilter"])
+    //        .Where(g => keys.Contains(g.Key))
+    //        .Select(g => new { g.Id, g.Key })
+    //        .ToDictionaryAsync(x => x.Key, x => x.Id, ct);
 
-        var current = await _context.Set<PagePermission>()
-            .IgnoreQueryFilters(["SoftDeleteFilter"])
-            .Where(pp => pp.RoleId == roleId && pp.MenuGroupId != null)   // yalnızca GRUP satırları
-            .ToListAsync(ct);
+    //    var current = await _context.Set<PagePermission>()
+    //        .IgnoreQueryFilters(["SoftDeleteFilter"])
+    //        .Where(pp => pp.RoleId == roleId && pp.MenuGroupId != null)   // yalnızca GRUP satırları
+    //        .ToListAsync(ct);
 
-        foreach (var p in items)
-        {
-            if (!map.TryGetValue(p.GroupKey!, out var groupId)) continue;
-            var existing = current.FirstOrDefault(x => x.MenuGroupId == groupId);
-            if (existing is null)
-                _context.PagePermissions.Add(
-                    PagePermission.ForRoleGroup(roleId, groupId, (PageAccessFlags)p.PermissionValue, tenantId));
-            else
-            {
-                existing.PermissionValue = (PageAccessFlags)p.PermissionValue;
-                existing.IsPassived = false;
-                _context.PagePermissions.Update(existing);
-            }
-        }
+    //    foreach (var p in items)
+    //    {
+    //        if (!map.TryGetValue(p.GroupKey!, out var groupId)) continue;
+    //        var existing = current.FirstOrDefault(x => x.MenuGroupId == groupId);
+    //        if (existing is null)
+    //            _context.PagePermissions.Add(
+    //                PagePermission.ForRoleGroup(roleId, groupId, (PageAccessFlags)p.PermissionValue, tenantId));
+    //        else
+    //        {
+    //            existing.PermissionValue = (PageAccessFlags)p.PermissionValue;
+    //            existing.IsPassived = false;
+    //            _context.PagePermissions.Update(existing);
+    //        }
+    //    }
 
-        var ids = items.Where(p => map.ContainsKey(p.GroupKey!)).Select(p => map[p.GroupKey!]).ToHashSet();
-        _context.PagePermissions.RemoveRange(current.Where(x => !ids.Contains(x.MenuGroupId!.Value)));
-    }
+    //    var ids = items.Where(p => map.ContainsKey(p.GroupKey!)).Select(p => map[p.GroupKey!]).ToHashSet();
+    //    _context.PagePermissions.RemoveRange(current.Where(x => !ids.Contains(x.MenuGroupId!.Value)));
+    //}
 
 
     public Task<Paginate<RoleLookUpListItemDto>> GetDtoLookUpListAsync(PageRequestBaseDto request, CancellationToken ct = default)

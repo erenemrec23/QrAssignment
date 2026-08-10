@@ -13,6 +13,7 @@ using QrAssignment.Application.Features.Tenants.Queries.FormBase.GetPassivedById
 using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetList;
 using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetListExportExcel;
 using QrAssignment.Application.Features.Tenants.Queries.ListBase.GetPassivedList;
+using QrAssignment.Application.Features.Users.Commands.Update;
 using QrAssignment.Application.Features.Users.Queries.LookUp.GetPermissionLookUp;
 using QrAssignment.Domain.Shared.PagePermission;
 using GetListMenuQuery = QrAssignment.Application.Features.Menu.Queries.GetList.GetListMenuQuery;
@@ -91,7 +92,8 @@ namespace QrAssignment.Application.Security
             Register(registry, AppPages.Users, PageAccessFlags.Update,
                 typeof(Features.Users.Commands.Update.UpdateAppUserCommand),
                 typeof(Features.Users.Commands.SetActive.SetActiveAppUserCommand),
-                typeof(Features.Permission.Commands.Update.UpdateUserPermissionCommand));
+                typeof(Features.Permission.Commands.Update.UpdateUserPermissionCommand),
+                typeof(Features.PagePermissions.Commands.UpdateRolesPermissions.UpdateRolesPermissionsCommand));
 
             Register(registry, AppPages.Users, PageAccessFlags.Delete,
                 typeof(Features.Users.Commands.Delete.DeleteAppUserCommand),
@@ -126,7 +128,7 @@ namespace QrAssignment.Application.Security
                 typeof(ValidateExcelQuery<UsersBulkExcelDto>),
                 typeof(GetSampleExcelTemplateQuery<UsersBulkExcelDto>));
 
-
+            
             // =========================================================================
             // ROLES (Page_Roles)
             // =========================================================================
@@ -135,7 +137,8 @@ namespace QrAssignment.Application.Security
 
             Register(registry, AppPages.Roles, PageAccessFlags.Update,
                 typeof(Features.Roles.Commands.Update.UpdateAppRoleCommand),
-                typeof(Features.Roles.Commands.BulkSetActive.BulkSetActiveAppRoleCommand));
+                typeof(Features.Roles.Commands.BulkSetActive.BulkSetActiveAppRoleCommand),
+                typeof(Features.PagePermissions.Commands.UpdateRolesPermissions.UpdateRolesPermissionsCommand));
 
             Register(registry, AppPages.Roles, PageAccessFlags.Delete,
                 typeof(Features.Roles.Commands.Delete.DeleteAppRoleCommand),

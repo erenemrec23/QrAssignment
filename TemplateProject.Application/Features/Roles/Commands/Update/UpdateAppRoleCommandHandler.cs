@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using QrAssignment.Application.Features.Roles.Commands.Update;
 using QrAssignment.Application.Interfaces;
 using QrAssignment.Application.Repositories;
+using QrAssignment.Application.Services;
 using QrAssignment.Domain.Entity.App;
 using QrAssignment.Domain.Shared;
 
@@ -11,14 +13,16 @@ public sealed class UpdateAppRoleCommandHandler : IRequestHandler<UpdateAppRoleC
     private readonly RoleManager<AppRole> _roleManager;
     private readonly IAppRoleRepository _appRoleRepository;
     private readonly IAppLocalizer _localizer;
-
+    private readonly IPermissionSyncService _permissionSyncService; 
     public UpdateAppRoleCommandHandler(RoleManager<AppRole> roleManager,
         IAppRoleRepository appRoleRepository,
-        IAppLocalizer localizer)
+        IAppLocalizer localizer,
+        IPermissionSyncService permissionSyncService)
     {
         _roleManager = roleManager;
         _appRoleRepository = appRoleRepository;
         _localizer = localizer;
+        _permissionSyncService = permissionSyncService;
     }
 
     public async Task<Result> Handle(UpdateAppRoleCommand request, CancellationToken ct)
@@ -34,9 +38,10 @@ public sealed class UpdateAppRoleCommandHandler : IRequestHandler<UpdateAppRoleC
         await _appRoleRepository.SyncAssignedUsersAsync(role.Id, request.UserIds, ct);
 
         // 2) Sayfa yetkileri — PagePermission tablosu (tek metod: ekle/güncelle/sil) 
-        await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, ct);
+        //await _appRoleRepository.SyncRolePermissionsAsync(role.Id, request.Permissions, ct);
+        await _permissionSyncService.SyncRolesPermissionsAsync(
+                  new[] { role.Id }, request.Permissions, ct);
 
-         
 
         // 3) Rol adı
         role.Name = request.Name;
