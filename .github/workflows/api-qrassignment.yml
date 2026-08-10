@@ -9,7 +9,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: api-qrassignment
-  AZURE_WEBAPP_PACKAGE_PATH: publish
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 10.0.x
 
@@ -47,7 +47,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: webapp
-          path: .
 
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v3
