@@ -52,7 +52,6 @@ public sealed class AppUserClaimRepository : IAppUserClaimRepository
         // Kullanıcı + rollerine ait TÜM satırlar (sayfa VEYA grup hedefli)
         var grants = await _context.Set<PagePermission>()
             .AsNoTracking()
-            .IgnoreQueryFilters()
             .Where(pp => pp.UserId == userId
                       || (pp.RoleId != null && roleIds.Contains(pp.RoleId.Value)))
             .Select(pp => new
