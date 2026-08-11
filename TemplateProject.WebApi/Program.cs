@@ -126,16 +126,26 @@ try
 
     // -------------------- Serilog host --------------------
     builder.Host.UseSerilog((context, loggerConfig) =>
+    {
         loggerConfig
             .ReadFrom.Configuration(context.Configuration)
-            .WriteTo.Console()
-            .WriteTo.MSSqlServer(
+            .WriteTo.Console();
+
+        try
+        {
+            loggerConfig.WriteTo.MSSqlServer(
                 connectionString: connectionString,
                 sinkOptions: new MSSqlServerSinkOptions
                 {
                     TableName = "Logs",
-                    AutoCreateSqlTable = true
-                }));
+                    AutoCreateSqlTable = false   // startup'ta DB'ye bağlanıp tablo yaratmayı DENEME
+                });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Serilog SQL sink atlandı: {ex.Message}");
+        }
+    });
 
     builder.Services.AddSingleton<IAppLocalizer, AppLocalizer>();
     builder.Services.AddScoped<ILocalizationService, JsonLocalizationManager>();
