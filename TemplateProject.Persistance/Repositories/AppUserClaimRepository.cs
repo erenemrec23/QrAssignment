@@ -21,6 +21,7 @@ public sealed class AppUserClaimRepository : IAppUserClaimRepository
     {
         var rows = await _context.Set<PagePermission>()
     .AsNoTracking()
+    .IgnoreQueryFilters(["TenantFilter"])
     .Where(pp => pp.UserId == userId)
     .Select(pp => new
     {
@@ -45,6 +46,8 @@ public sealed class AppUserClaimRepository : IAppUserClaimRepository
         if (userId is null) return new();
 
         var roleIds = await _context.AppUserRole
+            .AsNoTracking()
+            .IgnoreQueryFilters(["TenantFilter"])
             .Where(ur => ur.AppUserId == userId && ur.AppRoleId != null)
             .Select(ur => ur.AppRoleId!.Value)
             .ToListAsync(ct);
@@ -52,6 +55,7 @@ public sealed class AppUserClaimRepository : IAppUserClaimRepository
         // Kullanıcı + rollerine ait TÜM satırlar (sayfa VEYA grup hedefli)
         var grants = await _context.Set<PagePermission>()
             .AsNoTracking()
+            .IgnoreQueryFilters(["TenantFilter"])
             .Where(pp => pp.UserId == userId
                       || (pp.RoleId != null && roleIds.Contains(pp.RoleId.Value)))
             .Select(pp => new
@@ -73,7 +77,7 @@ public sealed class AppUserClaimRepository : IAppUserClaimRepository
         if (groupIds.Count > 0)
         {
             var rows = await _context.Set<Page>()
-                .AsNoTracking()
+                .AsNoTracking() 
                 .Where(p => p.MenuGroupId != null && groupIds.Contains(p.MenuGroupId.Value))
                 .Select(p => new { GroupId = p.MenuGroupId!.Value, p.PageKey })
                 .ToListAsync(ct);
