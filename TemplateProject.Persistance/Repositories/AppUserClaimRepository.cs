@@ -20,7 +20,7 @@ public sealed class AppUserClaimRepository : IAppUserClaimRepository
         Guid? userId, CancellationToken cancellationToken = default)
     {
         var rows = await _context.Set<PagePermission>()
-    .AsNoTracking().IgnoreQueryFilters()
+    .AsNoTracking()
     .Where(pp => pp.UserId == userId)
     .Select(pp => new
     {

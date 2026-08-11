@@ -5,7 +5,7 @@ using QrAssignment.Domain.Shared;
 namespace QrAssignment.Application.Features.Permission.Queries.GetByUserId
 {
      
-    public class GetByIdPermissionUserQueryHandler : IRequestHandler<GetUserPermissionByUserIdQuery, Result<PermissionUserItemDto>>
+    public class GetByIdPermissionUserQueryHandler : IRequestHandler<GetByIdPermissionUserQuery, Result<PermissionUserItemDto>>
     {
         private readonly IAppUserClaimRepository  _appUserClaimRepository;
 
@@ -14,7 +14,7 @@ namespace QrAssignment.Application.Features.Permission.Queries.GetByUserId
             _appUserClaimRepository = appUserClaimRepository;
         }
 
-        public async Task<Result<PermissionUserItemDto>> Handle(GetUserPermissionByUserIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PermissionUserItemDto>> Handle(GetByIdPermissionUserQuery request, CancellationToken cancellationToken)
         {
             var result = await _appUserClaimRepository.GetUserWithPermissionsAsync(request.UserId, cancellationToken);
 

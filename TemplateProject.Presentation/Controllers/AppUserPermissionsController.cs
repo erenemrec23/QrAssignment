@@ -29,7 +29,7 @@ namespace QrAssignment.Presentation.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetListByUserId(Guid? userId, CancellationToken cancellationToken)
         {
-            var query = new GetUserPermissionByUserIdQuery(userId);
+            var query = new GetByIdPermissionUserQuery(userId);
             var result = await _mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)
