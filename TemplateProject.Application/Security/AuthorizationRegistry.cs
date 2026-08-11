@@ -1,5 +1,6 @@
 ﻿using QrAssignment.Application.Common.Excel;
 using QrAssignment.Application.Features.PagePermissions.Commands.Update;
+using QrAssignment.Application.Features.PagePermissions.Commands.UpdateUsersPermissions;
 using QrAssignment.Application.Features.PagePermissions.Queries;
 using QrAssignment.Application.Features.QrLocations.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.QrLocations.Queries.FormBase.GetById;
@@ -138,7 +139,8 @@ namespace QrAssignment.Application.Security
             Register(registry, AppPages.Roles, PageAccessFlags.Update,
                 typeof(Features.Roles.Commands.Update.UpdateAppRoleCommand),
                 typeof(Features.Roles.Commands.BulkSetActive.BulkSetActiveAppRoleCommand),
-                typeof(Features.PagePermissions.Commands.UpdateRolesPermissions.UpdateRolesPermissionsCommand));
+                typeof(Features.PagePermissions.Commands.UpdateRolesPermissions.UpdateRolesPermissionsCommand),
+                typeof(Features.PagePermissions.Commands.UpdateUsersPermissions.UpdateUsersPermissionsCommand));
 
             Register(registry, AppPages.Roles, PageAccessFlags.Delete,
                 typeof(Features.Roles.Commands.Delete.DeleteAppRoleCommand),
