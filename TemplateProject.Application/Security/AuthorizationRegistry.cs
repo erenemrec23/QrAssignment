@@ -1,4 +1,5 @@
 ﻿using QrAssignment.Application.Common.Excel;
+using QrAssignment.Application.Features.Menu.Queries.GetUserList;
 using QrAssignment.Application.Features.PagePermissions.Commands.Update;
 using QrAssignment.Application.Features.PagePermissions.Commands.UpdateUsersPermissions;
 using QrAssignment.Application.Features.PagePermissions.Queries;
@@ -224,7 +225,8 @@ namespace QrAssignment.Application.Security
                 typeof(Features.AuthFeatures.Commands.ForgotPassword.ForgotPasswordCommand),
                 typeof(Features.AuthFeatures.Commands.ResetPassword.ResetPasswordCommand),
                 typeof(GetSystemModulesQuery),
-                typeof(GetListMenuQuery)
+                typeof(GetListMenuQuery),
+                typeof(GetUserMenuQuery)
             };
             RegisterDynamic(registry, dynamicCommands, PageAccessFlags.ManagePagePermissions,
             typeof(GetPagePermissionsForPageQuery),

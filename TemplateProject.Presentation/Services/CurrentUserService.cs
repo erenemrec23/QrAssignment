@@ -1,20 +1,22 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using QrAssignment.Application.Interfaces;
-using System.Collections.Generic; // IEnumerable için gerekli
-using System.Linq; // LINQ metotları (Select) için gerekli
-
+using System.Security.Claims;
+using System.Text.Json;
 namespace QrAssignment.Presentation.Services
 {
-    public class CurrentUserService : ICurrentUserService
+    public sealed class CurrentUserService : ICurrentUserService
     {
+        private static readonly JsonSerializerOptions JsonOpts =
+            new() { PropertyNameCaseInsensitive = true };
+
         private readonly IHttpContextAccessor _httpContextAccessor;
+         
+        private ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
 
         public CurrentUserService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
-
         public string? UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
         // GetClaim yerine GetClaims yaptık ve dönüş tipini IEnumerable<string> olarak değiştirdik
@@ -44,5 +46,24 @@ namespace QrAssignment.Presentation.Services
             // FindAll metodu ile hem User'dan hem Role'den gelen tüm aynı isimli claimleri yakalıyoruz
             return user.FindFirst(claimType)?.Value ?? string.Empty;
         }
+
+        public IReadOnlyDictionary<string, int> GetPagePermissions()
+        {
+            // Frontend bu claim'i JSON.parse ediyordu -> claim, JSON string'e
+            // serialize edilmis bir dizidir: [{ "pageName": "...", "permissionValue": 7 }, ...]
+            var raw = User?.FindFirst("permissions")?.Value;
+            if (string.IsNullOrWhiteSpace(raw))
+                return new Dictionary<string, int>();
+
+            var list = JsonSerializer.Deserialize<List<PagePermissionClaim>>(raw, JsonOpts)
+                       ?? new List<PagePermissionClaim>();
+
+            var dict = new Dictionary<string, int>(StringComparer.Ordinal);
+            foreach (var p in list)
+                dict[p.PageName] = p.PermissionValue;
+            return dict;
+        }
+
+        private sealed record PagePermissionClaim(string PageName, int PermissionValue);
     }
 }

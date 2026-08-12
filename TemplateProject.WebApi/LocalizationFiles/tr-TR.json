@@ -334,7 +334,8 @@
   "Wizard.Back": "Geri",
   "Messages.PagePermissionMatrixNotFound": "Aradığınız kriterlere uygun sayfa yetki matrisi bulunamadı.",
   "PageTitle.Role-multi-permission-wizard": "Rol Yetkilendirme Sihirbazı",
-  "PageTitle.User-multi-permission-wizard": "Kullanıcı Yetkilendirme Sihirbazı"
+  "PageTitle.User-multi-permission-wizard": "Kullanıcı Yetkilendirme Sihirbazı",
+  "SideBar.LogOut": "Çıkış Yap"
 
 
 
