@@ -184,21 +184,24 @@ var app = builder.Build();
 // Prod'da her başlangıçta otomatik migration genelde önerilmez — tercihen
 // migration'ı deploy dışında bir kez elle çalıştır.
 //
-//using (var scope = app.Services.CreateScope())
-//{
-//    try
-//    {
-//        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//        await db.Database.MigrateAsync();
-//        await new MenuCatalogSeeder(db).SeedAsync();
-//    }
-//    catch (Exception ex)
-//    {
-//        // Migration/seed başarısız olsa bile uygulamayı ayakta tut.
-//        Log.Error(ex, "Startup migration/seed sırasında hata oluştu; uygulama devam ediyor.");
-//    }
-//}
-
+if (args.Contains("seed"))
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        try
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            await db.Database.MigrateAsync();
+            await new MenuCatalogSeeder(db).SeedAsync();
+        }
+        catch (Exception ex)
+        {
+            // Migration/seed başarısız olsa bile uygulamayı ayakta tut.
+            Log.Error(ex, "Startup migration/seed sırasında hata oluştu; uygulama devam ediyor.");
+        }
+    }
+    return;
+}
 app.UseExceptionHandler();
 
 app.UseRouting();
