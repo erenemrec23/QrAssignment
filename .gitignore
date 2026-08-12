@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /TemplateProject.Application/Behaviors/AuthorizationBehavior.cs
 /TemplateProject.Application/Interfaces/ISecuredRequest.cs
+/TemplateProject.WebApi/appsettings.json
