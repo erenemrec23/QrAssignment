@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QrAssignment.Persistance.Context;
 
@@ -11,9 +12,11 @@ using QrAssignment.Persistance.Context;
 namespace QrAssignment.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260811144420_Add_PagePermissionLog")]
+    partial class Add_PagePermissionLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -409,10 +412,8 @@ namespace QrAssignment.Persistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<byte>("Action")
+                        .HasColumnType("tinyint");
 
                     b.Property<Guid?>("CreatedByUserId")
                         .HasColumnType("uniqueidentifier");
@@ -441,10 +442,8 @@ namespace QrAssignment.Persistance.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("OwnerType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<byte>("OwnerType")
+                        .HasColumnType("tinyint");
 
                     b.Property<int?>("PageId")
                         .HasColumnType("int");
@@ -465,10 +464,8 @@ namespace QrAssignment.Persistance.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.Property<string>("TargetType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<byte>("TargetType")
+                        .HasColumnType("tinyint");
 
                     b.Property<Guid?>("TenantId")
                         .HasColumnType("uniqueidentifier");

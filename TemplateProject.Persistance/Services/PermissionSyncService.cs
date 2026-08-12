@@ -81,11 +81,6 @@ namespace QrAssignment.Application.Services
             return (pageItems, groupItems, _tenantIdService.GetTenantId());
         }
 
-        // --- SAYFA satirlari (hedef-agnostik: user ya da role) ---
-        // Yalnizca GONDERILEN satirlara dokunulur:
-        //   value > 0  -> ekle/guncelle (upsert)
-        //   value <= 0 -> yalnizca o satiri sil (varsa); yoksa no-op
-        // Listede OLMAYAN satirlara HIC dokunulmaz (full-replace yok).
         private void SyncPageRows(
             List<PagePermission> current,
             List<PermissionUserUpdateDto> items,

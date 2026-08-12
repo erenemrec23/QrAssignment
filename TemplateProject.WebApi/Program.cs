@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using QrAssignment.Application;
@@ -10,19 +11,19 @@ using QrAssignment.Infrastructure.Localization;
 using QrAssignment.Persistance;
 using QrAssignment.Persistance.Context;
 using QrAssignment.Persistance.Seeding;
+using QrAssignment.Persistence.Seeders;
 using QrAssignment.Presentation;
+using QrAssignment.Presentation.Middlewares;
 using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
 using Serilog.Ui.Core.Extensions;
 using Serilog.Ui.MsSqlServerProvider.Extensions;
 using Serilog.Ui.Web.Extensions;
-using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
-using QrAssignment.Persistence.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -228,6 +229,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<PermissionChangeContextMiddleware>();
 
 app.UseRateLimiter();
 

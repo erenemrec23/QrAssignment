@@ -12,8 +12,8 @@ public static class DependencyInjection
     { 
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
-        services.AddScoped<ICurrentUserService, CurrentUserService>(); 
-        
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+       
         return services;
     }
 }

@@ -7,6 +7,7 @@ using QrAssignment.Application.Features.QrLocations.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Roles.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Features.Tenants.Commands.Excel.BulkCreate;
 using QrAssignment.Application.Interfaces;
+using QrAssignment.Application.Services;
 using QrAssignment.Domain.Shared;
 using System.Reflection; 
 
@@ -33,8 +34,8 @@ namespace QrAssignment.Application
             services.AddScoped<IExcelRowBusinessValidator<BulkCreateAppRoleInputDto>, BulkCreateAppRoleNameUniquenessValidator>();
             services.AddScoped<IExcelRowBusinessValidator<BulkCreateTenantInputDto>, BulkCreateTenantNameUniquenessValidator>();
             services.AddValidatorsFromAssembly(typeof(SharedResource).Assembly);
-            services.AddTransient(typeof(IValidator<>), typeof(GetByIdQueryValidator<>));
-
+            services.AddTransient(typeof(IValidator<>), typeof(GetByIdQueryValidator<>)); 
+            services.AddScoped<IPermissionChangeContext, PermissionChangeContext>();
             return services;
         }
 

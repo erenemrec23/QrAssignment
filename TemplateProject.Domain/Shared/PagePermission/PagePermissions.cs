@@ -19,4 +19,9 @@
         ViewAndInsert = View | Insert,  
         All = View | Insert | Update | SetPassive | ViewPassive | SetActive | Delete |  ExportExcel | ImportExcel | ManagePagePermissions
     }
+
+
+    public enum PermissionOwnerType : byte { User = 1, Role = 2 }
+    public enum PermissionTargetType : byte { Page = 1, MenuGroup = 2 }
+    public enum PermissionChangeAction : byte { Added = 1, Updated = 2, Removed = 3 }
 }

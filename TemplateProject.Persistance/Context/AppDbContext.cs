@@ -21,6 +21,7 @@ public class AppDbContext : AuditDbContext
         _tenantService = tenantService;
     }
 
+    public DbSet<PagePermissionLog> PagePermissionLogs { get; set; }
     public DbSet<SystemAuditLog> SystemAuditLogs { get; set; }
 
     public DbSet<AppUser> AppUsers { get; set; }
