@@ -352,7 +352,12 @@
   "Label.Comment": "Geri Bildirim",
   "Label.Screenshot": "Ekran Görüntüsü",
   "Button.View": "Görüntüle",
-  "Label.PageUrl":  "Sayfa Url"
+  "Label.PageUrl": "Sayfa Url",
+  "Title.SendFeedback": "Geri Bildirim",
+  "Label.SendOrSave": "Kaydet ve Gönder",
+  "Label.UserEmail": "Kullanıcı Mail Adresi",
+  "Label.DetailAndComments": "Detay ve Yorumlar",
+  "Label.MarkAsCompleted":  "Tamamlandı Olarak İşaretle"
 }
 
 
