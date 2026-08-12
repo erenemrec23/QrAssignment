@@ -40,7 +40,8 @@ public class AppDbContext : AuditDbContext
     // public DbSet<QrApplicant> QrApplicants { get; set; }
 
     public DbSet<QrLocation> QrLocations { get; set; }
-
+    public DbSet<Feedback> Feedbacks { get; set; }
+    
     public DbSet<SystemRegion> SystemRegions { get; set; }
 
     public DbSet<Tenant> Tenants { get; set; }

@@ -174,7 +174,7 @@ builder.Services.AddRateLimiter(options =>
             }
         ));
 });
-
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // -------------------- Migration / Seed (opsiyonel) --------------------
@@ -184,20 +184,20 @@ var app = builder.Build();
 // Prod'da her başlangıçta otomatik migration genelde önerilmez — tercihen
 // migration'ı deploy dışında bir kez elle çalıştır.
 //
-// using (var scope = app.Services.CreateScope())
-// {
-//     try
-//     {
-//         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//         await db.Database.MigrateAsync();
-//         await new MenuCatalogSeeder(db).SeedAsync();
-//     }
-//     catch (Exception ex)
-//     {
-//         // Migration/seed başarısız olsa bile uygulamayı ayakta tut.
-//         Log.Error(ex, "Startup migration/seed sırasında hata oluştu; uygulama devam ediyor.");
-//     }
-// }
+//using (var scope = app.Services.CreateScope())
+//{
+//    try
+//    {
+//        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//        await db.Database.MigrateAsync();
+//        await new MenuCatalogSeeder(db).SeedAsync();
+//    }
+//    catch (Exception ex)
+//    {
+//        // Migration/seed başarısız olsa bile uygulamayı ayakta tut.
+//        Log.Error(ex, "Startup migration/seed sırasında hata oluştu; uygulama devam ediyor.");
+//    }
+//}
 
 app.UseExceptionHandler();
 
@@ -227,6 +227,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<PermissionChangeContextMiddleware>();
@@ -240,8 +241,8 @@ app.UseSerilogUi(options =>
 
 app.MapGet("/health", () => Results.Ok(new { status = "Healthy", time = DateTime.UtcNow }))
    .AllowAnonymous();
-
 app.MapControllers()
    .RequireRateLimiting("IpBasedRateLimit");
 
+//await DatabaseSeeder.SeedAsync(app.Services);
 await app.RunAsync();

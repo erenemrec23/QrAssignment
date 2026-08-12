@@ -3,7 +3,7 @@
     public enum AppMenuGroup : short
     {
         [MenuGroupDefinition(Icon = "bi-gear-wide-connected", Order = 1)]
-        Admin = 1,
+        Admin = 1, 
     }
 
     public enum AppPage
@@ -23,6 +23,11 @@
         [PageDefinition(Group = AppMenuGroup.Admin, PageKey = "Roles",
             TranslationKey = "AppRoles", Icon = "bi-shield", Route = "/roles", Order = 4)]
         Roles = 4,
+
+
+        [PageDefinition(Group = AppMenuGroup.Admin, PageKey = "FeedBacks",
+    TranslationKey = "FeedBacks", Icon = "bi-chat-right-text-fill", Route = "/feedbacks", Order = 5)]
+        FeedBacks = 5,   
 
         // Menüde görünmeyen, sadece yetki kapsamı olan sayfa (AuthorizationRegistry'deki
         // Page_UserPermissions). Grup atanmadı → MenuGroupId null, ShowInMenu false.

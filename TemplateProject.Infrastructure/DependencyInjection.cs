@@ -7,6 +7,7 @@ using QrAssignment.Application.Services;
 using QrAssignment.Infrastructure.Authentication;
 using QrAssignment.Infrastructure.Excel;
 using QrAssignment.Infrastructure.Services;
+using QrAssignment.Infrastructure.Storage;
 
 namespace QrAssignment.Infrastructure
 {
@@ -25,8 +26,14 @@ namespace QrAssignment.Infrastructure
             services.AddScoped<ITenantIdService, TenantIdService>();
             services.AddScoped<IUserContext, UserContext>();
             services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
-            services.AddScoped<IJwtProvider, JwtProvider>(); 
+            services.AddScoped<IJwtProvider, JwtProvider>();
+            services.Configure<StorageOptions>(configuration.GetSection(StorageOptions.SectionName));
 
+            var provider = configuration[$"{StorageOptions.SectionName}:Provider"];
+            if (string.Equals(provider, "AzureBlob", StringComparison.OrdinalIgnoreCase))
+                services.AddSingleton<IFileStorageService, AzureBlobStorageService>();
+            else
+                services.AddSingleton<IFileStorageService, LocalFileStorageService>();
             return services;
         }
     }

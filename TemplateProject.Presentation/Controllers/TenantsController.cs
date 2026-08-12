@@ -51,7 +51,7 @@ namespace QrAssignment.Presentation.Controllers
                 SampleRowCount = 3
             };
 
-            var result = await Mediator.Send(query, cancellationToken); 
+            var result = await Mediator.Send(query, cancellationToken);
             if (!result.IsSuccess || result.Value is null)
                 return BadRequest(result);
 

@@ -335,9 +335,25 @@
   "Messages.PagePermissionMatrixNotFound": "Aradığınız kriterlere uygun sayfa yetki matrisi bulunamadı.",
   "PageTitle.Role-multi-permission-wizard": "Rol Yetkilendirme Sihirbazı",
   "PageTitle.User-multi-permission-wizard": "Kullanıcı Yetkilendirme Sihirbazı",
-  "SideBar.LogOut": "Çıkış Yap"
+  "SideBar.LogOut": "Çıkış Yap",
+  "PageTitle.FeedBacks": "Geri Bildirimler",
+  "Authorization.NotAuthenticated": "Kimlik doğrulama başarısız. Lütfen giriş yapın.",
+  "Authorization.NoPermissions": "Sistemde hiçbir yetkiniz bulunmuyor.",
+  "Authorization.PageAccessDenied": "Bu sayfaya ({0}) erişim yetkiniz bulunmamaktadır.",
+  "Authorization.InsufficientPermission": "Bu işlemi gerçekleştirmek için yetkiniz eksik.",
+  "Authorization.InvalidPermissionFormat": "Yetki verisi formatı hatalı.",
+  "Authorization.InvalidPageKey": "Geçersiz sayfa anahtarı (PageKey boş gönderildi).",
+  "SideBar.Feedback": "Geri Bildirim",
+  "Label.YourComment": "Geri Bildirim",
+  "Placeholder.FeedbackComment": "Lütfen Geri Bildiriminizi Giriniz",
+  "Hint.FeedbackDrawingHint": "Ekran Görüntüsü",
+  "Label.Completed": "Tamamlandı",
+  "Label.Pending": "Bekliyor",
+  "Label.Comment": "Geri Bildirim",
+  "Label.Screenshot": "Ekran Görüntüsü",
+  "Button.View": "Görüntüle",
+  "Label.PageUrl":  "Sayfa Url"
+}
 
 
-
-} 
  

@@ -4,7 +4,6 @@ using QrAssignment.Application.Features.QrLocations.DTOs;
 using QrAssignment.Application.Features.QrLocations.Queries.DTOs;
 using QrAssignment.Application.Repositories;
 using QrAssignment.Domain.Entity;
-using QrAssignment.Domain.Entity.App;
 using QrAssignment.Persistance.Context;
 using QrAssignment.Persistance.Repositories.Base;
 using System.Linq.Expressions;
@@ -18,10 +17,10 @@ internal sealed class QrLocationRepository : GenericRepository<QrLocation>, IQrL
     }
 
     // --- Okuma kaynakları ---
-    private IQueryable<QrLocation> ActiveQrLocations => _context.QrLocations.AsNoTracking();
+    private IQueryable<QrLocation> ActiveFeedbacks => _context.QrLocations.AsNoTracking();
 
     private IQueryable<QrLocation> PassivedQrLocations =>
-        ActiveQrLocations.IgnoreQueryFilters(["SoftDeleteFilter"]).Where(t => t.IsPassived);
+        ActiveFeedbacks.IgnoreQueryFilters(["SoftDeleteFilter"]).Where(t => t.IsPassived);
 
     // --- Projeksiyonlar ---
     private static Expression<Func<QrLocation, QrLocationListItemDto>> ListProjection =>
@@ -62,17 +61,17 @@ internal sealed class QrLocationRepository : GenericRepository<QrLocation>, IQrL
 
     // --- Liste / export ---
     public Task<Paginate<QrLocationListItemDto>> GetDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
-        => GetPaginatedListAsync(ActiveQrLocations, request, ListProjection, cancellationToken);
+        => GetPaginatedListAsync(ActiveFeedbacks, request, ListProjection, cancellationToken);
 
     public Task<Paginate<QrLocationListItemDto>> GetPassivedDtoListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
         => GetPaginatedListAsync(PassivedQrLocations, request, ListProjection, cancellationToken);
 
     public Task<List<QrLocationListItemExcelDto>> GetExportListAsync(PageRequestBaseDto request, CancellationToken cancellationToken)
-        => GetFilteredListWithoutPaginationAsync(ActiveQrLocations, request, ExcelProjection, cancellationToken);
+        => GetFilteredListWithoutPaginationAsync(ActiveFeedbacks, request, ExcelProjection, cancellationToken);
 
     // --- Tekil (DTO) ---
     public Task<QrLocationItemDto?> GetDtoByIdAsync(Guid id, CancellationToken cancellationToken)
-        => ActiveQrLocations
+        => ActiveFeedbacks
             .Where(t => t.Id == id)
             .Select(ItemProjection)
             .SingleOrDefaultAsync(cancellationToken);

@@ -25,4 +25,6 @@ namespace QrAssignment.Application.Features.QrLocations.DTOs
 
         public byte[] RowVersion { get; set; }
     }
+
+    
 }
